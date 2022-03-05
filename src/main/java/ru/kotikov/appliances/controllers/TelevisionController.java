@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.entities.TelevisionEntity;
-import ru.kotikov.appliances.exptions.TelevisionNotFoundException;
+import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
 import ru.kotikov.appliances.services.TelevisionService;
 
 @RestController
@@ -18,7 +18,7 @@ public class TelevisionController {
     public ResponseEntity create(@RequestBody TelevisionEntity television,
                                  @RequestParam Long applianceId) {
         try {
-            return ResponseEntity.ok(televisionService.create(television, applianceId));
+            return ResponseEntity.ok(televisionService.create(television));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка");
         }
@@ -37,7 +37,7 @@ public class TelevisionController {
     public ResponseEntity getOne(@RequestParam Long id) {
         try {
             return ResponseEntity.ok(televisionService.getOne(id));
-        } catch (TelevisionNotFoundException e) {
+        } catch (ApplianceNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка");
@@ -49,7 +49,7 @@ public class TelevisionController {
         try {
             televisionService.update(television);
             return ResponseEntity.ok().body("Прибор успешно обновлен!");
-        } catch (TelevisionNotFoundException e) {
+        } catch (ApplianceNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка");
@@ -60,7 +60,7 @@ public class TelevisionController {
     public ResponseEntity delete(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(televisionService.delete(id));
-        } catch (TelevisionNotFoundException e) {
+        } catch (ApplianceNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка");

@@ -3,9 +3,8 @@ package ru.kotikov.appliances.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.kotikov.appliances.entities.TelevisionEntity;
 import ru.kotikov.appliances.entities.TelevisionModelEntity;
-import ru.kotikov.appliances.exptions.TelevisionModelNotFoundException;
+import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.services.TelevisionModelService;
 
 @RestController
@@ -38,7 +37,7 @@ public class TelevisionModelController {
     public ResponseEntity getOne(@RequestParam Long id) {
         try {
             return ResponseEntity.ok(televisionModelService.getOne(id));
-        } catch (TelevisionModelNotFoundException e) {
+        } catch (ModelNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка");
@@ -50,7 +49,7 @@ public class TelevisionModelController {
         try {
             televisionModelService.update(televisionModel);
             return ResponseEntity.ok().body("Модель телевизора успешно обновлена!");
-        } catch (TelevisionModelNotFoundException e) {
+        } catch (ModelNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка");
@@ -61,7 +60,7 @@ public class TelevisionModelController {
     public ResponseEntity delete(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(televisionModelService.delete(id));
-        } catch (TelevisionModelNotFoundException e) {
+        } catch (ModelNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка");
@@ -72,7 +71,7 @@ public class TelevisionModelController {
     public ResponseEntity inStockTelevisionModel(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(televisionModelService.inStockTelevisionModel(id));
-        } catch (TelevisionModelNotFoundException e) {
+        } catch (ModelNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка");

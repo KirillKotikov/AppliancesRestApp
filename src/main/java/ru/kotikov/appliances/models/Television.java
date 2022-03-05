@@ -17,7 +17,7 @@ public class Television extends AbstractAppliance{
     public static Television toModel(TelevisionEntity televisionEntity) {
         Television model = new Television();
         model.setId(televisionEntity.getId());
-        model.setTelevisionName(televisionEntity.getTelevisionName());
+        model.setName(televisionEntity.getName());
         model.setProducingCountry(televisionEntity.getProducingCountry());
         model.setCompanyManufacturer(televisionEntity.getCompanyManufacturer());
         model.setAvailableOnline(televisionEntity.getAvailableOnline());

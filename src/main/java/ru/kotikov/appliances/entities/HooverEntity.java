@@ -12,14 +12,7 @@ import java.util.List;
 @Table(name = "hoover")
 public class HooverEntity extends AbstractApplianceEntity{
 
-    @Column(unique = true, nullable = false)
-    private String hooverName;
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "hoover")
     private List<HooverModelEntity> hooverModels;
-
-    @ManyToOne
-    @JoinColumn(name = "applianceId", nullable = false)
-    private ApplianceEntity appliance;
 
 }

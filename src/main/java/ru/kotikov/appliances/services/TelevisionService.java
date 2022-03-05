@@ -2,13 +2,10 @@ package ru.kotikov.appliances.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.kotikov.appliances.entities.ApplianceEntity;
 import ru.kotikov.appliances.entities.TelevisionEntity;
-import ru.kotikov.appliances.exptions.TelevisionAlreadyExistException;
-import ru.kotikov.appliances.exptions.TelevisionNotFoundException;
-import ru.kotikov.appliances.models.Appliance;
+import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
+import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
 import ru.kotikov.appliances.models.Television;
-import ru.kotikov.appliances.repository.ApplianceRepo;
 import ru.kotikov.appliances.repository.TelevisionRepo;
 
 import java.util.List;
@@ -18,46 +15,47 @@ import java.util.stream.Collectors;
 public class TelevisionService {
 
     @Autowired
-    private ApplianceRepo applianceRepo;
-    @Autowired
     private TelevisionRepo televisionRepo;
 
-    public Television create(TelevisionEntity television, Long applianceId) throws TelevisionAlreadyExistException {
-        if (televisionRepo.findByTelevisionName(television.getTelevisionName()) != null) {
-            throw new TelevisionAlreadyExistException("Телевизор с таким именем уже существует!");
+    public Television create(TelevisionEntity television) throws ApplianceAlreadyExistException {
+        if (televisionRepo.findByName(television.getName()) != null) {
+            throw new ApplianceAlreadyExistException("Телевизор с таким именем уже существует!");
         }
-        ApplianceEntity appliance = applianceRepo.findById(applianceId).get();
-        television.setAppliance(appliance);
         return Television.toModel(televisionRepo.save(television));
     }
 
     public List<Television> getAll() {
-        return televisionRepo.findAll().stream().sorted((o1, o2) -> o1.getTelevisionName().compareToIgnoreCase(o2.getTelevisionName()))
+        return televisionRepo.findAll().stream().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
                 .map(Television::toModel).collect(Collectors.toList());
     }
 
-    public Television getOne(Long id) throws TelevisionNotFoundException {
+    public Television getOne(Long id) throws ApplianceNotFoundException {
         TelevisionEntity television = televisionRepo.findById(id).get();
         if (television == null) {
-            throw new TelevisionNotFoundException("Телевизор не найден!");
+            throw new ApplianceNotFoundException("Телевизор не найден!");
         }
         return Television.toModel(television);
     }
 
-    public TelevisionEntity update(TelevisionEntity television) throws TelevisionNotFoundException {
+    public TelevisionEntity update(TelevisionEntity television) throws ApplianceNotFoundException {
         TelevisionEntity televisionEntity = televisionRepo.findById(television.getId()).get();
         if (televisionEntity == null) {
-            throw new TelevisionNotFoundException("Телевизор не найден!");
+            throw new ApplianceNotFoundException("Телевизор не найден!");
         }
         return televisionRepo.saveAndFlush(television);
     }
 
-    public Long delete(Long id) throws TelevisionNotFoundException {
+    public Long delete(Long id) throws ApplianceNotFoundException {
         TelevisionEntity television = televisionRepo.findById(id).get();
         if (television == null) {
-            throw new TelevisionNotFoundException("Телевизор не найден!");
+            throw new ApplianceNotFoundException("Телевизор не найден!");
         }
         televisionRepo.deleteById(id);
         return id;
+    }
+
+    public List<Television> serchForName(String name) {
+        return televisionRepo.findAll().stream().filter(x -> x.getName().equalsIgnoreCase(name))
+                .map(Television::toModel).sorted().collect(Collectors.toList());
     }
 }

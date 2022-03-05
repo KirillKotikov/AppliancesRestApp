@@ -10,15 +10,8 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @Table(name = "television")
-public class TelevisionEntity extends AbstractApplianceEntity{
-
-    @Column(unique = true, nullable = false)
-    private String televisionName;
+public class TelevisionEntity extends AbstractApplianceEntity {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "television")
     private List<TelevisionModelEntity> TelevisionModels;
-
-    @ManyToOne
-    @JoinColumn(name = "applianceId", nullable = false)
-    private ApplianceEntity appliance;
 }

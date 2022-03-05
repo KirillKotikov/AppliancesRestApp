@@ -12,8 +12,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class TelevisionModelEntity extends AbstractApplianceModelEntity{
 
-    @Column(nullable = false, unique = true)
-    private String televisionModelName;
     @Column(nullable = false)
     private String category;
     @Column(nullable = false)

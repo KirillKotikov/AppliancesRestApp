@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public abstract class AbstractAppliance {
     private Long id;
-    private String televisionName;
+    private String name;
     private String producingCountry;
     private String companyManufacturer;
     private Boolean availableOnline;

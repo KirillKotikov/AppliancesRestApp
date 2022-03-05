@@ -16,7 +16,7 @@ public class TelevisionModel extends AbstractApplianceModel{
     public static TelevisionModel toTelevisionModel(TelevisionModelEntity entity) {
         var televisionModel = new TelevisionModel();
         televisionModel.setId(entity.getId());
-        televisionModel.setTelevisionModelName(entity.getTelevisionModelName());
+        televisionModel.setTelevisionModelName(entity.getName());
         televisionModel.setSerialNumber(entity.getSerialNumber());
         televisionModel.setColor(entity.getColor());
         televisionModel.setSize(entity.getSize());

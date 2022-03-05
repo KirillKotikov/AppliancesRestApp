@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ru.kotikov.appliances.entities.TelevisionModelEntity;
 
 public interface TelevisionModelRepo extends JpaRepository<TelevisionModelEntity, Long> {
-TelevisionModelEntity findByTelevisionModelName(String televisionModelName);
+TelevisionModelEntity findByName(String televisionModelName);
 }

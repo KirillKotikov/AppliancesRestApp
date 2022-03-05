@@ -16,6 +16,8 @@ public abstract class AbstractApplianceModelEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false, unique = true)
+    private String name;
+    @Column(nullable = false, unique = true)
     private Long serialNumber;
     @Column(nullable = false)
     private String color;

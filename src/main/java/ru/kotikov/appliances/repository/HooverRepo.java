@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ru.kotikov.appliances.entities.HooverEntity;
 
 public interface HooverRepo extends JpaRepository<HooverEntity, Long> {
-    HooverEntity findByHooverName(String hooverName);
+    HooverEntity findByName(String hooverName);
 }
 
 
