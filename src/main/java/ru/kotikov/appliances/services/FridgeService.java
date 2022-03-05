@@ -54,7 +54,7 @@ public class FridgeService {
         return "Холодильник с id = " + id + " успешно удалён!";
     }
 
-    public List<Fridge> serchForName(String name) {
+    public List<Fridge> searchForName(String name) {
         return fridgeRepo.findAll().stream().filter(x -> x.getName().equalsIgnoreCase(name))
                 .map(Fridge::toModel).sorted().collect(Collectors.toList());
     }

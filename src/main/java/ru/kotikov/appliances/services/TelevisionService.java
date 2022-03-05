@@ -54,7 +54,7 @@ public class TelevisionService {
         return id;
     }
 
-    public List<Television> serchForName(String name) {
+    public List<Television> searchForName(String name) {
         return televisionRepo.findAll().stream().filter(x -> x.getName().equalsIgnoreCase(name))
                 .map(Television::toModel).sorted().collect(Collectors.toList());
     }

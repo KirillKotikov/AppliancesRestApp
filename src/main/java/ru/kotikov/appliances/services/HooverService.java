@@ -55,7 +55,7 @@ public class HooverService {
             return "Пылесос с id = " + id + " успешно удалён!";
         }
 
-        public List<Hoover> serchForName(String name) {
+        public List<Hoover> searchForName(String name) {
             return hooverRepo.findAll().stream().filter(x -> x.getName().equalsIgnoreCase(name))
                     .map(Hoover::toModel).sorted().collect(Collectors.toList());
         }
