@@ -1,10 +1,15 @@
 package ru.kotikov.appliances.entities;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "appliance")
+@Data
+@NoArgsConstructor
 public class ApplianceEntity {
 
     @Id
@@ -15,30 +20,4 @@ public class ApplianceEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "appliance")
     private List<TelevisionEntity> televisionEntities;
 
-    public ApplianceEntity() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getApplianceName() {
-        return applianceName;
-    }
-
-    public void setApplianceName(String applianceName) {
-        this.applianceName = applianceName;
-    }
-
-    public List<TelevisionEntity> getTelevisionEntities() {
-        return televisionEntities;
-    }
-
-    public void setTelevisionEntities(List<TelevisionEntity> televisionEntities) {
-        this.televisionEntities = televisionEntities;
-    }
 }
