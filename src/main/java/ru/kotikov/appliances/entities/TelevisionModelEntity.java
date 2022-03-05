@@ -11,17 +11,25 @@ public class TelevisionModelEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String TelevisionModelName;
+    @Column(nullable = false, unique = true)
+    private String televisionModelName;
+    @Column(nullable = false, unique = true)
     private Long serialNumber;
+    @Column(nullable = false)
     private String color;
-    private String Size;
+    @Column(nullable = false)
+    private String size;
+    @Column(nullable = false)
     private BigDecimal price;
+    @Column(nullable = false)
     private String category;
+    @Column(nullable = false)
     private String technology;
+    @Column(nullable = false)
     private Boolean inStock;
 
     @ManyToOne
-    @JoinColumn(name = "television_id")
+    @JoinColumn(name = "televisionId", nullable = false)
     private TelevisionEntity television;
 
     public TelevisionModelEntity() {
@@ -36,11 +44,11 @@ public class TelevisionModelEntity {
     }
 
     public String getTelevisionModelName() {
-        return TelevisionModelName;
+        return televisionModelName;
     }
 
     public void setTelevisionModelName(String televisionModelName) {
-        TelevisionModelName = televisionModelName;
+        this.televisionModelName = televisionModelName;
     }
 
     public Long getSerialNumber() {
@@ -60,11 +68,11 @@ public class TelevisionModelEntity {
     }
 
     public String getSize() {
-        return Size;
+        return size;
     }
 
     public void setSize(String size) {
-        Size = size;
+        this.size = size;
     }
 
     public BigDecimal getPrice() {

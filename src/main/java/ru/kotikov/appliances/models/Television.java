@@ -3,6 +3,7 @@ package ru.kotikov.appliances.models;
 import ru.kotikov.appliances.entities.TelevisionEntity;
 import ru.kotikov.appliances.entities.TelevisionModelEntity;
 
+import javax.persistence.Entity;
 import java.util.List;
 import java.util.stream.Collectors;
 

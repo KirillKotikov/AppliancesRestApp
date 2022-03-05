@@ -1,9 +1,9 @@
 package ru.kotikov.appliances.repository;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import ru.kotikov.appliances.entities.TelevisionEntity;
 
-public interface TelevisionRepo extends CrudRepository<TelevisionEntity, Long> {
+public interface TelevisionRepo extends JpaRepository<TelevisionEntity, Long> {
 
     TelevisionEntity findByTelevisionName(String televisionName);
 }

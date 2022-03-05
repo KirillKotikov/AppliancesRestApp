@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.entities.TelevisionEntity;
-import ru.kotikov.appliances.exptions.TelevisionAlreadyExistException;
 import ru.kotikov.appliances.exptions.TelevisionNotFoundException;
 import ru.kotikov.appliances.services.TelevisionService;
 
@@ -16,19 +15,26 @@ public class TelevisionController {
     private TelevisionService televisionService;
 
     @PostMapping
-    public ResponseEntity registration (@RequestBody TelevisionEntity television) {
+    public ResponseEntity create(@RequestBody TelevisionEntity television,
+                                 @RequestParam Long applianceId) {
         try {
-            televisionService.registration(television);
-            return ResponseEntity.ok().body("Телевизор успешно сохранен!");
-        }catch (TelevisionAlreadyExistException e) {
-            return ResponseEntity.badRequest().body(e.getMessage() );
+            return ResponseEntity.ok(televisionService.create(television, applianceId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Произошла ошибка");
+        }
+    }
+
+    @GetMapping("/get-all")
+    public ResponseEntity getAll() {
+        try {
+            return ResponseEntity.ok(televisionService.getAll());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка");
         }
     }
 
     @GetMapping
-    public ResponseEntity getOneTelevision(@RequestParam Long id) {
+    public ResponseEntity getOne(@RequestParam Long id) {
         try {
             return ResponseEntity.ok(televisionService.getOne(id));
         } catch (TelevisionNotFoundException e) {
@@ -38,8 +44,18 @@ public class TelevisionController {
         }
     }
 
+    @PutMapping
+    public ResponseEntity update(@RequestBody TelevisionEntity television) {
+        try {
+            televisionService.update(television);
+            return ResponseEntity.ok().body("Прибор успешно обновлен!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Произошла ошибка");
+        }
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteTelevision (@PathVariable Long id) {
+    public ResponseEntity delete(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(televisionService.delete(id));
         } catch (Exception e) {

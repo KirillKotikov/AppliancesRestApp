@@ -3,30 +3,71 @@ package ru.kotikov.appliances.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.kotikov.appliances.entities.TelevisionEntity;
 import ru.kotikov.appliances.entities.TelevisionModelEntity;
-import ru.kotikov.appliances.services.TelevisionModelsService;
+import ru.kotikov.appliances.exptions.TelevisionModelNotFoundException;
+import ru.kotikov.appliances.services.TelevisionModelService;
 
 @RestController
 @RequestMapping("/television-models")
 public class TelevisionModelController {
 
     @Autowired
-    TelevisionModelsService televisionModelsService;
+    TelevisionModelService televisionModelService;
 
     @PostMapping
-    public ResponseEntity createTelevisionModel(@RequestBody TelevisionModelEntity televisionModel,
-                                                @RequestParam Long televisionId) {
+    public ResponseEntity create(@RequestBody TelevisionModelEntity televisionModel,
+                                 @RequestParam Long televisionId) {
         try {
-            return ResponseEntity.ok(televisionModelsService.createTelevisionModel(televisionModel, televisionId));
+            return ResponseEntity.ok(televisionModelService.create(televisionModel, televisionId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Произошла ошибка");
+        }
+    }
+
+    @GetMapping("/get-all")
+    public ResponseEntity getAll() {
+        try {
+            return ResponseEntity.ok(televisionModelService.getAll());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Произошла ошибка");
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity getOne(@RequestParam Long id) {
+        try {
+            return ResponseEntity.ok(televisionModelService.getOne(id));
+        } catch (TelevisionModelNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка");
         }
     }
 
     @PutMapping
-    public ResponseEntity inStockTelevisionModel(@RequestParam Long id) {
+    public ResponseEntity update(@RequestBody TelevisionModelEntity televisionModel) {
         try {
-            return ResponseEntity.ok(televisionModelsService.inStockTelevisionModel(id));
+            televisionModelService.update(televisionModel);
+            return ResponseEntity.ok().body("Модель телевизора успешно обновлена!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Произошла ошибка");
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(televisionModelService.delete(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Произошла ошибка");
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity inStockTelevisionModel(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(televisionModelService.inStockTelevisionModel(id));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка");
         }

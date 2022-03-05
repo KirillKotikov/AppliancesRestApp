@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.entities.ApplianceEntity;
 import ru.kotikov.appliances.exptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exptions.ApplianceNotFoundException;
-import ru.kotikov.appliances.exptions.TelevisionNotFoundException;
 import ru.kotikov.appliances.services.ApplianceService;
 
 @RestController
@@ -17,9 +16,9 @@ public class ApplianceController {
     private ApplianceService applianceService;
 
     @PostMapping
-    public ResponseEntity createAppliance(@RequestBody ApplianceEntity appliance) {
+    public ResponseEntity create(@RequestBody ApplianceEntity appliance) {
         try {
-            applianceService.createAppliance(appliance);
+            applianceService.create(appliance);
             return ResponseEntity.ok().body("Прибор успешно сохранен!");
         } catch (ApplianceAlreadyExistException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -28,8 +27,17 @@ public class ApplianceController {
         }
     }
 
-        @GetMapping
-    public ResponseEntity getOneAppliance(@RequestParam Long id) {
+    @GetMapping("/get-all")
+    public ResponseEntity getAll() {
+        try {
+            return ResponseEntity.ok(applianceService.getAll());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Произошла ошибка");
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity getOne(@RequestParam Long id) {
         try {
             return ResponseEntity.ok(applianceService.getOne(id));
         } catch (ApplianceNotFoundException e) {
@@ -39,25 +47,24 @@ public class ApplianceController {
         }
     }
 
+    @PutMapping
+    public ResponseEntity update(@RequestBody ApplianceEntity appliance) {
+        try {
+            applianceService.update(appliance);
+            return ResponseEntity.ok().body("Прибор успешно обновлен!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Произошла ошибка");
+        }
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteAppliance(@PathVariable Long id) {
+    public ResponseEntity delete(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(applianceService.delete(id));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка");
         }
     }
-
-    @GetMapping("/get-all")
-    public ResponseEntity getAllAppliances() {
-        try {
-            return ResponseEntity.ok("Сервер работает");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Произошла ошибка");
-        }
-    }
-
-
 }
 
 

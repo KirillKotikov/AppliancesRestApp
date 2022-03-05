@@ -1,5 +1,7 @@
 package ru.kotikov.appliances.entities;
 
+import com.sun.istack.NotNull;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -11,21 +13,22 @@ public class TelevisionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(unique = true, nullable = false)
     private String televisionName;
+    @Column(nullable = false)
     private String producingCountry;
+    @Column(nullable = false)
     private String companyManufacturer;
+    @Column(nullable = false)
     private Boolean availableOnline;
+    @Column(nullable = false)
     private Boolean installmentPlan;
-    
-//    @org.hibernate.annotations.ForeignKey(name = "")
-//    private Long applianceId;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "television")
     private List<TelevisionModelEntity> TelevisionModels;
 
     @ManyToOne
-    @JoinColumn(name = "appliance_id")
+    @JoinColumn(name = "applianceId", nullable = false)
     private ApplianceEntity appliance;
 
     public TelevisionEntity() {
@@ -85,5 +88,13 @@ public class TelevisionEntity {
 
     public void setTelevisionModels(List<TelevisionModelEntity> televisionModels) {
         TelevisionModels = televisionModels;
+    }
+
+    public ApplianceEntity getAppliance() {
+        return appliance;
+    }
+
+    public void setAppliance(ApplianceEntity appliance) {
+        this.appliance = appliance;
     }
 }
