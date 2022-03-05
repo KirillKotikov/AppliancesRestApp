@@ -1,26 +1,27 @@
 package ru.kotikov.appliances.models;
 
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.kotikov.appliances.entities.HooverModelEntity;
+import ru.kotikov.appliances.entities.FridgeModelEntity;
 
 @Data
 @NoArgsConstructor
-public class HooverModel extends AbstractApplianceModel{
+public class FridgeModel extends AbstractApplianceModel{
 
-    private Integer dustContainerVolume;
-    private Integer numberOfModes;
+    private Integer numbersOfDoors;
+    private String compressorType;
 
-    public static HooverModel toModel(HooverModelEntity entity) {
-        var model = new HooverModel();
+    public static FridgeModel toModel(FridgeModelEntity entity) {
+        var model = new FridgeModel();
         model.setId(entity.getId());
         model.setName(entity.getName());
         model.setSerialNumber(entity.getSerialNumber());
         model.setColor(entity.getColor());
         model.setSize(entity.getSize());
         model.setPrice(entity.getPrice());
-        model.setDustContainerVolume(entity.getDustContainerVolume());
-        model.setNumberOfModes(entity.getNumberOfModes());
+        model.setNumbersOfDoors(entity.getNumbersOfDoors());
+        model.setCompressorType(entity.getCompressorType());
         model.setInStock(entity.getInStock());
 
         return model;

@@ -61,14 +61,4 @@ public class TelevisionModelService {
         televisionModelRepo.deleteById(id);
         return id;
     }
-
-    public TelevisionModel inStockTelevisionModel(Long id) throws ModelNotFoundException {
-        TelevisionModelEntity television = televisionModelRepo.findById(id).get();
-        if (television == null) {
-            throw new ModelNotFoundException("Модель телевизора не найдена!");
-        }
-        TelevisionModelEntity televisionModel = televisionModelRepo.findById(id).get();
-        televisionModel.setInStock(!televisionModel.getInStock());
-        return TelevisionModel.toTelevisionModel(televisionModelRepo.save(televisionModel));
-    }
 }

@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.entities.HooverEntity;
-import ru.kotikov.appliances.entities.TelevisionEntity;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
 import ru.kotikov.appliances.services.HooverService;
 

@@ -4,8 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.kotikov.appliances.entities.TelevisionModelEntity;
 
-import java.math.BigDecimal;
-
 @Data
 @NoArgsConstructor
 public class TelevisionModel extends AbstractApplianceModel{
@@ -14,17 +12,17 @@ public class TelevisionModel extends AbstractApplianceModel{
     private String technology;
 
     public static TelevisionModel toTelevisionModel(TelevisionModelEntity entity) {
-        var televisionModel = new TelevisionModel();
-        televisionModel.setId(entity.getId());
-        televisionModel.setTelevisionModelName(entity.getName());
-        televisionModel.setSerialNumber(entity.getSerialNumber());
-        televisionModel.setColor(entity.getColor());
-        televisionModel.setSize(entity.getSize());
-        televisionModel.setPrice(entity.getPrice());
-        televisionModel.setCategory(entity.getCategory());
-        televisionModel.setTechnology(entity.getTechnology());
-        televisionModel.setInStock(entity.getInStock());
+        var model = new TelevisionModel();
+        model.setId(entity.getId());
+        model.setName(entity.getName());
+        model.setSerialNumber(entity.getSerialNumber());
+        model.setColor(entity.getColor());
+        model.setSize(entity.getSize());
+        model.setPrice(entity.getPrice());
+        model.setCategory(entity.getCategory());
+        model.setTechnology(entity.getTechnology());
+        model.setInStock(entity.getInStock());
 
-        return televisionModel;
+        return model;
     }
 }

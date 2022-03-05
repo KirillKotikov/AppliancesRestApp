@@ -3,22 +3,22 @@ package ru.kotikov.appliances.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.kotikov.appliances.entities.TelevisionModelEntity;
+import ru.kotikov.appliances.entities.FridgeModelEntity;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
-import ru.kotikov.appliances.services.TelevisionModelService;
+import ru.kotikov.appliances.services.FridgeModelService;
 
 @RestController
-@RequestMapping("/television-models")
-public class TelevisionModelController {
+@RequestMapping("/fridge-models")
+public class FridgeModelController {
 
     @Autowired
-    TelevisionModelService televisionModelService;
+    FridgeModelService fridgeModelService;
 
     @PostMapping
-    public ResponseEntity create(@RequestBody TelevisionModelEntity televisionModel,
-                                 @RequestParam Long televisionId) {
+    public ResponseEntity create(@RequestBody FridgeModelEntity fridgeModel,
+                                 @RequestParam Long fridgeId) {
         try {
-            return ResponseEntity.ok(televisionModelService.create(televisionModel, televisionId));
+            return ResponseEntity.ok(fridgeModelService.create(fridgeModel, fridgeId));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка");
         }
@@ -27,7 +27,7 @@ public class TelevisionModelController {
     @GetMapping("/get-all")
     public ResponseEntity getAll() {
         try {
-            return ResponseEntity.ok(televisionModelService.getAll());
+            return ResponseEntity.ok(fridgeModelService.getAll());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка");
         }
@@ -36,7 +36,7 @@ public class TelevisionModelController {
     @GetMapping
     public ResponseEntity getOne(@RequestParam Long id) {
         try {
-            return ResponseEntity.ok(televisionModelService.getOne(id));
+            return ResponseEntity.ok(fridgeModelService.getOne(id));
         } catch (ModelNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -45,10 +45,10 @@ public class TelevisionModelController {
     }
 
     @PutMapping
-    public ResponseEntity update(@RequestBody TelevisionModelEntity televisionModel) {
+    public ResponseEntity update(@RequestBody FridgeModelEntity fridgeModel) {
         try {
-            televisionModelService.update(televisionModel);
-            return ResponseEntity.ok().body("Модель телевизора успешно обновлена!");
+            fridgeModelService.update(fridgeModel);
+            return ResponseEntity.ok().body("Модель холодильника успешно обновлена!");
         } catch (ModelNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -59,7 +59,7 @@ public class TelevisionModelController {
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable Long id) {
         try {
-            return ResponseEntity.ok(televisionModelService.delete(id));
+            return ResponseEntity.ok(fridgeModelService.delete(id));
         } catch (ModelNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {

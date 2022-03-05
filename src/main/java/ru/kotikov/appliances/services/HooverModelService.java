@@ -60,14 +60,4 @@ public class HooverModelService {
         hooverModelRepo.deleteById(id);
         return id;
     }
-
-    public HooverModel inStockTelevisionModel(Long id) throws ModelNotFoundException {
-        HooverModelEntity hoover = hooverModelRepo.findById(id).get();
-        if (hoover == null) {
-            throw new ModelNotFoundException("Модель пылесоса не найдена!");
-        }
-        HooverModelEntity hooverModel = hooverModelRepo.findById(id).get();
-        hooverModel.setInStock(!hooverModel.getInStock());
-        return HooverModel.toModel(hooverModelRepo.save(hooverModel));
-    }
 }

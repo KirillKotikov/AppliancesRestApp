@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public abstract class AbstractApplianceModel {
     private Long id;
-    private String televisionModelName;
+    private String name;
     private Long serialNumber;
     private String color;
     private String size;
