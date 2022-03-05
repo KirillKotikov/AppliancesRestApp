@@ -3,16 +3,15 @@ package ru.kotikov.appliances.entities;
 import javax.persistence.*;
 import java.util.List;
 
-@SuppressWarnings("ALL")
 @Entity
-@Table(name = "television")
-public class TelevisionEntity {
+@Table(name = "hoover")
+public class HooverEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(unique = true, nullable = false)
-    private String televisionName;
+    private String hooverName;
     @Column(nullable = false)
     private String producingCountry;
     @Column(nullable = false)
@@ -22,14 +21,14 @@ public class TelevisionEntity {
     @Column(nullable = false)
     private Boolean installmentPlan;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "television")
-    private List<TelevisionModelEntity> TelevisionModels;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "hoover")
+    private List<HooverModelEntity> hooverModels;
 
     @ManyToOne
     @JoinColumn(name = "applianceId", nullable = false)
     private ApplianceEntity appliance;
 
-    public TelevisionEntity() {
+    public HooverEntity() {
     }
 
     public Long getId() {
@@ -40,12 +39,12 @@ public class TelevisionEntity {
         this.id = id;
     }
 
-    public String getTelevisionName() {
-        return televisionName;
+    public String getHooverName() {
+        return hooverName;
     }
 
-    public void setTelevisionName(String name) {
-        this.televisionName = name;
+    public void setHooverName(String hooverName) {
+        this.hooverName = hooverName;
     }
 
     public String getProducingCountry() {
@@ -80,12 +79,12 @@ public class TelevisionEntity {
         this.installmentPlan = installmentPlan;
     }
 
-    public List<TelevisionModelEntity> getTelevisionModels() {
-        return TelevisionModels;
+    public List<HooverModelEntity> getHooverModels() {
+        return hooverModels;
     }
 
-    public void setTelevisionModels(List<TelevisionModelEntity> televisionModels) {
-        TelevisionModels = televisionModels;
+    public void setHooverModels(List<HooverModelEntity> hooverModels) {
+        this.hooverModels = hooverModels;
     }
 
     public ApplianceEntity getAppliance() {

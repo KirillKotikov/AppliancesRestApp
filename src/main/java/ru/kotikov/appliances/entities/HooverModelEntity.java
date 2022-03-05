@@ -4,14 +4,14 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "television_model")
-public class TelevisionModelEntity {
+@Table(name = "hoover_model")
+public class HooverModelEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false, unique = true)
-    private String televisionModelName;
+    private String hooverModelName;
     @Column(nullable = false, unique = true)
     private Long serialNumber;
     @Column(nullable = false)
@@ -21,17 +21,17 @@ public class TelevisionModelEntity {
     @Column(nullable = false)
     private BigDecimal price;
     @Column(nullable = false)
-    private String category;
+    private Integer dustContainerVolume;
     @Column(nullable = false)
-    private String technology;
+    private Integer numberOfModes;
     @Column(nullable = false)
     private Boolean inStock;
 
     @ManyToOne
-    @JoinColumn(name = "televisionId", nullable = false)
-    private TelevisionEntity television;
+    @JoinColumn(name = "hooverId", nullable = false)
+    private HooverEntity hoover;
 
-    public TelevisionModelEntity() {
+    public HooverModelEntity() {
     }
 
     public Long getId() {
@@ -42,12 +42,12 @@ public class TelevisionModelEntity {
         this.id = id;
     }
 
-    public String getTelevisionModelName() {
-        return televisionModelName;
+    public String getHooverModelName() {
+        return hooverModelName;
     }
 
-    public void setTelevisionModelName(String televisionModelName) {
-        this.televisionModelName = televisionModelName;
+    public void setHooverModelName(String hooverModelName) {
+        this.hooverModelName = hooverModelName;
     }
 
     public Long getSerialNumber() {
@@ -82,20 +82,20 @@ public class TelevisionModelEntity {
         this.price = price;
     }
 
-    public String getCategory() {
-        return category;
+    public Integer getDustContainerVolume() {
+        return dustContainerVolume;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setDustContainerVolume(Integer dustContainerVolume) {
+        this.dustContainerVolume = dustContainerVolume;
     }
 
-    public String getTechnology() {
-        return technology;
+    public Integer getNumberOfModes() {
+        return numberOfModes;
     }
 
-    public void setTechnology(String technology) {
-        this.technology = technology;
+    public void setNumberOfModes(Integer numberOfModes) {
+        this.numberOfModes = numberOfModes;
     }
 
     public Boolean getInStock() {
@@ -106,12 +106,11 @@ public class TelevisionModelEntity {
         this.inStock = inStock;
     }
 
-    public TelevisionEntity getTelevision() {
-        return television;
+    public HooverEntity getHoover() {
+        return hoover;
     }
 
-    public void setTelevision(TelevisionEntity television) {
-        this.television = television;
+    public void setHoover(HooverEntity hoover) {
+        this.hoover = hoover;
     }
 }
-
