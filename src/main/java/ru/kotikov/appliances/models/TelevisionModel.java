@@ -8,17 +8,10 @@ import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
-public class TelevisionModel {
+public class TelevisionModel extends AbstractApplianceModel{
 
-    private Long id;
-    private String televisionModelName;
-    private Long serialNumber;
-    private String color;
-    private String size;
-    private BigDecimal price;
     private String category;
     private String technology;
-    private Boolean inStock;
 
     public static TelevisionModel toTelevisionModel(TelevisionModelEntity entity) {
         var televisionModel = new TelevisionModel();

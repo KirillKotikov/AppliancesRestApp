@@ -10,13 +10,8 @@ import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
-public class Television {
-    private Long id;
-    private String televisionName;
-    private String producingCountry;
-    private String companyManufacturer;
-    private Boolean availableOnline;
-    private Boolean installmentPlan;
+public class Television extends AbstractAppliance{
+
     private List<TelevisionModel> televisionModels;
 
     public static Television toModel(TelevisionEntity televisionEntity) {

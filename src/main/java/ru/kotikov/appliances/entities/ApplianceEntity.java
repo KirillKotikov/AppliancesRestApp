@@ -6,10 +6,10 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.List;
 
-@Entity
-@Table(name = "appliance")
 @Data
+@Entity
 @NoArgsConstructor
+@Table(name = "appliance")
 public class ApplianceEntity {
 
     @Id

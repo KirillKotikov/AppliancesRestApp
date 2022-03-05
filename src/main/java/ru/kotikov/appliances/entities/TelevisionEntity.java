@@ -10,21 +10,10 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @Table(name = "television")
-public class TelevisionEntity {
+public class TelevisionEntity extends AbstractApplianceEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     @Column(unique = true, nullable = false)
     private String televisionName;
-    @Column(nullable = false)
-    private String producingCountry;
-    @Column(nullable = false)
-    private String companyManufacturer;
-    @Column(nullable = false)
-    private Boolean availableOnline;
-    @Column(nullable = false)
-    private Boolean installmentPlan;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "television")
     private List<TelevisionModelEntity> TelevisionModels;
