@@ -23,7 +23,7 @@ public class Television extends AbstractAppliance{
         model.setAvailableOnline(televisionEntity.getAvailableOnline());
         model.setInstallmentPlan(televisionEntity.getInstallmentPlan());
         model.setTelevisionModels(televisionEntity.getTelevisionModels()
-                 .stream().filter(TelevisionModelEntity::getInStock).map(TelevisionModel::toTelevisionModel).collect(Collectors.toList()));
+                 .stream().filter(TelevisionModelEntity::getInStock).map(TelevisionModel::toModel).collect(Collectors.toList()));
 
         return model;
     }

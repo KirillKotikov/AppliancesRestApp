@@ -2,17 +2,17 @@ package ru.kotikov.appliances.models;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.kotikov.appliances.entities.TelevisionModelEntity;
+import ru.kotikov.appliances.entities.ComputerModelEntity;
 
 @Data
 @NoArgsConstructor
-public class TelevisionModel extends AbstractApplianceModel{
+public class ComputerModel extends AbstractApplianceModel{
 
     private String category;
-    private String technology;
+    private Integer numberOfProcessors;
 
-    public static TelevisionModel toModel(TelevisionModelEntity entity) {
-        var model = new TelevisionModel();
+    public static ComputerModel toModel(ComputerModelEntity entity) {
+        var model = new ComputerModel();
         model.setId(entity.getId());
         model.setName(entity.getName());
         model.setSerialNumber(entity.getSerialNumber());
@@ -20,7 +20,7 @@ public class TelevisionModel extends AbstractApplianceModel{
         model.setSize(entity.getSize());
         model.setPrice(entity.getPrice());
         model.setCategory(entity.getCategory());
-        model.setTechnology(entity.getTechnology());
+        model.setNumberOfProcessors(entity.getNumberOfProcessors());
         model.setInStock(entity.getInStock());
 
         return model;

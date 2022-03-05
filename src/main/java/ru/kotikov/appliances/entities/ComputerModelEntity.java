@@ -7,17 +7,16 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "television_model")
+@Table(name = "computer_model")
 @NoArgsConstructor
-public class TelevisionModelEntity extends AbstractApplianceModelEntity{
+public class ComputerModelEntity extends AbstractApplianceModelEntity{
 
     @Column(nullable = false)
     private String category;
     @Column(nullable = false)
-    private String technology;
+    private Integer numberOfProcessors;
 
     @ManyToOne
-    @JoinColumn(name = "televisionId", nullable = false)
-    private TelevisionEntity television;
+    @JoinColumn(name = "computerId", nullable = false)
+    private ComputerEntity computer;
 }
-

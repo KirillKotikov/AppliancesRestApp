@@ -13,5 +13,5 @@ import java.util.List;
 public class TelevisionEntity extends AbstractApplianceEntity {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "television")
-    private List<TelevisionModelEntity> TelevisionModels;
+    private List<TelevisionModelEntity> televisionModels;
 }

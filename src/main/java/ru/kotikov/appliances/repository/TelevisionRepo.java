@@ -5,5 +5,5 @@ import ru.kotikov.appliances.entities.TelevisionEntity;
 
 public interface TelevisionRepo extends JpaRepository<TelevisionEntity, Long> {
 
-    TelevisionEntity findByName(String televisionName);
+    TelevisionEntity findByName(String name);
 }

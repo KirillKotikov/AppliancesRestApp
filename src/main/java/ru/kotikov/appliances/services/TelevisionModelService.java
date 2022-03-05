@@ -28,13 +28,13 @@ public class TelevisionModelService {
         }
         TelevisionEntity television = televisionRepo.findById(televisionId).get();
         televisionModel.setTelevision(television);
-        return TelevisionModel.toTelevisionModel(televisionModelRepo.save(televisionModel));
+        return TelevisionModel.toModel(televisionModelRepo.save(televisionModel));
     }
 
     public List<TelevisionModel> getAll() {
         return televisionModelRepo.findAll().stream().sorted((Comparator.comparing(TelevisionModelEntity::getPrice)))
                 .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
-                .map(TelevisionModel::toTelevisionModel).collect(Collectors.toList());
+                .map(TelevisionModel::toModel).collect(Collectors.toList());
     }
 
     public TelevisionModel getOne(Long id) throws ModelNotFoundException {
@@ -42,7 +42,7 @@ public class TelevisionModelService {
         if (television == null) {
             throw new ModelNotFoundException("Модель телевизора не найдена!");
         }
-        return TelevisionModel.toTelevisionModel(television);
+        return TelevisionModel.toModel(television);
     }
 
     public TelevisionModelEntity update(TelevisionModelEntity televisionModel) throws ModelNotFoundException {
