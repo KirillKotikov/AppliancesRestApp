@@ -37,11 +37,19 @@ public class ApplianceService {
         return Appliance.toModel(appliance);
     }
 
-    public ApplianceEntity update(ApplianceEntity appliance) {
-      return applianceRepo.saveAndFlush(appliance);
+    public ApplianceEntity update(ApplianceEntity appliance) throws ApplianceNotFoundException {
+        ApplianceEntity applianceEntity = applianceRepo.findById(appliance.getId()).get();
+        if (applianceEntity == null) {
+            throw new ApplianceNotFoundException("Прибор не найден!");
+        }
+        return applianceRepo.saveAndFlush(appliance);
     }
 
-    public Long delete(Long id) {
+    public Long delete(Long id) throws ApplianceNotFoundException {
+        ApplianceEntity appliance = applianceRepo.findById(id).get();
+        if (appliance == null) {
+            throw new ApplianceNotFoundException("Прибор не найден!");
+        }
         applianceRepo.deleteById(id);
         return id;
     }

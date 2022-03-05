@@ -44,11 +44,19 @@ public class TelevisionService {
         return Television.toModel(television);
     }
 
-    public TelevisionEntity update(TelevisionEntity television) {
+    public TelevisionEntity update(TelevisionEntity television) throws TelevisionNotFoundException {
+        TelevisionEntity televisionEntity = televisionRepo.findById(television.getId()).get();
+        if (televisionEntity == null) {
+            throw new TelevisionNotFoundException("Телевизор не найден!");
+        }
         return televisionRepo.saveAndFlush(television);
     }
 
-    public Long delete(Long id) {
+    public Long delete(Long id) throws TelevisionNotFoundException {
+        TelevisionEntity television = televisionRepo.findById(id).get();
+        if (television == null) {
+            throw new TelevisionNotFoundException("Телевизор не найден!");
+        }
         televisionRepo.deleteById(id);
         return id;
     }

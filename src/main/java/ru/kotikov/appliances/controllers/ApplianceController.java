@@ -52,6 +52,8 @@ public class ApplianceController {
         try {
             applianceService.update(appliance);
             return ResponseEntity.ok().body("Прибор успешно обновлен!");
+        } catch (ApplianceNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка");
         }
@@ -61,6 +63,8 @@ public class ApplianceController {
     public ResponseEntity delete(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(applianceService.delete(id));
+        } catch (ApplianceNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка");
         }

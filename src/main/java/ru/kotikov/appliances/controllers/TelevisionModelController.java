@@ -50,6 +50,8 @@ public class TelevisionModelController {
         try {
             televisionModelService.update(televisionModel);
             return ResponseEntity.ok().body("Модель телевизора успешно обновлена!");
+        } catch (TelevisionModelNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка");
         }
@@ -59,6 +61,8 @@ public class TelevisionModelController {
     public ResponseEntity delete(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(televisionModelService.delete(id));
+        } catch (TelevisionModelNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка");
         }
@@ -68,6 +72,8 @@ public class TelevisionModelController {
     public ResponseEntity inStockTelevisionModel(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(televisionModelService.inStockTelevisionModel(id));
+        } catch (TelevisionModelNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка");
         }

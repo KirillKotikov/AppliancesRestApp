@@ -47,16 +47,28 @@ public class TelevisionModelService {
         return TelevisionModel.toTelevisionModel(television);
     }
 
-    public TelevisionModelEntity update(TelevisionModelEntity televisionModel) {
+    public TelevisionModelEntity update(TelevisionModelEntity televisionModel) throws TelevisionModelNotFoundException {
+        TelevisionModelEntity television = televisionModelRepo.findById(televisionModel.getId()).get();
+        if (television == null) {
+            throw new TelevisionModelNotFoundException("Модель телевизора не найдена!");
+        }
         return televisionModelRepo.saveAndFlush(televisionModel);
     }
 
-    public Long delete(Long id) {
+    public Long delete(Long id) throws TelevisionModelNotFoundException {
+        TelevisionModelEntity television = televisionModelRepo.findById(id).get();
+        if (television == null) {
+            throw new TelevisionModelNotFoundException("Модель телевизора не найдена!");
+        }
         televisionModelRepo.deleteById(id);
         return id;
     }
 
-    public TelevisionModel inStockTelevisionModel(Long id) {
+    public TelevisionModel inStockTelevisionModel(Long id) throws TelevisionModelNotFoundException {
+        TelevisionModelEntity television = televisionModelRepo.findById(id).get();
+        if (television == null) {
+            throw new TelevisionModelNotFoundException("Модель телевизора не найдена!");
+        }
         TelevisionModelEntity televisionModel = televisionModelRepo.findById(id).get();
         televisionModel.setInStock(!televisionModel.getInStock());
         return TelevisionModel.toTelevisionModel(televisionModelRepo.save(televisionModel));

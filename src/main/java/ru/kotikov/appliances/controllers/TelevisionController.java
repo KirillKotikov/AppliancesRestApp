@@ -49,6 +49,8 @@ public class TelevisionController {
         try {
             televisionService.update(television);
             return ResponseEntity.ok().body("Прибор успешно обновлен!");
+        } catch (TelevisionNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка");
         }
@@ -58,6 +60,8 @@ public class TelevisionController {
     public ResponseEntity delete(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(televisionService.delete(id));
+        } catch (TelevisionNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка");
         }
