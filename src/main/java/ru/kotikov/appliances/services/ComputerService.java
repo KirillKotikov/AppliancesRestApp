@@ -6,7 +6,6 @@ import ru.kotikov.appliances.entities.ComputerEntity;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
 import ru.kotikov.appliances.models.Computer;
-import ru.kotikov.appliances.models.Television;
 import ru.kotikov.appliances.repository.ComputerRepo;
 
 import java.util.List;
