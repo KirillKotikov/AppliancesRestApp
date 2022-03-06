@@ -25,7 +25,8 @@ public class TelevisionService {
     }
 
     public List<Television> getAll() {
-        return televisionRepo.findAll().stream().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
+        return televisionRepo.findAll().stream()
+                .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
                 .map(Television::toModel).collect(Collectors.toList());
     }
 

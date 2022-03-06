@@ -7,6 +7,7 @@ import ru.kotikov.appliances.entities.FridgeModelEntity;
 import ru.kotikov.appliances.entities.SmartphoneEntity;
 import ru.kotikov.appliances.entities.SmartphoneModelEntity;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +26,10 @@ public class Smartphone extends AbstractAppliance{
         model.setAvailableOnline(smartphoneEntity.getAvailableOnline());
         model.setInstallmentPlan(smartphoneEntity.getInstallmentPlan());
         model.setSmartphoneModels(smartphoneEntity.getSmartphoneModels()
-                .stream().filter(SmartphoneModelEntity::getInStock).map(SmartphoneModel::toModel).collect(Collectors.toList()));
+                .stream().filter(SmartphoneModelEntity::getInStock).map(SmartphoneModel::toModel)
+                .sorted((Comparator.comparing(AbstractApplianceModel::getPrice)))
+                .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
+                .collect(Collectors.toList()));
 
         return model;
     }

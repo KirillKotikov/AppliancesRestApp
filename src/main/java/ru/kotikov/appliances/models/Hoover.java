@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import ru.kotikov.appliances.entities.HooverEntity;
 import ru.kotikov.appliances.entities.HooverModelEntity;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,10 @@ public class Hoover extends AbstractAppliance{
             model.setAvailableOnline(hooverEntity.getAvailableOnline());
             model.setInstallmentPlan(hooverEntity.getInstallmentPlan());
             model.setHooverModels(hooverEntity.getHooverModels()
-                    .stream().filter(HooverModelEntity::getInStock).map(HooverModel::toModel).collect(Collectors.toList()));
+                    .stream().filter(HooverModelEntity::getInStock).map(HooverModel::toModel)
+                    .sorted((Comparator.comparing(AbstractApplianceModel::getPrice)))
+                    .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
+                    .collect(Collectors.toList()));
 
             return model;
         }

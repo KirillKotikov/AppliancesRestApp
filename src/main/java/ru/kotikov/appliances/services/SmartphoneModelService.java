@@ -8,6 +8,7 @@ import ru.kotikov.appliances.entities.SmartphoneModelEntity;
 import ru.kotikov.appliances.exceptions.ModelAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.models.SmartphoneModel;
+import ru.kotikov.appliances.models.Television;
 import ru.kotikov.appliances.repository.SmartphoneModelRepo;
 import ru.kotikov.appliances.repository.SmartphoneRepo;
 
@@ -32,7 +33,8 @@ public class SmartphoneModelService {
     }
 
     public List<SmartphoneModel> getAll() {
-        return smartphoneModelRepo.findAll().stream().sorted((Comparator.comparing(SmartphoneModelEntity::getPrice)))
+        return smartphoneModelRepo.findAll().stream()
+                .sorted((Comparator.comparing(SmartphoneModelEntity::getPrice)))
                 .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
                 .map(SmartphoneModel::toModel).collect(Collectors.toList());
     }
@@ -60,5 +62,10 @@ public class SmartphoneModelService {
         }
         smartphoneModelRepo.deleteById(id);
         return id;
+    }
+
+    public List<SmartphoneModel> searchForName(String name) {
+        return smartphoneModelRepo.findAll().stream().filter(x -> x.getName().equalsIgnoreCase(name))
+                .map(SmartphoneModel::toModel).sorted().collect(Collectors.toList());
     }
 }

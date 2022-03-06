@@ -7,6 +7,7 @@ import ru.kotikov.appliances.entities.ComputerModelEntity;
 import ru.kotikov.appliances.exceptions.ModelAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.models.ComputerModel;
+import ru.kotikov.appliances.models.Television;
 import ru.kotikov.appliances.repository.ComputerModelRepo;
 import ru.kotikov.appliances.repository.ComputerRepo;
 
@@ -32,7 +33,8 @@ public class ComputerModelService {
     }
 
     public List<ComputerModel> getAll() {
-        return computerModelRepo.findAll().stream().sorted((Comparator.comparing(ComputerModelEntity::getPrice)))
+        return computerModelRepo.findAll().stream()
+                .sorted((Comparator.comparing(ComputerModelEntity::getPrice)))
                 .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
                 .map(ComputerModel::toModel).collect(Collectors.toList());
     }
@@ -60,5 +62,10 @@ public class ComputerModelService {
         }
         computerModelRepo.deleteById(id);
         return id;
+    }
+
+    public List<ComputerModel> searchForName(String name) {
+        return computerModelRepo.findAll().stream().filter(x -> x.getName().equalsIgnoreCase(name))
+                .map(ComputerModel::toModel).sorted().collect(Collectors.toList());
     }
 }

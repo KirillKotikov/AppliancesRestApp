@@ -7,6 +7,7 @@ import ru.kotikov.appliances.entities.FridgeModelEntity;
 import ru.kotikov.appliances.entities.HooverEntity;
 import ru.kotikov.appliances.entities.HooverModelEntity;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +26,10 @@ public class Fridge extends AbstractAppliance{
         model.setAvailableOnline(fridgeEntity.getAvailableOnline());
         model.setInstallmentPlan(fridgeEntity.getInstallmentPlan());
         model.setFrudgeModels(fridgeEntity.getFridgeModels()
-                .stream().filter(FridgeModelEntity::getInStock).map(FridgeModel::toModel).collect(Collectors.toList()));
+                .stream().filter(FridgeModelEntity::getInStock).map(FridgeModel::toModel)
+                .sorted((Comparator.comparing(AbstractApplianceModel::getPrice)))
+                .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
+                .collect(Collectors.toList()));
 
         return model;
     }

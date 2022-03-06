@@ -7,6 +7,7 @@ import ru.kotikov.appliances.entities.HooverModelEntity;
 import ru.kotikov.appliances.exceptions.ModelAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.models.HooverModel;
+import ru.kotikov.appliances.models.Television;
 import ru.kotikov.appliances.repository.HooverModelRepo;
 import ru.kotikov.appliances.repository.HooverRepo;
 
@@ -31,7 +32,8 @@ public class HooverModelService {
     }
 
     public List<HooverModel> getAll() {
-        return hooverModelRepo.findAll().stream().sorted((Comparator.comparing(HooverModelEntity::getPrice)))
+        return hooverModelRepo.findAll().stream()
+                .sorted((Comparator.comparing(HooverModelEntity::getPrice)))
                 .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
                 .map(HooverModel::toModel).collect(Collectors.toList());
     }
@@ -59,5 +61,10 @@ public class HooverModelService {
         }
         hooverModelRepo.deleteById(id);
         return id;
+    }
+
+    public List<HooverModel> searchForName(String name) {
+        return hooverModelRepo.findAll().stream().filter(x -> x.getName().equalsIgnoreCase(name))
+                .map(HooverModel::toModel).sorted().collect(Collectors.toList());
     }
 }

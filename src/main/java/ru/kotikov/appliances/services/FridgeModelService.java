@@ -9,6 +9,7 @@ import ru.kotikov.appliances.exceptions.ModelAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.models.FridgeModel;
 import ru.kotikov.appliances.models.HooverModel;
+import ru.kotikov.appliances.models.Television;
 import ru.kotikov.appliances.repository.FridgeModelRepo;
 import ru.kotikov.appliances.repository.FridgeRepo;
 
@@ -33,7 +34,8 @@ public class FridgeModelService {
     }
 
     public List<FridgeModel> getAll() {
-        return fridgeModelRepo.findAll().stream().sorted((Comparator.comparing(FridgeModelEntity::getPrice)))
+        return fridgeModelRepo.findAll().stream()
+                .sorted((Comparator.comparing(FridgeModelEntity::getPrice)))
                 .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
                 .map(FridgeModel::toModel).collect(Collectors.toList());
     }
@@ -61,5 +63,10 @@ public class FridgeModelService {
         }
         fridgeModelRepo.deleteById(id);
         return id;
+    }
+
+    public List<FridgeModel> searchForName(String name) {
+        return fridgeModelRepo.findAll().stream().filter(x -> x.getName().equalsIgnoreCase(name))
+                .map(FridgeModel::toModel).sorted().collect(Collectors.toList());
     }
 }

@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import ru.kotikov.appliances.entities.ComputerEntity;
 import ru.kotikov.appliances.entities.ComputerModelEntity;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,10 @@ public class Computer extends AbstractAppliance{
         model.setAvailableOnline(computerEntity.getAvailableOnline());
         model.setInstallmentPlan(computerEntity.getInstallmentPlan());
         model.setComputerModels(computerEntity.getComputerModels()
-                .stream().filter(ComputerModelEntity::getInStock).map(ComputerModel::toModel).collect(Collectors.toList()));
+                .stream().filter(ComputerModelEntity::getInStock).map(ComputerModel::toModel)
+                .sorted((Comparator.comparing(AbstractApplianceModel::getPrice)))
+                .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
+                .collect(Collectors.toList()));
 
         return model;
     }
