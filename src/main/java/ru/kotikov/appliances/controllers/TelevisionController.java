@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.entities.TelevisionEntity;
+import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
+import ru.kotikov.appliances.exceptions.ListOfModelIsNullException;
 import ru.kotikov.appliances.services.TelevisionService;
 
 @RestController
@@ -18,8 +20,8 @@ public class TelevisionController {
     public ResponseEntity create(@RequestBody TelevisionEntity television) {
         try {
             return ResponseEntity.ok(televisionService.create(television));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Произошла ошибка");
+        } catch (ApplianceAlreadyExistException | ListOfModelIsNullException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 

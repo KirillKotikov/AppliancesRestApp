@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.entities.TelevisionModelEntity;
+import ru.kotikov.appliances.exceptions.ModelAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.services.TelevisionModelService;
 
@@ -19,6 +20,8 @@ public class TelevisionModelController {
                                  @RequestParam Long televisionId) {
         try {
             return ResponseEntity.ok(televisionModelService.create(televisionModel, televisionId));
+        } catch (ModelAlreadyExistException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка");
         }

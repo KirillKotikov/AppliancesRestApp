@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.kotikov.appliances.services.MainService;
 
 @RestController
-@RequestMapping("/get-all-appliances")
+@RequestMapping("/")
 public class MainController {
 
     @Autowired

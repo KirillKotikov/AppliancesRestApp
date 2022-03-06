@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.kotikov.appliances.entities.TelevisionEntity;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
+import ru.kotikov.appliances.exceptions.ListOfModelIsNullException;
 import ru.kotikov.appliances.models.Television;
 import ru.kotikov.appliances.repository.TelevisionRepo;
 
@@ -17,10 +18,11 @@ public class TelevisionService {
     @Autowired
     private TelevisionRepo televisionRepo;
 
-    public Television create(TelevisionEntity television) throws ApplianceAlreadyExistException {
+    public Television create(TelevisionEntity television) throws ApplianceAlreadyExistException, ListOfModelIsNullException {
         if (televisionRepo.findByName(television.getName()) != null) {
             throw new ApplianceAlreadyExistException("Телевизор с таким именем уже существует!");
-        }
+        } else if(televisionRepo.findByName(television.getName()) == null)
+            throw new ListOfModelIsNullException("Группа телевизоров успешно добавлена! Список моделей пуст!");
         return Television.toModel(televisionRepo.save(television));
     }
 

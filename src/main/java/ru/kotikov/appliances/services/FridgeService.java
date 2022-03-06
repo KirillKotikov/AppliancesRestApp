@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.kotikov.appliances.entities.FridgeEntity;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
+import ru.kotikov.appliances.exceptions.ListOfModelIsNullException;
 import ru.kotikov.appliances.models.Fridge;
 import ru.kotikov.appliances.repository.FridgeRepo;
 
@@ -17,10 +18,11 @@ public class FridgeService {
     @Autowired
     private FridgeRepo fridgeRepo;
 
-    public Fridge create(FridgeEntity fridge) throws ApplianceAlreadyExistException {
+    public Fridge create(FridgeEntity fridge) throws ApplianceAlreadyExistException, ListOfModelIsNullException {
         if (fridgeRepo.findByName(fridge.getName()) != null) {
             throw new ApplianceAlreadyExistException("Холодильник с таким именем уже существует!");
-        }
+        } else if(fridgeRepo.findByName(fridge.getName()) == null)
+            throw new ListOfModelIsNullException("Группа телевизоров успешно добавлена! Список моделей пуст!");
         return Fridge.toModel(fridgeRepo.save(fridge));
     }
 
