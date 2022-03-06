@@ -69,4 +69,15 @@ public class SmartphoneController {
             return ResponseEntity.badRequest().body("Произошла ошибка");
         }
     }
+
+    @GetMapping("/search-for-name")
+    public ResponseEntity searchForName(@RequestParam String name) {
+        try {
+            return ResponseEntity.ok(smartphoneService.searchForName(name));
+        } catch (ApplianceNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Произошла ошибка");
+        }
+    }
 }

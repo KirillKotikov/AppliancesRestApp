@@ -66,4 +66,15 @@ public class FridgeModelController {
             return ResponseEntity.badRequest().body("Произошла ошибка");
         }
     }
+
+    @GetMapping("/search-for-name")
+    public ResponseEntity searchForName(@RequestParam String name) {
+        try {
+            return ResponseEntity.ok(fridgeModelService.searchForName(name));
+        } catch (ModelNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Произошла ошибка");
+        }
+    }
 }

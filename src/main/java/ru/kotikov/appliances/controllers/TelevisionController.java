@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.entities.TelevisionEntity;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
+import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.services.TelevisionService;
 
 @RestController
@@ -62,6 +63,16 @@ public class TelevisionController {
     public ResponseEntity delete(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(televisionService.delete(id));
+        } catch (ApplianceNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Произошла ошибка");
+        }
+    }
+    @GetMapping("/search-for-name")
+    public ResponseEntity searchForName(@RequestParam String name) {
+        try {
+            return ResponseEntity.ok(televisionService.searchForName(name));
         } catch (ApplianceNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {

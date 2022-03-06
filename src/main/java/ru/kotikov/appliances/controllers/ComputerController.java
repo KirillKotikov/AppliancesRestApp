@@ -69,4 +69,14 @@ public class ComputerController {
         }
     }
 
+    @GetMapping("/search-for-name")
+    public ResponseEntity searchForName(@RequestParam String name) {
+        try {
+            return ResponseEntity.ok(computerService.searchForName(name));
+        } catch (ApplianceNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Произошла ошибка");
+        }
+    }
 }
