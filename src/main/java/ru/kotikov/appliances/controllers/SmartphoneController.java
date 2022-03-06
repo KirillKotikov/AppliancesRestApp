@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.entities.SmartphoneEntity;
+import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
 import ru.kotikov.appliances.services.SmartphoneService;
 
@@ -19,8 +20,10 @@ public class SmartphoneController {
     public ResponseEntity create(@RequestBody SmartphoneEntity smartphone) {
         try {
             return ResponseEntity.ok(smartphoneService.create(smartphone));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Произошла ошибка");
+        } catch (ApplianceAlreadyExistException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (NullPointerException e) {
+            return ResponseEntity.badRequest().body("Список моделей пуст!");
         }
     }
 

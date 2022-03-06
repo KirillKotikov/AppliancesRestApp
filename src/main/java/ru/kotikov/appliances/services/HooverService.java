@@ -5,9 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.kotikov.appliances.entities.HooverEntity;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
-import ru.kotikov.appliances.exceptions.ListOfModelIsNullException;
 import ru.kotikov.appliances.models.Hoover;
-import ru.kotikov.appliances.models.Television;
 import ru.kotikov.appliances.repository.HooverRepo;
 
 import java.util.List;
@@ -19,11 +17,10 @@ public class HooverService {
         @Autowired
         private HooverRepo hooverRepo;
 
-        public Hoover create(HooverEntity hoover) throws ApplianceAlreadyExistException, ListOfModelIsNullException {
+        public Hoover create(HooverEntity hoover) throws ApplianceAlreadyExistException {
             if (hooverRepo.findByName(hoover.getName()) != null) {
                 throw new ApplianceAlreadyExistException("Пылесос с таким именем уже существует!");
-            } else if(hooverRepo.findByName(hoover.getName()) == null)
-                throw new ListOfModelIsNullException("Группа телевизоров успешно добавлена! Список моделей пуст!");
+            }
             return Hoover.toModel(hooverRepo.save(hoover));
         }
 

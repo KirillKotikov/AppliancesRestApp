@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.entities.HooverEntity;
+import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
 import ru.kotikov.appliances.services.HooverService;
 
@@ -18,8 +19,10 @@ public class HooverController {
         public ResponseEntity create(@RequestBody HooverEntity hoover) {
             try {
                 return ResponseEntity.ok(hooverService.create(hoover));
-            } catch (Exception e) {
-                return ResponseEntity.badRequest().body("Произошла ошибка");
+            } catch (ApplianceAlreadyExistException e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            } catch (NullPointerException e) {
+                return ResponseEntity.badRequest().body("Список моделей пуст!");
             }
         }
 

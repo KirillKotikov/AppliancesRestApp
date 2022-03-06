@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.kotikov.appliances.entities.ComputerEntity;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
-import ru.kotikov.appliances.exceptions.ListOfModelIsNullException;
 import ru.kotikov.appliances.models.Computer;
 import ru.kotikov.appliances.repository.ComputerRepo;
 
@@ -18,11 +17,10 @@ public class ComputerService {
     @Autowired
     private ComputerRepo computerRepo;
 
-    public Computer create(ComputerEntity computer) throws ApplianceAlreadyExistException, ListOfModelIsNullException {
+    public Computer create(ComputerEntity computer) throws ApplianceAlreadyExistException {
         if (computerRepo.findByName(computer.getName()) != null) {
             throw new ApplianceAlreadyExistException("Компьютер с таким именем уже существует!");
-        } else if(computerRepo.findByName(computer.getName()) == null)
-            throw new ListOfModelIsNullException("Группа телевизоров успешно добавлена! Список моделей пуст!");
+        }
         return Computer.toModel(computerRepo.save(computer));
     }
 
