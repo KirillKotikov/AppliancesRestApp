@@ -6,7 +6,6 @@ import ru.kotikov.appliances.entities.TelevisionEntity;
 import ru.kotikov.appliances.entities.TelevisionModelEntity;
 import ru.kotikov.appliances.exceptions.ModelAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
-import ru.kotikov.appliances.models.Television;
 import ru.kotikov.appliances.models.TelevisionModel;
 import ru.kotikov.appliances.repository.TelevisionModelRepo;
 import ru.kotikov.appliances.repository.TelevisionRepo;
@@ -65,7 +64,8 @@ public class TelevisionModelService {
     }
 
     public List<TelevisionModel> searchForName(String name) throws ModelNotFoundException {
-        List<TelevisionModel> televisionModels = televisionModelRepo.findAll().stream().filter(x -> x.getName().equalsIgnoreCase(name))
+        List<TelevisionModel> televisionModels = televisionModelRepo.findAll().stream()
+                .filter(x -> x.getName().equalsIgnoreCase(name))
                 .map(TelevisionModel::toModel).sorted().collect(Collectors.toList());
         if (televisionModels == null) throw new ModelNotFoundException("Модель с таким именем не найдена!");
         return televisionModels;

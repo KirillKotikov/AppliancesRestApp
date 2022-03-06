@@ -7,7 +7,7 @@ import ru.kotikov.appliances.entities.ComputerModelEntity;
 import ru.kotikov.appliances.exceptions.ModelAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.models.ComputerModel;
-import ru.kotikov.appliances.models.Television;
+import ru.kotikov.appliances.models.FridgeModel;
 import ru.kotikov.appliances.repository.ComputerModelRepo;
 import ru.kotikov.appliances.repository.ComputerRepo;
 
@@ -64,8 +64,11 @@ public class ComputerModelService {
         return id;
     }
 
-    public List<ComputerModel> searchForName(String name) {
-        return computerModelRepo.findAll().stream().filter(x -> x.getName().equalsIgnoreCase(name))
+    public List<ComputerModel> searchForName(String name) throws ModelNotFoundException {
+        List<ComputerModel> computerModels = computerModelRepo.findAll().stream()
+                .filter(x -> x.getName().equalsIgnoreCase(name))
                 .map(ComputerModel::toModel).sorted().collect(Collectors.toList());
+        if (computerModels == null) throw new ModelNotFoundException("Модель с таким именем не найдена!");
+        return computerModels;
     }
 }

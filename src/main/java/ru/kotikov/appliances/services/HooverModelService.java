@@ -7,7 +7,7 @@ import ru.kotikov.appliances.entities.HooverModelEntity;
 import ru.kotikov.appliances.exceptions.ModelAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.models.HooverModel;
-import ru.kotikov.appliances.models.Television;
+import ru.kotikov.appliances.models.SmartphoneModel;
 import ru.kotikov.appliances.repository.HooverModelRepo;
 import ru.kotikov.appliances.repository.HooverRepo;
 
@@ -63,8 +63,11 @@ public class HooverModelService {
         return id;
     }
 
-    public List<HooverModel> searchForName(String name) {
-        return hooverModelRepo.findAll().stream().filter(x -> x.getName().equalsIgnoreCase(name))
+    public List<HooverModel> searchForName(String name) throws ModelNotFoundException {
+        List<HooverModel> hooverModels = hooverModelRepo.findAll().stream()
+                .filter(x -> x.getName().equalsIgnoreCase(name))
                 .map(HooverModel::toModel).sorted().collect(Collectors.toList());
+        if (hooverModels == null) throw new ModelNotFoundException("Модель с таким именем не найдена!");
+        return hooverModels;
     }
 }

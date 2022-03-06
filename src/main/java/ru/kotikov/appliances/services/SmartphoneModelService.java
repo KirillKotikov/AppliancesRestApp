@@ -9,6 +9,7 @@ import ru.kotikov.appliances.exceptions.ModelAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.models.SmartphoneModel;
 import ru.kotikov.appliances.models.Television;
+import ru.kotikov.appliances.models.TelevisionModel;
 import ru.kotikov.appliances.repository.SmartphoneModelRepo;
 import ru.kotikov.appliances.repository.SmartphoneRepo;
 
@@ -64,8 +65,12 @@ public class SmartphoneModelService {
         return id;
     }
 
-    public List<SmartphoneModel> searchForName(String name) {
-        return smartphoneModelRepo.findAll().stream().filter(x -> x.getName().equalsIgnoreCase(name))
+    public List<SmartphoneModel> searchForName(String name) throws ModelNotFoundException {
+        List<SmartphoneModel> smartphoneModels = smartphoneModelRepo.findAll().stream()
+                .filter(x -> x.getName().equalsIgnoreCase(name))
                 .map(SmartphoneModel::toModel).sorted().collect(Collectors.toList());
+        if (smartphoneModels == null) throw new ModelNotFoundException("Модель с таким именем не найдена!");
+        return smartphoneModels;
     }
 }
+

@@ -4,12 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.kotikov.appliances.entities.FridgeEntity;
 import ru.kotikov.appliances.entities.FridgeModelEntity;
-import ru.kotikov.appliances.entities.HooverModelEntity;
 import ru.kotikov.appliances.exceptions.ModelAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.models.FridgeModel;
 import ru.kotikov.appliances.models.HooverModel;
-import ru.kotikov.appliances.models.Television;
 import ru.kotikov.appliances.repository.FridgeModelRepo;
 import ru.kotikov.appliances.repository.FridgeRepo;
 
@@ -65,8 +63,11 @@ public class FridgeModelService {
         return id;
     }
 
-    public List<FridgeModel> searchForName(String name) {
-        return fridgeModelRepo.findAll().stream().filter(x -> x.getName().equalsIgnoreCase(name))
+    public List<FridgeModel> searchForName(String name) throws ModelNotFoundException {
+        List<FridgeModel> fridgeModels = fridgeModelRepo.findAll().stream()
+                .filter(x -> x.getName().equalsIgnoreCase(name))
                 .map(FridgeModel::toModel).sorted().collect(Collectors.toList());
+        if (fridgeModels == null) throw new ModelNotFoundException("Модель с таким именем не найдена!");
+        return fridgeModels;
     }
 }
