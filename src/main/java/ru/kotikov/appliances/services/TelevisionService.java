@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import ru.kotikov.appliances.entities.TelevisionEntity;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
+import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.models.Television;
+import ru.kotikov.appliances.models.TelevisionModel;
 import ru.kotikov.appliances.repository.TelevisionRepo;
 
 import java.util.List;
@@ -55,8 +57,11 @@ public class TelevisionService {
         return id;
     }
 
-    public List<Television> searchForName(String name) {
-        return televisionRepo.findAll().stream().filter(x -> x.getName().equalsIgnoreCase(name))
+    public List<Television> searchForName(String name) throws ApplianceNotFoundException {
+        List<Television> televisions = televisionRepo.findAll().stream()
+                .filter(x -> x.getName().equalsIgnoreCase(name))
                 .map(Television::toModel).sorted().collect(Collectors.toList());
+        if (televisions == null) throw new ApplianceNotFoundException("Техника с таким именем не найдена!");
+        return televisions;
     }
 }
