@@ -7,7 +7,7 @@ import ru.kotikov.appliances.entities.SmartphoneModelEntity;
 
 @Data
 @NoArgsConstructor
-public class SmartphoneModel extends AbstractApplianceModel{
+public class SmartphoneModel extends AbstractApplianceModel {
 
     private Integer volumeOfMemory;
     private Integer numbersOfCameras;
@@ -25,5 +25,10 @@ public class SmartphoneModel extends AbstractApplianceModel{
         model.setInStock(entity.getInStock());
 
         return model;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return 0;
     }
 }

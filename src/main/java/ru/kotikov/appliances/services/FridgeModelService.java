@@ -7,7 +7,7 @@ import ru.kotikov.appliances.entities.FridgeModelEntity;
 import ru.kotikov.appliances.exceptions.ModelAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.models.FridgeModel;
-import ru.kotikov.appliances.models.HooverModel;
+import ru.kotikov.appliances.models.TelevisionModel;
 import ru.kotikov.appliances.repository.FridgeModelRepo;
 import ru.kotikov.appliances.repository.FridgeRepo;
 
@@ -63,11 +63,19 @@ public class FridgeModelService {
         return id;
     }
 
-    public List<FridgeModel> searchForName(String name) throws ModelNotFoundException {
+    public List<FridgeModel> searchByName(String name) throws ModelNotFoundException {
         List<FridgeModel> fridgeModels = fridgeModelRepo.findAll().stream()
                 .filter(x -> x.getName().equalsIgnoreCase(name))
                 .map(FridgeModel::toModel).sorted().collect(Collectors.toList());
         if (fridgeModels.size() == 0) throw new ModelNotFoundException("Модель с таким именем не найдена!");
+        return fridgeModels;
+    }
+
+    public List<FridgeModel> searchByColor(String color) throws ModelNotFoundException {
+        List<FridgeModel> fridgeModels = fridgeModelRepo.findAll().stream()
+                .filter(x -> x.getColor().equalsIgnoreCase(color))
+                .map(FridgeModel::toModel).sorted().collect(Collectors.toList());
+        if (fridgeModels.size() == 0) throw new ModelNotFoundException("Модель с таким цветом не найдена!");
         return fridgeModels;
     }
 }

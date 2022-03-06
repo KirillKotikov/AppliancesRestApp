@@ -6,7 +6,6 @@ import ru.kotikov.appliances.entities.ComputerEntity;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
 import ru.kotikov.appliances.models.Computer;
-import ru.kotikov.appliances.models.Television;
 import ru.kotikov.appliances.repository.ComputerRepo;
 
 import java.util.List;
@@ -55,7 +54,7 @@ public class ComputerService {
         return id;
     }
 
-    public List<Computer> searchForName(String name) throws ApplianceNotFoundException {
+    public List<Computer> searchByName(String name) throws ApplianceNotFoundException {
         List<Computer> computers = computerRepo.findAll().stream()
                 .filter(x -> x.getName().equalsIgnoreCase(name))
                 .map(Computer::toModel).sorted().collect(Collectors.toList());

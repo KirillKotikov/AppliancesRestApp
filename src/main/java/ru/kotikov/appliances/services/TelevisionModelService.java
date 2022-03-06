@@ -63,11 +63,19 @@ public class TelevisionModelService {
         return id;
     }
 
-    public List<TelevisionModel> searchForName(String name) throws ModelNotFoundException {
+    public List<TelevisionModel> searchByName(String name) throws ModelNotFoundException {
         List<TelevisionModel> televisionModels = televisionModelRepo.findAll().stream()
                 .filter(x -> x.getName().equalsIgnoreCase(name))
                 .map(TelevisionModel::toModel).sorted().collect(Collectors.toList());
         if (televisionModels.size() == 0) throw new ModelNotFoundException("Модель с таким именем не найдена!");
+        return televisionModels;
+    }
+
+    public List<TelevisionModel> searchByColor(String color) throws ModelNotFoundException {
+        List<TelevisionModel> televisionModels = televisionModelRepo.findAll().stream()
+                .filter(x -> x.getColor().equalsIgnoreCase(color))
+                .map(TelevisionModel::toModel).sorted().collect(Collectors.toList());
+        if (televisionModels.size() == 0) throw new ModelNotFoundException("Модель с таким цветом не найдена!");
         return televisionModels;
     }
 }

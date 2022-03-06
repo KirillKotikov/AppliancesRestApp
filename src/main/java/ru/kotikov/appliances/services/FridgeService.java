@@ -6,7 +6,6 @@ import ru.kotikov.appliances.entities.FridgeEntity;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
 import ru.kotikov.appliances.models.Fridge;
-import ru.kotikov.appliances.models.Television;
 import ru.kotikov.appliances.repository.FridgeRepo;
 
 import java.util.List;
@@ -55,7 +54,7 @@ public class FridgeService {
         return "Холодильник с id = " + id + " успешно удалён!";
     }
 
-    public List<Fridge> searchForName(String name) throws ApplianceNotFoundException {
+    public List<Fridge> searchByName(String name) throws ApplianceNotFoundException {
         List<Fridge> fridges = fridgeRepo.findAll().stream()
                 .filter(x -> x.getName().equalsIgnoreCase(name))
                 .map(Fridge::toModel).sorted().collect(Collectors.toList());

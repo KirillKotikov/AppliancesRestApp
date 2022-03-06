@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
-public abstract class AbstractApplianceModel {
+public abstract class AbstractApplianceModel implements Comparable {
     private Long id;
     private String name;
     private Long serialNumber;

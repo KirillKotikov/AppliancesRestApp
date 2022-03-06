@@ -6,7 +6,6 @@ import ru.kotikov.appliances.entities.HooverEntity;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
 import ru.kotikov.appliances.models.Hoover;
-import ru.kotikov.appliances.models.Television;
 import ru.kotikov.appliances.repository.HooverRepo;
 
 import java.util.List;
@@ -55,7 +54,7 @@ public class HooverService {
             return "Пылесос с id = " + id + " успешно удалён!";
         }
 
-    public List<Hoover> searchForName(String name) throws ApplianceNotFoundException {
+    public List<Hoover> searchByName(String name) throws ApplianceNotFoundException {
         List<Hoover> hoovers = hooverRepo.findAll().stream()
                 .filter(x -> x.getName().equalsIgnoreCase(name))
                 .map(Hoover::toModel).sorted().collect(Collectors.toList());

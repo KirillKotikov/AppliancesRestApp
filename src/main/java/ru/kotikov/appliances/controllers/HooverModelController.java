@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.entities.HooverModelEntity;
-import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.services.HooverModelService;
 
@@ -68,10 +67,21 @@ public class HooverModelController {
             }
         }
 
-    @GetMapping("/search-for-name")
-    public ResponseEntity searchForName(@RequestParam String name) {
+    @GetMapping("/search-by-name")
+    public ResponseEntity searchByName(@RequestParam String name) {
         try {
-            return ResponseEntity.ok(hooverModelService.searchForName(name));
+            return ResponseEntity.ok(hooverModelService.searchByName(name));
+        } catch (ModelNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Произошла ошибка");
+        }
+    }
+
+    @GetMapping("/search-by-color")
+    public ResponseEntity searchByColor(@RequestParam String color) {
+        try {
+            return ResponseEntity.ok(hooverModelService.searchByColor(color));
         } catch (ModelNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {

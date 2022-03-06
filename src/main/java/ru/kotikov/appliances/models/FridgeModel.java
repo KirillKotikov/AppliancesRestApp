@@ -7,7 +7,7 @@ import ru.kotikov.appliances.entities.FridgeModelEntity;
 
 @Data
 @NoArgsConstructor
-public class FridgeModel extends AbstractApplianceModel{
+public class FridgeModel extends AbstractApplianceModel {
 
     private Integer numbersOfDoors;
     private String compressorType;
@@ -25,5 +25,10 @@ public class FridgeModel extends AbstractApplianceModel{
         model.setInStock(entity.getInStock());
 
         return model;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return 0;
     }
 }

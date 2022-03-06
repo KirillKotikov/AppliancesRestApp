@@ -67,10 +67,21 @@ public class FridgeModelController {
         }
     }
 
-    @GetMapping("/search-for-name")
-    public ResponseEntity searchForName(@RequestParam String name) {
+    @GetMapping("/search-by-name")
+    public ResponseEntity searchByName(@RequestParam String name) {
         try {
-            return ResponseEntity.ok(fridgeModelService.searchForName(name));
+            return ResponseEntity.ok(fridgeModelService.searchByName(name));
+        } catch (ModelNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Произошла ошибка");
+        }
+    }
+
+    @GetMapping("/search-by-color")
+    public ResponseEntity searchByColor(@RequestParam String color) {
+        try {
+            return ResponseEntity.ok(fridgeModelService.searchByColor(color));
         } catch (ModelNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {

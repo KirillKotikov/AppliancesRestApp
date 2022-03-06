@@ -6,7 +6,6 @@ import ru.kotikov.appliances.entities.SmartphoneEntity;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
 import ru.kotikov.appliances.models.Smartphone;
-import ru.kotikov.appliances.models.Television;
 import ru.kotikov.appliances.repository.SmartphoneRepo;
 
 import java.util.List;
@@ -55,7 +54,7 @@ public class SmartphoneService {
         return "Смартфон с id = " + id + " успешно удалён!";
     }
 
-    public List<Smartphone> searchForName(String name) throws ApplianceNotFoundException {
+    public List<Smartphone> searchByName(String name) throws ApplianceNotFoundException {
         List<Smartphone> smartphones = smartphoneRepo.findAll().stream()
                 .filter(x -> x.getName().equalsIgnoreCase(name))
                 .map(Smartphone::toModel).sorted().collect(Collectors.toList());

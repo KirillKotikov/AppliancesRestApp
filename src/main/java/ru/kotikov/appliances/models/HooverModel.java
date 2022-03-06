@@ -25,4 +25,9 @@ public class HooverModel extends AbstractApplianceModel{
 
         return model;
     }
+
+    @Override
+    public int compareTo(Object o) {
+        return 0;
+    }
 }

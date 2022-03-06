@@ -25,4 +25,10 @@ public class TelevisionModel extends AbstractApplianceModel{
 
         return model;
     }
+
+
+    @Override
+    public int compareTo(Object o) {
+        return 0;
+    }
 }

@@ -2,14 +2,11 @@ package ru.kotikov.appliances.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.kotikov.appliances.entities.FridgeModelEntity;
 import ru.kotikov.appliances.entities.SmartphoneEntity;
 import ru.kotikov.appliances.entities.SmartphoneModelEntity;
 import ru.kotikov.appliances.exceptions.ModelAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.models.SmartphoneModel;
-import ru.kotikov.appliances.models.Television;
-import ru.kotikov.appliances.models.TelevisionModel;
 import ru.kotikov.appliances.repository.SmartphoneModelRepo;
 import ru.kotikov.appliances.repository.SmartphoneRepo;
 
@@ -65,11 +62,19 @@ public class SmartphoneModelService {
         return id;
     }
 
-    public List<SmartphoneModel> searchForName(String name) throws ModelNotFoundException {
+    public List<SmartphoneModel> searchByName(String name) throws ModelNotFoundException {
         List<SmartphoneModel> smartphoneModels = smartphoneModelRepo.findAll().stream()
                 .filter(x -> x.getName().equalsIgnoreCase(name))
                 .map(SmartphoneModel::toModel).sorted().collect(Collectors.toList());
         if (smartphoneModels.size() == 0) throw new ModelNotFoundException("Модель с таким именем не найдена!");
+        return smartphoneModels;
+    }
+
+    public List<SmartphoneModel> searchByColor(String color) throws ModelNotFoundException {
+        List<SmartphoneModel> smartphoneModels = smartphoneModelRepo.findAll().stream()
+                .filter(x -> x.getColor().equalsIgnoreCase(color))
+                .map(SmartphoneModel::toModel).sorted().collect(Collectors.toList());
+        if (smartphoneModels.size() == 0) throw new ModelNotFoundException("Модель с таким цветом не найдена!");
         return smartphoneModels;
     }
 }

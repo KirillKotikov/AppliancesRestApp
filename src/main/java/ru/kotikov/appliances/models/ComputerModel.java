@@ -6,7 +6,7 @@ import ru.kotikov.appliances.entities.ComputerModelEntity;
 
 @Data
 @NoArgsConstructor
-public class ComputerModel extends AbstractApplianceModel{
+public class ComputerModel extends AbstractApplianceModel {
 
     private String category;
     private String processorType;
@@ -24,5 +24,10 @@ public class ComputerModel extends AbstractApplianceModel{
         model.setInStock(entity.getInStock());
 
         return model;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return 0;
     }
 }
