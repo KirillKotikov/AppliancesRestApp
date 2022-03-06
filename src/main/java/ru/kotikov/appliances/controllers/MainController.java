@@ -14,6 +14,7 @@ public class MainController {
     @Autowired
     private MainService mainService;
 
+    // Отображает полный список всей техники
     @GetMapping
     public ResponseEntity getAll() {
         try {

@@ -67,7 +67,7 @@ public class HooverModelService {
         List<HooverModel> hooverModels = hooverModelRepo.findAll().stream()
                 .filter(x -> x.getName().equalsIgnoreCase(name))
                 .map(HooverModel::toModel).sorted().collect(Collectors.toList());
-        if (hooverModels == null) throw new ModelNotFoundException("Модель с таким именем не найдена!");
+        if (hooverModels.size() == 0) throw new ModelNotFoundException("Модель с таким именем не найдена!");
         return hooverModels;
     }
 }

@@ -59,7 +59,7 @@ public class ComputerService {
         List<Computer> computers = computerRepo.findAll().stream()
                 .filter(x -> x.getName().equalsIgnoreCase(name))
                 .map(Computer::toModel).sorted().collect(Collectors.toList());
-        if (computers == null) throw new ApplianceNotFoundException("Техника с таким именем не найдена!");
+        if (computers.size() == 0) throw new ApplianceNotFoundException("Техника с таким именем не найдена!");
         return computers;
     }
 }

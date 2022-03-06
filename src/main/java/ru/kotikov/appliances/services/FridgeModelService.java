@@ -67,7 +67,7 @@ public class FridgeModelService {
         List<FridgeModel> fridgeModels = fridgeModelRepo.findAll().stream()
                 .filter(x -> x.getName().equalsIgnoreCase(name))
                 .map(FridgeModel::toModel).sorted().collect(Collectors.toList());
-        if (fridgeModels == null) throw new ModelNotFoundException("Модель с таким именем не найдена!");
+        if (fridgeModels.size() == 0) throw new ModelNotFoundException("Модель с таким именем не найдена!");
         return fridgeModels;
     }
 }

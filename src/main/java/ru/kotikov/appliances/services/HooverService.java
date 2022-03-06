@@ -59,7 +59,7 @@ public class HooverService {
         List<Hoover> hoovers = hooverRepo.findAll().stream()
                 .filter(x -> x.getName().equalsIgnoreCase(name))
                 .map(Hoover::toModel).sorted().collect(Collectors.toList());
-        if (hoovers == null) throw new ApplianceNotFoundException("Техника с таким именем не найдена!");
+        if (hoovers.size() == 0) throw new ApplianceNotFoundException("Техника с таким именем не найдена!");
         return hoovers;
     }
 }

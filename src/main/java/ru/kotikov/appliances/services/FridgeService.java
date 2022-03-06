@@ -59,7 +59,7 @@ public class FridgeService {
         List<Fridge> fridges = fridgeRepo.findAll().stream()
                 .filter(x -> x.getName().equalsIgnoreCase(name))
                 .map(Fridge::toModel).sorted().collect(Collectors.toList());
-        if (fridges == null) throw new ApplianceNotFoundException("Техника с таким именем не найдена!");
+        if (fridges.size() == 0) throw new ApplianceNotFoundException("Техника с таким именем не найдена!");
         return fridges;
     }
 }

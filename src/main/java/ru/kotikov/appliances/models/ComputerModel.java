@@ -9,7 +9,7 @@ import ru.kotikov.appliances.entities.ComputerModelEntity;
 public class ComputerModel extends AbstractApplianceModel{
 
     private String category;
-    private Integer numberOfProcessors;
+    private String processorType;
 
     public static ComputerModel toModel(ComputerModelEntity entity) {
         var model = new ComputerModel();
@@ -20,7 +20,7 @@ public class ComputerModel extends AbstractApplianceModel{
         model.setSize(entity.getSize());
         model.setPrice(entity.getPrice());
         model.setCategory(entity.getCategory());
-        model.setNumberOfProcessors(entity.getNumberOfProcessors());
+        model.setProcessorType(entity.getProcessorType());
         model.setInStock(entity.getInStock());
 
         return model;

@@ -30,7 +30,7 @@ public class ComputerModelEntity extends AbstractApplianceModelEntity{
     @Column(nullable = false)
     private String category;
     @Column(nullable = false)
-    private Integer numberOfProcessors;
+    private String processorType;
 
     @ManyToOne
     @JoinColumn(name = "computerId", nullable = false)

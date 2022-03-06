@@ -67,7 +67,7 @@ public class TelevisionModelService {
         List<TelevisionModel> televisionModels = televisionModelRepo.findAll().stream()
                 .filter(x -> x.getName().equalsIgnoreCase(name))
                 .map(TelevisionModel::toModel).sorted().collect(Collectors.toList());
-        if (televisionModels == null) throw new ModelNotFoundException("Модель с таким именем не найдена!");
+        if (televisionModels.size() == 0) throw new ModelNotFoundException("Модель с таким именем не найдена!");
         return televisionModels;
     }
 }

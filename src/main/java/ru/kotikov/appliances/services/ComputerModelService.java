@@ -68,7 +68,7 @@ public class ComputerModelService {
         List<ComputerModel> computerModels = computerModelRepo.findAll().stream()
                 .filter(x -> x.getName().equalsIgnoreCase(name))
                 .map(ComputerModel::toModel).sorted().collect(Collectors.toList());
-        if (computerModels == null) throw new ModelNotFoundException("Модель с таким именем не найдена!");
+        if (computerModels.size() == 0) throw new ModelNotFoundException("Модель с таким именем не найдена!");
         return computerModels;
     }
 }

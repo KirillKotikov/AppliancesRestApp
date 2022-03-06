@@ -61,7 +61,7 @@ public class TelevisionService {
         List<Television> televisions = televisionRepo.findAll().stream()
                 .filter(x -> x.getName().equalsIgnoreCase(name))
                 .map(Television::toModel).sorted().collect(Collectors.toList());
-        if (televisions == null) throw new ApplianceNotFoundException("Техника с таким именем не найдена!");
+        if (televisions.size() == 0) throw new ApplianceNotFoundException("Техника с таким именем не найдена!");
         return televisions;
     }
 }

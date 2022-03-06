@@ -69,7 +69,7 @@ public class SmartphoneModelService {
         List<SmartphoneModel> smartphoneModels = smartphoneModelRepo.findAll().stream()
                 .filter(x -> x.getName().equalsIgnoreCase(name))
                 .map(SmartphoneModel::toModel).sorted().collect(Collectors.toList());
-        if (smartphoneModels == null) throw new ModelNotFoundException("Модель с таким именем не найдена!");
+        if (smartphoneModels.size() == 0) throw new ModelNotFoundException("Модель с таким именем не найдена!");
         return smartphoneModels;
     }
 }
