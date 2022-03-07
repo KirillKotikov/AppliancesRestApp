@@ -24,7 +24,7 @@ public class FridgeModelEntity extends AbstractApplianceModelEntity {
     @Column(nullable = false)
     private String size;
     @Column(nullable = false)
-    private BigDecimal price;
+    private Double price;
     @Column(nullable = false)
     private Boolean inStock;
     @Column(nullable = false)

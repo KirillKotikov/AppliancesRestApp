@@ -7,7 +7,6 @@ import ru.kotikov.appliances.entities.ComputerModelEntity;
 import ru.kotikov.appliances.exceptions.ModelAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.models.ComputerModel;
-import ru.kotikov.appliances.models.TelevisionModel;
 import ru.kotikov.appliances.repository.ComputerModelRepo;
 import ru.kotikov.appliances.repository.ComputerRepo;
 
@@ -77,6 +76,14 @@ public class ComputerModelService {
                 .filter(x -> x.getColor().equalsIgnoreCase(color))
                 .map(ComputerModel::toModel).sorted().collect(Collectors.toList());
         if (computerModels.size() == 0) throw new ModelNotFoundException("Модель с таким цветом не найдена!");
+        return computerModels;
+    }
+
+    public List<ComputerModel> searchByPrice(Double low, Double high) throws ModelNotFoundException {
+        List<ComputerModel> computerModels = computerModelRepo.findAll().stream()
+                .map(ComputerModel::toModel).sorted()
+                .filter(x -> (x.getPrice() > low) && (high > x.getPrice())).collect(Collectors.toList());
+        if (computerModels.size() == 0) throw new ModelNotFoundException("Модель с такой ценой не найдена!");
         return computerModels;
     }
 }

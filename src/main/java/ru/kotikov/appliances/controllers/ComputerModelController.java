@@ -88,4 +88,15 @@ public class ComputerModelController {
             return ResponseEntity.badRequest().body("Произошла ошибка");
         }
     }
+
+    @GetMapping("/search-by-price")
+    public ResponseEntity searchByPrice(@RequestParam Double low, Double high) {
+        try {
+            return ResponseEntity.ok(computerModelService.searchByPrice(low, high));
+        } catch (ModelNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Произошла ошибка");
+        }
+    }
 }

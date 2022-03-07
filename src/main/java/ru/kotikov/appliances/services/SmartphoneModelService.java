@@ -77,5 +77,13 @@ public class SmartphoneModelService {
         if (smartphoneModels.size() == 0) throw new ModelNotFoundException("Модель с таким цветом не найдена!");
         return smartphoneModels;
     }
+
+    public List<SmartphoneModel> searchByPrice(Double low, Double high) throws ModelNotFoundException {
+        List<SmartphoneModel> smartphoneModels = smartphoneModelRepo.findAll().stream()
+                .map(SmartphoneModel::toModel).sorted()
+                .filter(x -> (x.getPrice() > low) && (high > x.getPrice())).collect(Collectors.toList());
+        if (smartphoneModels.size() == 0) throw new ModelNotFoundException("Модель с такой ценой не найдена!");
+        return smartphoneModels;
+    }
 }
 

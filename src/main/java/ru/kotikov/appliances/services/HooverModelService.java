@@ -7,7 +7,6 @@ import ru.kotikov.appliances.entities.HooverModelEntity;
 import ru.kotikov.appliances.exceptions.ModelAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.models.HooverModel;
-import ru.kotikov.appliances.models.TelevisionModel;
 import ru.kotikov.appliances.repository.HooverModelRepo;
 import ru.kotikov.appliances.repository.HooverRepo;
 
@@ -76,6 +75,14 @@ public class HooverModelService {
                 .filter(x -> x.getColor().equalsIgnoreCase(color))
                 .map(HooverModel::toModel).sorted().collect(Collectors.toList());
         if (hooverModels.size() == 0) throw new ModelNotFoundException("Модель с таким цветом не найдена!");
+        return hooverModels;
+    }
+
+    public List<HooverModel> searchByPrice(Double low, Double high) throws ModelNotFoundException {
+        List<HooverModel> hooverModels = hooverModelRepo.findAll().stream()
+                .map(HooverModel::toModel).sorted()
+                .filter(x -> (x.getPrice() > low) && (high > x.getPrice())).collect(Collectors.toList());
+        if (hooverModels.size() == 0) throw new ModelNotFoundException("Модель с такой ценой не найдена!");
         return hooverModels;
     }
 }

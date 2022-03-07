@@ -78,4 +78,12 @@ public class TelevisionModelService {
         if (televisionModels.size() == 0) throw new ModelNotFoundException("Модель с таким цветом не найдена!");
         return televisionModels;
     }
+
+    public List<TelevisionModel> searchByPrice(Double low, Double high) throws ModelNotFoundException {
+        List<TelevisionModel> televisionModels = televisionModelRepo.findAll().stream()
+                .map(TelevisionModel::toModel).sorted()
+                .filter(x -> (x.getPrice() > low) && (high > x.getPrice())).collect(Collectors.toList());
+        if (televisionModels.size() == 0) throw new ModelNotFoundException("Модель с такой ценой не найдена!");
+        return televisionModels;
+    }
 }

@@ -13,6 +13,6 @@ public abstract class AbstractApplianceModel implements Comparable {
     private Long serialNumber;
     private String color;
     private String size;
-    private BigDecimal price;
+    private Double price;
     private Boolean inStock;
 }
