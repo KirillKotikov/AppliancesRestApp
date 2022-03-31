@@ -6,12 +6,14 @@ import ru.kotikov.appliances.entities.TelevisionEntity;
 import ru.kotikov.appliances.entities.TelevisionModelEntity;
 import ru.kotikov.appliances.exceptions.ModelAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
+import ru.kotikov.appliances.models.ComputerModel;
 import ru.kotikov.appliances.models.TelevisionModel;
 import ru.kotikov.appliances.repository.TelevisionModelRepo;
 import ru.kotikov.appliances.repository.TelevisionRepo;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -85,5 +87,43 @@ public class TelevisionModelService {
                 .filter(x -> (x.getPrice() > low) && (high > x.getPrice())).collect(Collectors.toList());
         if (televisionModels.size() == 0) throw new ModelNotFoundException("Модель с такой ценой не найдена!");
         return televisionModels;
+    }
+
+    public List<TelevisionModel> searchWithFilters(
+            String name, Long serialNumber, String color, String size,
+            Double lowPrice, Double highPrice, String category, String technology, Boolean inStock
+    ) {
+        return televisionModelRepo.findAll().stream()
+                .map(TelevisionModel::toModel).sorted()
+                .filter(x -> {
+                    if (!name.trim().isEmpty()) return x.getName().equalsIgnoreCase(name);
+                    else return true;
+                })
+                .filter(x -> {
+                    if (!(serialNumber == 0)) return Objects.equals(x.getSerialNumber(), serialNumber);
+                    else return true;
+                })
+                .filter(x -> {
+                    if (!color.trim().isEmpty()) return x.getColor().equalsIgnoreCase(color);
+                    else return true;
+                })
+                .filter(x -> {
+                    if (!size.trim().isEmpty()) return x.getSize().equalsIgnoreCase(size);
+                    else return true;
+                })
+                .filter(x -> (x.getPrice() > lowPrice) && (highPrice > x.getPrice()))
+                .filter(x -> {
+                    if (!category.trim().isEmpty()) return x.getCategory().equalsIgnoreCase(category);
+                    else return true;
+                })
+                .filter(x -> {
+                    if (!technology.trim().isEmpty()) return x.getTechnology().equalsIgnoreCase(technology);
+                    else return true;
+                })
+                .filter(x -> {
+                    if (inStock) return x.getInStock().equals(true);
+                    else return true;
+                })
+                .collect(Collectors.toList());
     }
 }

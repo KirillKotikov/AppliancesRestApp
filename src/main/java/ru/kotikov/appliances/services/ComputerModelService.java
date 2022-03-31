@@ -12,6 +12,7 @@ import ru.kotikov.appliances.repository.ComputerRepo;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -85,5 +86,43 @@ public class ComputerModelService {
                 .filter(x -> (x.getPrice() > low) && (high > x.getPrice())).collect(Collectors.toList());
         if (computerModels.size() == 0) throw new ModelNotFoundException("Модель с такой ценой не найдена!");
         return computerModels;
+    }
+
+    public List<ComputerModel> searchWithFilters(
+            String name, Long serialNumber, String color, String size,
+            Double lowPrice, Double highPrice, String category, String processorType, Boolean inStock
+    ) {
+        return computerModelRepo.findAll().stream()
+                .map(ComputerModel::toModel).sorted()
+                .filter(x -> {
+                    if (!name.trim().isEmpty()) return x.getName().equalsIgnoreCase(name);
+                    else return true;
+                })
+                .filter(x -> {
+                    if (!(serialNumber == 0)) return Objects.equals(x.getSerialNumber(), serialNumber);
+                    else return true;
+                })
+                .filter(x -> {
+                    if (!color.trim().isEmpty()) return x.getColor().equalsIgnoreCase(color);
+                    else return true;
+                })
+                .filter(x -> {
+                    if (!size.trim().isEmpty()) return x.getSize().equalsIgnoreCase(size);
+                    else return true;
+                })
+                .filter(x -> (x.getPrice() > lowPrice) && (highPrice > x.getPrice()))
+                .filter(x -> {
+                    if (!category.trim().isEmpty()) return x.getCategory().equalsIgnoreCase(category);
+                    else return true;
+                })
+                .filter(x -> {
+                    if (!processorType.trim().isEmpty()) return x.getProcessorType().equalsIgnoreCase(processorType);
+                    else return true;
+                })
+                .filter(x -> {
+                    if (inStock) return x.getInStock().equals(true);
+                    else return true;
+                })
+                .collect(Collectors.toList());
     }
 }

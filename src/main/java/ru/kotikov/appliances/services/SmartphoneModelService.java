@@ -6,12 +6,14 @@ import ru.kotikov.appliances.entities.SmartphoneEntity;
 import ru.kotikov.appliances.entities.SmartphoneModelEntity;
 import ru.kotikov.appliances.exceptions.ModelAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
+import ru.kotikov.appliances.models.HooverModel;
 import ru.kotikov.appliances.models.SmartphoneModel;
 import ru.kotikov.appliances.repository.SmartphoneModelRepo;
 import ru.kotikov.appliances.repository.SmartphoneRepo;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -84,6 +86,44 @@ public class SmartphoneModelService {
                 .filter(x -> (x.getPrice() > low) && (high > x.getPrice())).collect(Collectors.toList());
         if (smartphoneModels.size() == 0) throw new ModelNotFoundException("Модель с такой ценой не найдена!");
         return smartphoneModels;
+    }
+
+    public List<SmartphoneModel> searchWithFilters(
+            String name, Long serialNumber, String color, String size,
+            Double lowPrice, Double highPrice, Integer volumeOfMemory, Integer numberOfCameras, Boolean inStock
+    ) {
+        return smartphoneModelRepo.findAll().stream()
+                .map(SmartphoneModel::toModel).sorted()
+                .filter(x -> {
+                    if (!name.trim().isEmpty()) return x.getName().equalsIgnoreCase(name);
+                    else return true;
+                })
+                .filter(x -> {
+                    if (!(serialNumber == 0)) return Objects.equals(x.getSerialNumber(), serialNumber);
+                    else return true;
+                })
+                .filter(x -> {
+                    if (!color.trim().isEmpty()) return x.getColor().equalsIgnoreCase(color);
+                    else return true;
+                })
+                .filter(x -> {
+                    if (!size.trim().isEmpty()) return x.getSize().equalsIgnoreCase(size);
+                    else return true;
+                })
+                .filter(x -> (x.getPrice() > lowPrice) && (highPrice > x.getPrice()))
+                .filter(x -> {
+                    if (!(volumeOfMemory == 0)) return x.getVolumeOfMemory().equals(volumeOfMemory);
+                    else return true;
+                })
+                .filter(x -> {
+                    if (!(numberOfCameras == 0)) return x.getNumbersOfCameras().equals(numberOfCameras);
+                    else return true;
+                })
+                .filter(x -> {
+                    if (inStock) return x.getInStock().equals(true);
+                    else return true;
+                })
+                .collect(Collectors.toList());
     }
 }
 
