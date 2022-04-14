@@ -1,13 +1,11 @@
 package ru.kotikov.appliances.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.kotikov.appliances.entities.TelevisionEntity;
-import ru.kotikov.appliances.entities.TelevisionModelEntity;
+import ru.kotikov.appliances.dto.TelevisionModelDto;
+import ru.kotikov.appliances.entity.TelevisionModelEntity;
+import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
 import ru.kotikov.appliances.exceptions.ModelAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
-import ru.kotikov.appliances.models.ComputerModel;
-import ru.kotikov.appliances.models.TelevisionModel;
 import ru.kotikov.appliances.repository.TelevisionModelRepo;
 import ru.kotikov.appliances.repository.TelevisionRepo;
 
@@ -16,85 +14,83 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static ru.kotikov.appliances.dto.TelevisionModelDto.toModelDto;
+import static ru.kotikov.appliances.entity.TelevisionModelEntity.toEntity;
+
 @Service
 public class TelevisionModelService {
 
-    @Autowired
-    private TelevisionModelRepo televisionModelRepo;
-    @Autowired
-    private TelevisionRepo televisionRepo;
+    private final TelevisionModelRepo televisionModelRepo;
+    private final TelevisionRepo televisionRepo;
 
-    public TelevisionModel create(TelevisionModelEntity televisionModel, Long televisionId) throws ModelAlreadyExistException {
-        if (televisionModelRepo.findByName(televisionModel.getName()) != null) {
-            throw new ModelAlreadyExistException("Модель телевизора с таким именем уже существует!");
-        }
-        TelevisionEntity television = televisionRepo.findById(televisionId).get();
-        televisionModel.setTelevision(television);
-        return TelevisionModel.toModel(televisionModelRepo.save(televisionModel));
+    public TelevisionModelService(TelevisionModelRepo televisionModelRepo, TelevisionRepo televisionRepo) {
+        this.televisionModelRepo = televisionModelRepo;
+        this.televisionRepo = televisionRepo;
     }
 
-    public List<TelevisionModel> getAll() {
+    public TelevisionModelDto create(TelevisionModelDto televisionModel, Long televisionId)
+            throws ModelAlreadyExistException, ApplianceNotFoundException {
+        if (televisionModelRepo.findByName(televisionModel.getName()) != null) {
+            throw new ModelAlreadyExistException("Модель телевизора с таким именем уже существует!");
+        } else if (televisionRepo.findById(televisionId).isPresent()) {
+            TelevisionModelEntity televisionModelEntity = toEntity(televisionModel);
+            televisionModelEntity.setTelevision(televisionRepo.findById(televisionId).get());
+            televisionModelRepo.save(televisionModelEntity);
+            return televisionModel;
+        } else
+            throw new ApplianceNotFoundException("Группа телеизоров с id = " + televisionId + " для добавления модели не найдена!");
+    }
+
+    public List<TelevisionModelDto> getAll() {
         return televisionModelRepo.findAll().stream()
                 .sorted((Comparator.comparing(TelevisionModelEntity::getPrice)))
                 .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
-                .map(TelevisionModel::toModel).collect(Collectors.toList());
+                .map(TelevisionModelDto::toModelDto).collect(Collectors.toList());
     }
 
-    public TelevisionModel getOne(Long id) throws ModelNotFoundException {
-        TelevisionModelEntity television = televisionModelRepo.findById(id).get();
-        if (television == null) {
-            throw new ModelNotFoundException("Модель телевизора не найдена!");
-        }
-        return TelevisionModel.toModel(television);
+    public TelevisionModelDto searchById(Long id) throws ModelNotFoundException {
+        if (televisionModelRepo.findById(id).isPresent()) {
+            return toModelDto(televisionModelRepo.findById(id).get());
+        } else throw new ModelNotFoundException("Модель телевизора с id = " + id + " не найдена!");
     }
 
-    public TelevisionModelEntity update(TelevisionModelEntity televisionModel) throws ModelNotFoundException {
-        TelevisionModelEntity television = televisionModelRepo.findById(televisionModel.getId()).get();
-        if (television == null) {
-            throw new ModelNotFoundException("Модель телевизора не найдена!");
-        }
-        return televisionModelRepo.saveAndFlush(televisionModel);
+    public TelevisionModelDto update(TelevisionModelDto televisionModel) throws ModelNotFoundException {
+        if (televisionModelRepo.findById(televisionModel.getId()).isPresent()) {
+            televisionModelRepo.saveAndFlush(toEntity(televisionModel));
+            return televisionModel;
+        } else throw new ModelNotFoundException("Модель телевизора для изменения (обновления) не найдена!");
     }
 
-    public Long delete(Long id) throws ModelNotFoundException {
-        TelevisionModelEntity television = televisionModelRepo.findById(id).get();
-        if (television == null) {
-            throw new ModelNotFoundException("Модель телевизора не найдена!");
-        }
-        televisionModelRepo.deleteById(id);
-        return id;
+    public void delete(Long id) throws ModelNotFoundException {
+        if (televisionModelRepo.findById(id).isPresent()) {
+            televisionModelRepo.deleteById(id);
+        } else throw new ModelNotFoundException("Модель телевизора с id = " + id + " для удаления не найдена!");
     }
 
-    public List<TelevisionModel> searchByName(String name) throws ModelNotFoundException {
-        List<TelevisionModel> televisionModels = televisionModelRepo.findAll().stream()
+    public List<TelevisionModelDto> searchByName(String name) throws ModelNotFoundException {
+        return televisionModelRepo.findAll().stream()
                 .filter(x -> x.getName().equalsIgnoreCase(name))
-                .map(TelevisionModel::toModel).sorted().collect(Collectors.toList());
-        if (televisionModels.size() == 0) throw new ModelNotFoundException("Модель с таким именем не найдена!");
-        return televisionModels;
+                .map(TelevisionModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<TelevisionModel> searchByColor(String color) throws ModelNotFoundException {
-        List<TelevisionModel> televisionModels = televisionModelRepo.findAll().stream()
+    public List<TelevisionModelDto> searchByColor(String color) throws ModelNotFoundException {
+        return televisionModelRepo.findAll().stream()
                 .filter(x -> x.getColor().equalsIgnoreCase(color))
-                .map(TelevisionModel::toModel).sorted().collect(Collectors.toList());
-        if (televisionModels.size() == 0) throw new ModelNotFoundException("Модель с таким цветом не найдена!");
-        return televisionModels;
+                .map(TelevisionModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<TelevisionModel> searchByPrice(Double low, Double high) throws ModelNotFoundException {
-        List<TelevisionModel> televisionModels = televisionModelRepo.findAll().stream()
-                .map(TelevisionModel::toModel).sorted()
+    public List<TelevisionModelDto> searchByPrice(Double low, Double high) throws ModelNotFoundException {
+        return televisionModelRepo.findAll().stream()
+                .map(TelevisionModelDto::toModelDto).sorted()
                 .filter(x -> (x.getPrice() > low) && (high > x.getPrice())).collect(Collectors.toList());
-        if (televisionModels.size() == 0) throw new ModelNotFoundException("Модель с такой ценой не найдена!");
-        return televisionModels;
     }
 
-    public List<TelevisionModel> searchWithFilters(
+    public List<TelevisionModelDto> searchWithFilters(
             String name, Long serialNumber, String color, String size,
             Double lowPrice, Double highPrice, String category, String technology, Boolean inStock
     ) {
         return televisionModelRepo.findAll().stream()
-                .map(TelevisionModel::toModel).sorted()
+                .map(TelevisionModelDto::toModelDto).sorted()
                 .filter(x -> {
                     if (!name.trim().isEmpty()) return x.getName().equalsIgnoreCase(name);
                     else return true;

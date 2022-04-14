@@ -1,13 +1,11 @@
 package ru.kotikov.appliances.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.kotikov.appliances.entities.SmartphoneEntity;
-import ru.kotikov.appliances.entities.SmartphoneModelEntity;
+import ru.kotikov.appliances.dto.SmartphoneModelDto;
+import ru.kotikov.appliances.entity.SmartphoneModelEntity;
+import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
 import ru.kotikov.appliances.exceptions.ModelAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
-import ru.kotikov.appliances.models.HooverModel;
-import ru.kotikov.appliances.models.SmartphoneModel;
 import ru.kotikov.appliances.repository.SmartphoneModelRepo;
 import ru.kotikov.appliances.repository.SmartphoneRepo;
 
@@ -16,84 +14,82 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static ru.kotikov.appliances.dto.SmartphoneModelDto.toModelDto;
+import static ru.kotikov.appliances.entity.SmartphoneModelEntity.toEntity;
+
 @Service
 public class SmartphoneModelService {
-    @Autowired
-    private SmartphoneModelRepo smartphoneModelRepo;
-    @Autowired
-    private SmartphoneRepo smartphoneRepo;
+    private final SmartphoneModelRepo smartphoneModelRepo;
+    private final SmartphoneRepo smartphoneRepo;
 
-    public SmartphoneModel create(SmartphoneModelEntity smartphoneModel, Long id) throws ModelAlreadyExistException {
-        if (smartphoneModelRepo.findByName(smartphoneModel.getName()) != null) {
-            throw new ModelAlreadyExistException("Модель смартфона с таким именем уже существует!");
-        }
-        SmartphoneEntity smartphone = smartphoneRepo.findById(id).get();
-        smartphoneModel.setSmartphone(smartphone);
-        return SmartphoneModel.toModel(smartphoneModelRepo.save(smartphoneModel));
+    public SmartphoneModelService(SmartphoneModelRepo smartphoneModelRepo, SmartphoneRepo smartphoneRepo) {
+        this.smartphoneModelRepo = smartphoneModelRepo;
+        this.smartphoneRepo = smartphoneRepo;
     }
 
-    public List<SmartphoneModel> getAll() {
+    public SmartphoneModelDto create(SmartphoneModelDto smartphoneModel, Long smartphoneId)
+            throws ModelAlreadyExistException, ApplianceNotFoundException {
+        if (smartphoneModelRepo.findByName(smartphoneModel.getName()) != null) {
+            throw new ModelAlreadyExistException("Модель смартфона с таким именем уже существует!");
+        } else if (smartphoneRepo.findById(smartphoneId).isPresent()) {
+            SmartphoneModelEntity smartphoneModelEntity = toEntity(smartphoneModel);
+            smartphoneModelEntity.setSmartphone(smartphoneRepo.findById(smartphoneId).get());
+            smartphoneModelRepo.save(smartphoneModelEntity);
+            return smartphoneModel;
+        } else
+            throw new ApplianceNotFoundException("Группа смартфонов с id = " + smartphoneId + " для добавления модели не найдена!");
+    }
+
+    public List<SmartphoneModelDto> getAll() {
         return smartphoneModelRepo.findAll().stream()
                 .sorted((Comparator.comparing(SmartphoneModelEntity::getPrice)))
                 .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
-                .map(SmartphoneModel::toModel).collect(Collectors.toList());
+                .map(SmartphoneModelDto::toModelDto).collect(Collectors.toList());
     }
 
-    public SmartphoneModel getOne(Long id) throws ModelNotFoundException {
-        SmartphoneModelEntity smartphoneModel = smartphoneModelRepo.findById(id).get();
-        if (smartphoneModel == null) {
-            throw new ModelNotFoundException("Модель смартфона не найдена!");
-        }
-        return SmartphoneModel.toModel(smartphoneModel);
+    public SmartphoneModelDto searchById(Long id) throws ModelNotFoundException {
+        if (smartphoneModelRepo.findById(id).isPresent()) {
+            return toModelDto(smartphoneModelRepo.findById(id).get());
+        } else throw new ModelNotFoundException("Модель смартфона c id = " + id + " не найдена!");
     }
 
-    public SmartphoneModelEntity update(SmartphoneModelEntity smartphoneModel) throws ModelNotFoundException {
-        SmartphoneModelEntity smartphoneModelEntity = smartphoneModelRepo.findById(smartphoneModel.getId()).get();
-        if (smartphoneModelEntity == null) {
-            throw new ModelNotFoundException("Модель смартфона не найдена!");
-        }
-        return smartphoneModelRepo.saveAndFlush(smartphoneModel);
+    public SmartphoneModelDto update(SmartphoneModelDto smartphoneModel) throws ModelNotFoundException {
+        if (smartphoneModelRepo.findById(smartphoneModel.getId()).isPresent()) {
+            smartphoneModelRepo.saveAndFlush(toEntity(smartphoneModel));
+            return smartphoneModel;
+        } else throw new ModelNotFoundException("Модель смартфона для изменения (обновления) не найдена!");
     }
 
-    public Long delete(Long id) throws ModelNotFoundException {
-        SmartphoneModelEntity smartphoneModelEntity = smartphoneModelRepo.findById(id).get();
-        if (smartphoneModelEntity == null) {
-            throw new ModelNotFoundException("Модель смартфона не найдена!");
-        }
-        smartphoneModelRepo.deleteById(id);
-        return id;
+    public void delete(Long id) throws ModelNotFoundException {
+        if (smartphoneModelRepo.findById(id).isPresent()) {
+            smartphoneModelRepo.deleteById(id);
+        } else throw new ModelNotFoundException("Модель смартфона с id = " + id + " для удаления не найдена!");
     }
 
-    public List<SmartphoneModel> searchByName(String name) throws ModelNotFoundException {
-        List<SmartphoneModel> smartphoneModels = smartphoneModelRepo.findAll().stream()
+    public List<SmartphoneModelDto> searchByName(String name) throws ModelNotFoundException {
+        return smartphoneModelRepo.findAll().stream()
                 .filter(x -> x.getName().equalsIgnoreCase(name))
-                .map(SmartphoneModel::toModel).sorted().collect(Collectors.toList());
-        if (smartphoneModels.size() == 0) throw new ModelNotFoundException("Модель с таким именем не найдена!");
-        return smartphoneModels;
+                .map(SmartphoneModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<SmartphoneModel> searchByColor(String color) throws ModelNotFoundException {
-        List<SmartphoneModel> smartphoneModels = smartphoneModelRepo.findAll().stream()
+    public List<SmartphoneModelDto> searchByColor(String color) throws ModelNotFoundException {
+        return smartphoneModelRepo.findAll().stream()
                 .filter(x -> x.getColor().equalsIgnoreCase(color))
-                .map(SmartphoneModel::toModel).sorted().collect(Collectors.toList());
-        if (smartphoneModels.size() == 0) throw new ModelNotFoundException("Модель с таким цветом не найдена!");
-        return smartphoneModels;
+                .map(SmartphoneModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<SmartphoneModel> searchByPrice(Double low, Double high) throws ModelNotFoundException {
-        List<SmartphoneModel> smartphoneModels = smartphoneModelRepo.findAll().stream()
-                .map(SmartphoneModel::toModel).sorted()
+    public List<SmartphoneModelDto> searchByPrice(Double low, Double high) throws ModelNotFoundException {
+        return smartphoneModelRepo.findAll().stream()
+                .map(SmartphoneModelDto::toModelDto).sorted()
                 .filter(x -> (x.getPrice() > low) && (high > x.getPrice())).collect(Collectors.toList());
-        if (smartphoneModels.size() == 0) throw new ModelNotFoundException("Модель с такой ценой не найдена!");
-        return smartphoneModels;
     }
 
-    public List<SmartphoneModel> searchWithFilters(
+    public List<SmartphoneModelDto> searchWithFilters(
             String name, Long serialNumber, String color, String size,
             Double lowPrice, Double highPrice, Integer volumeOfMemory, Integer numberOfCameras, Boolean inStock
     ) {
         return smartphoneModelRepo.findAll().stream()
-                .map(SmartphoneModel::toModel).sorted()
+                .map(SmartphoneModelDto::toModelDto).sorted()
                 .filter(x -> {
                     if (!name.trim().isEmpty()) return x.getName().equalsIgnoreCase(name);
                     else return true;

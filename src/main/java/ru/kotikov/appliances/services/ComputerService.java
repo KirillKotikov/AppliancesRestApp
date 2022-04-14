@@ -1,64 +1,61 @@
 package ru.kotikov.appliances.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.kotikov.appliances.entities.ComputerEntity;
+import ru.kotikov.appliances.dto.ApplianceDto;
+import ru.kotikov.appliances.entity.AbstractApplianceEntity;
+import ru.kotikov.appliances.entity.ComputerEntity;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
-import ru.kotikov.appliances.models.Computer;
 import ru.kotikov.appliances.repository.ComputerRepo;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.kotikov.appliances.dto.ApplianceDto.toDto;
+
 @Service
 public class ComputerService {
 
-    @Autowired
-    private ComputerRepo computerRepo;
+    private final ComputerRepo computerRepo;
 
-    public Computer create(ComputerEntity computer) throws ApplianceAlreadyExistException {
+    public ComputerService(ComputerRepo computerRepo) {
+        this.computerRepo = computerRepo;
+    }
+
+    public ApplianceDto create(ApplianceDto computer) throws ApplianceAlreadyExistException {
         if (computerRepo.findByName(computer.getName()) != null) {
-            throw new ApplianceAlreadyExistException("Компьютер с таким именем уже существует!");
+            throw new ApplianceAlreadyExistException("Группа компьютеров с таким именем уже существует!");
         }
-        return Computer.toModel(computerRepo.save(computer));
+        return toDto(computerRepo.save(ComputerEntity.toEntity(computer)));
     }
 
-    public List<Computer> getAll() {
+    public List<ApplianceDto> getAll() {
         return computerRepo.findAll().stream().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
-                .map(Computer::toModel).collect(Collectors.toList());
+                .map(ApplianceDto::toDto).collect(Collectors.toList());
     }
 
-    public Computer getOne(Long id) throws ApplianceNotFoundException {
-        ComputerEntity computerEntity = computerRepo.findById(id).get();
-        if (computerEntity == null) {
-            throw new ApplianceNotFoundException("Компьютер не найден!");
-        }
-        return Computer.toModel(computerEntity);
+    public ApplianceDto searchById(Long id) throws ApplianceNotFoundException {
+        if (computerRepo.findById(id).isPresent()) {
+            return toDto(computerRepo.findById(id).get());
+        } else throw new ApplianceNotFoundException("Группа компьютеров с id = " + id + " не найдена!");
     }
 
-    public ComputerEntity update(ComputerEntity computer) throws ApplianceNotFoundException {
-        ComputerEntity computerEntity = computerRepo.findById(computer.getId()).get();
-        if (computerEntity == null) {
-            throw new ApplianceNotFoundException("Компьютер не найден!");
-        }
-        return computerRepo.saveAndFlush(computer);
+    public ApplianceDto update(ApplianceDto computer) throws ApplianceNotFoundException {
+        if (computerRepo.findById(computer.getId()).isPresent()) {
+            computerRepo.saveAndFlush(ComputerEntity.toEntity(computer));
+            return computer;
+        } else throw new ApplianceNotFoundException("Группа компьютеров для изменения (обновления) не найдена!");
     }
 
-    public Long delete(Long id) throws ApplianceNotFoundException {
-        ComputerEntity computerEntity = computerRepo.findById(id).get();
-        if (computerEntity == null) {
-            throw new ApplianceNotFoundException("Компьютер не найден!");
-        }
-        computerRepo.deleteById(id);
-        return id;
+    public void delete(Long id) throws ApplianceNotFoundException {
+        if (computerRepo.findById(id).isPresent()) {
+            computerRepo.deleteById(id);
+        } else throw new ApplianceNotFoundException("Группа компьютеров с id = " + id + " для удаления не найдена!");
     }
 
-    public List<Computer> searchByName(String name) throws ApplianceNotFoundException {
-        List<Computer> computers = computerRepo.findAll().stream()
+    public List<ApplianceDto> searchByName(String name) throws ApplianceNotFoundException {
+        return computerRepo.findAll().stream()
                 .filter(x -> x.getName().equalsIgnoreCase(name))
-                .map(Computer::toModel).sorted().collect(Collectors.toList());
-        if (computers.size() == 0) throw new ApplianceNotFoundException("Техника с таким именем не найдена!");
-        return computers;
+                .map(ApplianceDto::toDto).sorted().collect(Collectors.toList());
     }
 }

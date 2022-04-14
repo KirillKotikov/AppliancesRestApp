@@ -1,128 +1,95 @@
 package ru.kotikov.appliances.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.kotikov.appliances.entities.ComputerEntity;
-import ru.kotikov.appliances.entities.ComputerModelEntity;
+import ru.kotikov.appliances.dto.ComputerModelDto;
+import ru.kotikov.appliances.entity.ComputerModelEntity;
+import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
 import ru.kotikov.appliances.exceptions.ModelAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
-import ru.kotikov.appliances.models.ComputerModel;
 import ru.kotikov.appliances.repository.ComputerModelRepo;
 import ru.kotikov.appliances.repository.ComputerRepo;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static ru.kotikov.appliances.dto.ComputerModelDto.toModelDto;
+import static ru.kotikov.appliances.entity.ComputerModelEntity.toEntity;
 
 @Service
 public class ComputerModelService {
 
-    @Autowired
-    private ComputerModelRepo computerModelRepo;
-    @Autowired
-    private ComputerRepo computerRepo;
+    private final ComputerModelRepo computerModelRepo;
+    private final ComputerRepo computerRepo;
 
-    public ComputerModel create(ComputerModelEntity computerModelEntity, Long computerId) throws ModelAlreadyExistException {
-        if (computerModelRepo.findByName(computerModelEntity.getName()) != null) {
+    public ComputerModelService(ComputerModelRepo computerModelRepo, ComputerRepo computerRepo) {
+        this.computerModelRepo = computerModelRepo;
+        this.computerRepo = computerRepo;
+    }
+
+    public ComputerModelDto create(ComputerModelDto computerModel, Long computerId)
+            throws ModelAlreadyExistException, ApplianceNotFoundException {
+        if (computerModelRepo.getByNameContainingIgnoreCase(computerModel.getName()) != null) {
             throw new ModelAlreadyExistException("Модель компьютера с таким именем уже существует!");
-        }
-        ComputerEntity computerEntity = computerRepo.findById(computerId).get();
-        computerModelEntity.setComputer(computerEntity);
-        return ComputerModel.toModel(computerModelRepo.save(computerModelEntity));
+        } else if (computerRepo.findById(computerId).isPresent()) {
+            ComputerModelEntity computerModelEntity = toEntity(computerModel);
+            computerModelEntity.setComputer(computerRepo.findById(computerId).get());
+            computerModelRepo.save(computerModelEntity);
+            return computerModel;
+        } else
+            throw new ApplianceNotFoundException("Группа компьютеров с id = " + computerId + " для добавления модели не найдена!");
     }
 
-    public List<ComputerModel> getAll() {
+    public List<ComputerModelDto> getAll() {
         return computerModelRepo.findAll().stream()
-                .sorted((Comparator.comparing(ComputerModelEntity::getPrice)))
-                .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
-                .map(ComputerModel::toModel).collect(Collectors.toList());
+                .map(ComputerModelDto::toModelDto).collect(Collectors.toList());
+
     }
 
-    public ComputerModel getOne(Long id) throws ModelNotFoundException {
-        ComputerModelEntity computerModelEntity = computerModelRepo.findById(id).get();
-        if (computerModelEntity == null) {
-            throw new ModelNotFoundException("Модель компьютера не найдена!");
-        }
-        return ComputerModel.toModel(computerModelEntity);
+    public ComputerModelDto searchById(Long id) throws ModelNotFoundException {
+        if (computerModelRepo.findById(id).isPresent()) {
+            return toModelDto(computerModelRepo.findById(id).get());
+        } else throw new ModelNotFoundException("Модель компьютера с id = " + id + " не найдена!");
     }
 
-    public ComputerModelEntity update(ComputerModelEntity computerModelEntity) throws ModelNotFoundException {
-        ComputerModelEntity computerModel = computerModelRepo.findById(computerModelEntity.getId()).get();
-        if (computerModel == null) {
-            throw new ModelNotFoundException("Модель компьютера не найдена!");
-        }
-        return computerModelRepo.saveAndFlush(computerModelEntity);
+    public ComputerModelDto update(ComputerModelDto computerModel) throws ModelNotFoundException {
+        if (computerModelRepo.findById(computerModel.getId()).isPresent()) {
+            computerModelRepo.saveAndFlush(toEntity(computerModel));
+            return computerModel;
+        } else throw new ModelNotFoundException("Модель компьютера для изменения (обновления) не найдена!");
     }
 
-    public Long delete(Long id) throws ModelNotFoundException {
-        ComputerModelEntity computerModelEntity = computerModelRepo.findById(id).get();
-        if (computerModelEntity == null) {
-            throw new ModelNotFoundException("Модель компьютера не найдена!");
-        }
-        computerModelRepo.deleteById(id);
-        return id;
+    public void delete(Long id) throws ModelNotFoundException {
+        if (computerModelRepo.findById(id).isPresent()) {
+            computerModelRepo.deleteById(id);
+        } else throw new ModelNotFoundException("Модель компьютера с id = " + id + " для удаления не найдена!");
     }
 
-    public List<ComputerModel> searchByName(String name) throws ModelNotFoundException {
-        List<ComputerModel> computerModels = computerModelRepo.findAll().stream()
-                .filter(x -> x.getName().equalsIgnoreCase(name))
-                .map(ComputerModel::toModel).sorted().collect(Collectors.toList());
-        if (computerModels.size() == 0) throw new ModelNotFoundException("Модель с таким именем не найдена!");
-        return computerModels;
+    public List<ComputerModelDto> searchByName(String name) throws ModelNotFoundException {
+        return computerModelRepo.getByNameContainingIgnoreCase(name).stream()
+                .map(ComputerModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<ComputerModel> searchByColor(String color) throws ModelNotFoundException {
-        List<ComputerModel> computerModels = computerModelRepo.findAll().stream()
-                .filter(x -> x.getColor().equalsIgnoreCase(color))
-                .map(ComputerModel::toModel).sorted().collect(Collectors.toList());
-        if (computerModels.size() == 0) throw new ModelNotFoundException("Модель с таким цветом не найдена!");
-        return computerModels;
+    public List<ComputerModelDto> searchByColor(String color) throws ModelNotFoundException {
+        return computerModelRepo.getByColorContainingIgnoreCase(color).stream()
+                .map(ComputerModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<ComputerModel> searchByPrice(Double low, Double high) throws ModelNotFoundException {
-        List<ComputerModel> computerModels = computerModelRepo.findAll().stream()
-                .map(ComputerModel::toModel).sorted()
-                .filter(x -> (x.getPrice() > low) && (high > x.getPrice())).collect(Collectors.toList());
-        if (computerModels.size() == 0) throw new ModelNotFoundException("Модель с такой ценой не найдена!");
-        return computerModels;
+    public List<ComputerModelDto> searchByPrice(Double low, Double high) throws ModelNotFoundException {
+        return computerModelRepo.getByPriceGreaterThanAndPriceLessThan(low, high).stream()
+                .map(ComputerModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<ComputerModel> searchWithFilters(
+    public List<ComputerModelDto> searchWithFilters(
             String name, Long serialNumber, String color, String size,
             Double lowPrice, Double highPrice, String category, String processorType, Boolean inStock
     ) {
-        return computerModelRepo.findAll().stream()
-                .map(ComputerModel::toModel).sorted()
-                .filter(x -> {
-                    if (!name.trim().isEmpty()) return x.getName().equalsIgnoreCase(name);
-                    else return true;
-                })
-                .filter(x -> {
-                    if (!(serialNumber == 0)) return Objects.equals(x.getSerialNumber(), serialNumber);
-                    else return true;
-                })
-                .filter(x -> {
-                    if (!color.trim().isEmpty()) return x.getColor().equalsIgnoreCase(color);
-                    else return true;
-                })
-                .filter(x -> {
-                    if (!size.trim().isEmpty()) return x.getSize().equalsIgnoreCase(size);
-                    else return true;
-                })
-                .filter(x -> (x.getPrice() > lowPrice) && (highPrice > x.getPrice()))
-                .filter(x -> {
-                    if (!category.trim().isEmpty()) return x.getCategory().equalsIgnoreCase(category);
-                    else return true;
-                })
-                .filter(x -> {
-                    if (!processorType.trim().isEmpty()) return x.getProcessorType().equalsIgnoreCase(processorType);
-                    else return true;
-                })
-                .filter(x -> {
-                    if (inStock) return x.getInStock().equals(true);
-                    else return true;
-                })
-                .collect(Collectors.toList());
+        if (name != null) name = name.toUpperCase();
+        if (color != null) color = color.toUpperCase();
+        if (size != null) size = size.toUpperCase();
+        if (category != null) category = category.toUpperCase();
+        if (processorType != null) processorType = processorType.toUpperCase();
+        return computerModelRepo.getByParams(
+                name, serialNumber, color, size, lowPrice, highPrice, category, processorType, inStock
+        ).stream().map(ComputerModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 }

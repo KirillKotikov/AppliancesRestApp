@@ -1,64 +1,60 @@
 package ru.kotikov.appliances.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.kotikov.appliances.entities.HooverEntity;
+import ru.kotikov.appliances.dto.ApplianceDto;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
-import ru.kotikov.appliances.models.Hoover;
 import ru.kotikov.appliances.repository.HooverRepo;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.kotikov.appliances.dto.ApplianceDto.toDto;
+import static ru.kotikov.appliances.entity.HooverEntity.toEntity;
+
 @Service
 public class HooverService {
 
-        @Autowired
-        private HooverRepo hooverRepo;
+    private final HooverRepo hooverRepo;
 
-        public Hoover create(HooverEntity hoover) throws ApplianceAlreadyExistException {
-            if (hooverRepo.findByName(hoover.getName()) != null) {
-                throw new ApplianceAlreadyExistException("Пылесос с таким именем уже существует!");
-            }
-            return Hoover.toModel(hooverRepo.save(hoover));
-        }
+    public HooverService(HooverRepo hooverRepo) {
+        this.hooverRepo = hooverRepo;
+    }
 
-        public List<Hoover> getAll() {
-            return hooverRepo.findAll().stream().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
-                    .map(Hoover::toModel).collect(Collectors.toList());
-        }
+    public ApplianceDto create(ApplianceDto hoover) throws ApplianceAlreadyExistException {
+        if (hooverRepo.findByName(hoover.getName()) != null) {
+            throw new ApplianceAlreadyExistException("Группа пылесосов с таким именем уже существует!");
+        } else return toDto(hooverRepo.save(toEntity(hoover)));
+    }
 
-        public Hoover getOne(Long id) throws ApplianceNotFoundException {
-            HooverEntity hoover = hooverRepo.findById(id).get();
-            if (hoover == null) {
-                throw new ApplianceNotFoundException("Пылесос не найден!");
-            }
-            return Hoover.toModel(hoover);
-        }
+    public List<ApplianceDto> getAll() {
+        return hooverRepo.findAll().stream().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
+                .map(ApplianceDto::toDto).collect(Collectors.toList());
+    }
 
-        public HooverEntity update(HooverEntity hoover) throws ApplianceNotFoundException {
-            HooverEntity hooverEntity = hooverRepo.findById(hoover.getId()).get();
-            if (hooverEntity == null) {
-                throw new ApplianceNotFoundException("Пылесос не найден!");
-            }
-            return hooverRepo.saveAndFlush(hoover);
-        }
+    public ApplianceDto searchById(Long id) throws ApplianceNotFoundException {
+        if (hooverRepo.findById(id).isPresent()) {
+            return toDto(hooverRepo.findById(id).get());
+        } else throw new ApplianceNotFoundException("Группа пылесосов с id = " + id + " для удаления не найдена!");
+    }
 
-        public String delete(Long id) throws ApplianceNotFoundException {
-            HooverEntity hoover = hooverRepo.findById(id).get();
-            if (hoover == null) {
-                throw new ApplianceNotFoundException("Пылесос не найден!");
-            }
+    public ApplianceDto update(ApplianceDto hoover) throws ApplianceNotFoundException {
+        if (hooverRepo.findById(hoover.getId()).isPresent()) {
+            hooverRepo.saveAndFlush(toEntity(hoover));
+            return hoover;
+        } else throw new ApplianceNotFoundException("Группа пылесосов не найдена!");
+    }
+
+    public String delete(Long id) throws ApplianceNotFoundException {
+        if (hooverRepo.findById(id).isPresent()) {
             hooverRepo.deleteById(id);
-            return "Пылесос с id = " + id + " успешно удалён!";
         }
+        throw new ApplianceNotFoundException("Группа пылесосов с id = " + id + " для удаления не найдена!");
+    }
 
-    public List<Hoover> searchByName(String name) throws ApplianceNotFoundException {
-        List<Hoover> hoovers = hooverRepo.findAll().stream()
+    public List<ApplianceDto> searchByName(String name) throws ApplianceNotFoundException {
+        return hooverRepo.findAll().stream()
                 .filter(x -> x.getName().equalsIgnoreCase(name))
-                .map(Hoover::toModel).sorted().collect(Collectors.toList());
-        if (hoovers.size() == 0) throw new ApplianceNotFoundException("Техника с таким именем не найдена!");
-        return hoovers;
+                .map(ApplianceDto::toDto).sorted().collect(Collectors.toList());
     }
 }

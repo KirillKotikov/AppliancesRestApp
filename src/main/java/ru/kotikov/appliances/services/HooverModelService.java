@@ -1,13 +1,11 @@
 package ru.kotikov.appliances.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.kotikov.appliances.entities.HooverEntity;
-import ru.kotikov.appliances.entities.HooverModelEntity;
+import ru.kotikov.appliances.dto.HooverModelDto;
+import ru.kotikov.appliances.entity.HooverModelEntity;
+import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
 import ru.kotikov.appliances.exceptions.ModelAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
-import ru.kotikov.appliances.models.FridgeModel;
-import ru.kotikov.appliances.models.HooverModel;
 import ru.kotikov.appliances.repository.HooverModelRepo;
 import ru.kotikov.appliances.repository.HooverRepo;
 
@@ -16,84 +14,82 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static ru.kotikov.appliances.dto.HooverModelDto.toModelDto;
+import static ru.kotikov.appliances.entity.HooverModelEntity.toEntity;
+
 @Service
 public class HooverModelService {
-    @Autowired
-    private HooverModelRepo hooverModelRepo;
-    @Autowired
-    private HooverRepo hooverRepo;
+    private final HooverModelRepo hooverModelRepo;
+    private final HooverRepo hooverRepo;
 
-    public HooverModel create(HooverModelEntity hooverModel, Long id) throws ModelAlreadyExistException {
-        if (hooverModelRepo.findByName(hooverModel.getName()) != null) {
-            throw new ModelAlreadyExistException("Модель пылесоса с таким именем уже существует!");
-        }
-        HooverEntity hoover = hooverRepo.findById(id).get();
-        hooverModel.setHoover(hoover);
-        return HooverModel.toModel(hooverModelRepo.save(hooverModel));
+    public HooverModelService(HooverModelRepo hooverModelRepo, HooverRepo hooverRepo) {
+        this.hooverModelRepo = hooverModelRepo;
+        this.hooverRepo = hooverRepo;
     }
 
-    public List<HooverModel> getAll() {
+    public HooverModelDto create(HooverModelDto hooverModel, Long hooverId)
+            throws ModelAlreadyExistException, ApplianceNotFoundException {
+        if (hooverModelRepo.findByName(hooverModel.getName()) != null) {
+            throw new ModelAlreadyExistException("Модель пылесоса с таким именем уже существует!");
+        } else if (hooverRepo.findById(hooverId).isPresent()) {
+            HooverModelEntity hooverModelEntity = toEntity(hooverModel);
+            hooverModelEntity.setHoover(hooverRepo.findById(hooverId).get());
+            hooverModelRepo.save(hooverModelEntity);
+            return hooverModel;
+        } else
+            throw new ApplianceNotFoundException("Группа пылесосов с id = " + hooverId + " для добавления модели не найдена!");
+    }
+
+    public List<HooverModelDto> getAll() {
         return hooverModelRepo.findAll().stream()
                 .sorted((Comparator.comparing(HooverModelEntity::getPrice)))
                 .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
-                .map(HooverModel::toModel).collect(Collectors.toList());
+                .map(HooverModelDto::toModelDto).collect(Collectors.toList());
     }
 
-    public HooverModel getOne(Long id) throws ModelNotFoundException {
-        HooverModelEntity hooverModel = hooverModelRepo.findById(id).get();
-        if (hooverModel == null) {
-            throw new ModelNotFoundException("Модель пылесоса не найдена!");
-        }
-        return HooverModel.toModel(hooverModel);
+    public HooverModelDto searchById(Long id) throws ModelNotFoundException {
+        if (hooverModelRepo.findById(id).isPresent()) {
+            return toModelDto(hooverModelRepo.findById(id).get());
+        } else throw new ModelNotFoundException("Модель пылесоса с id = " + id + " не найдена!");
     }
 
-    public HooverModelEntity update(HooverModelEntity hooverModel) throws ModelNotFoundException {
-        HooverModelEntity hooverModelEntity = hooverModelRepo.findById(hooverModel.getId()).get();
-        if (hooverModelEntity == null) {
-            throw new ModelNotFoundException("Модель пылесоса не найдена!");
-        }
-        return hooverModelRepo.saveAndFlush(hooverModel);
+    public HooverModelDto update(HooverModelDto hooverModel) throws ModelNotFoundException {
+        if (hooverModelRepo.findById(hooverModel.getId()).isPresent()) {
+            hooverModelRepo.saveAndFlush(toEntity(hooverModel));
+            return hooverModel;
+        } else throw new ModelNotFoundException("Модель пылесоса для изменения (обновления) не найдена!");
     }
 
-    public Long delete(Long id) throws ModelNotFoundException {
-        HooverModelEntity hoover = hooverModelRepo.findById(id).get();
-        if (hoover == null) {
-            throw new ModelNotFoundException("Модель пылесоса не найдена!");
-        }
-        hooverModelRepo.deleteById(id);
-        return id;
+    public void delete(Long id) throws ModelNotFoundException {
+        if (hooverModelRepo.findById(id).isPresent()) {
+            hooverModelRepo.deleteById(id);
+        } else throw new ModelNotFoundException("Модель пылесоса с id = " + id + " для удаления не найдена!");
     }
 
-    public List<HooverModel> searchByName(String name) throws ModelNotFoundException {
-        List<HooverModel> hooverModels = hooverModelRepo.findAll().stream()
+    public List<HooverModelDto> searchByName(String name) throws ModelNotFoundException {
+        return hooverModelRepo.findAll().stream()
                 .filter(x -> x.getName().equalsIgnoreCase(name))
-                .map(HooverModel::toModel).sorted().collect(Collectors.toList());
-        if (hooverModels.size() == 0) throw new ModelNotFoundException("Модель с таким именем не найдена!");
-        return hooverModels;
+                .map(HooverModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<HooverModel> searchByColor(String color) throws ModelNotFoundException {
-        List<HooverModel> hooverModels = hooverModelRepo.findAll().stream()
+    public List<HooverModelDto> searchByColor(String color) throws ModelNotFoundException {
+        return hooverModelRepo.findAll().stream()
                 .filter(x -> x.getColor().equalsIgnoreCase(color))
-                .map(HooverModel::toModel).sorted().collect(Collectors.toList());
-        if (hooverModels.size() == 0) throw new ModelNotFoundException("Модель с таким цветом не найдена!");
-        return hooverModels;
+                .map(HooverModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<HooverModel> searchByPrice(Double low, Double high) throws ModelNotFoundException {
-        List<HooverModel> hooverModels = hooverModelRepo.findAll().stream()
-                .map(HooverModel::toModel).sorted()
+    public List<HooverModelDto> searchByPrice(Double low, Double high) throws ModelNotFoundException {
+        return hooverModelRepo.findAll().stream()
+                .map(HooverModelDto::toModelDto).sorted()
                 .filter(x -> (x.getPrice() > low) && (high > x.getPrice())).collect(Collectors.toList());
-        if (hooverModels.size() == 0) throw new ModelNotFoundException("Модель с такой ценой не найдена!");
-        return hooverModels;
     }
 
-    public List<HooverModel> searchWithFilters(
+    public List<HooverModelDto> searchWithFilters(
             String name, Long serialNumber, String color, String size,
             Double lowPrice, Double highPrice, Integer dustContainerVolume, Integer numberOfModes, Boolean inStock
     ) {
         return hooverModelRepo.findAll().stream()
-                .map(HooverModel::toModel).sorted()
+                .map(HooverModelDto::toModelDto).sorted()
                 .filter(x -> {
                     if (!name.trim().isEmpty()) return x.getName().equalsIgnoreCase(name);
                     else return true;

@@ -1,64 +1,61 @@
 package ru.kotikov.appliances.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.kotikov.appliances.entities.SmartphoneEntity;
+import ru.kotikov.appliances.dto.ApplianceDto;
+import ru.kotikov.appliances.entity.SmartphoneEntity;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
-import ru.kotikov.appliances.models.Smartphone;
 import ru.kotikov.appliances.repository.SmartphoneRepo;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.kotikov.appliances.dto.ApplianceDto.toDto;
+
 @Service
 public class SmartphoneService {
 
-    @Autowired
-    private SmartphoneRepo smartphoneRepo;
+    private final SmartphoneRepo smartphoneRepo;
 
-    public Smartphone create(SmartphoneEntity smartphone) throws ApplianceAlreadyExistException {
+    public SmartphoneService(SmartphoneRepo smartphoneRepo) {
+        this.smartphoneRepo = smartphoneRepo;
+    }
+
+    public ApplianceDto create(ApplianceDto smartphone) throws ApplianceAlreadyExistException {
         if (smartphoneRepo.findByName(smartphone.getName()) != null) {
-            throw new ApplianceAlreadyExistException("Смартфон с таким именем уже существует!");
+            throw new ApplianceAlreadyExistException("Группа смартфонов с таким именем уже существует!");
+        } else {
+            return toDto(smartphoneRepo.save(SmartphoneEntity.toEntity(smartphone)));
         }
-        return Smartphone.toModel(smartphoneRepo.save(smartphone));
     }
 
-    public List<Smartphone> getAll() {
+    public List<ApplianceDto> getAll() {
         return smartphoneRepo.findAll().stream().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
-                .map(Smartphone::toModel).collect(Collectors.toList());
+                .map(ApplianceDto::toDto).collect(Collectors.toList());
     }
 
-    public Smartphone getOne(Long id) throws ApplianceNotFoundException {
-        SmartphoneEntity smartphoneEntity = smartphoneRepo.findById(id).get();
-        if (smartphoneEntity == null) {
-            throw new ApplianceNotFoundException("Смартфон не найден!");
-        }
-        return Smartphone.toModel(smartphoneEntity);
+    public ApplianceDto searchById(Long id) throws ApplianceNotFoundException {
+        if (smartphoneRepo.findById(id).isPresent()) {
+            return toDto(smartphoneRepo.findById(id).get());
+        } else throw new ApplianceNotFoundException("Группа смартфонов с id = " + id + " не найдена!");
     }
 
-    public SmartphoneEntity update(SmartphoneEntity smartphoneEntity) throws ApplianceNotFoundException {
-        SmartphoneEntity smartphone = smartphoneRepo.findById(smartphoneEntity.getId()).get();
-        if (smartphone == null) {
-            throw new ApplianceNotFoundException("Смартфон не найден!");
-        }
-        return smartphoneRepo.saveAndFlush(smartphoneEntity);
+    public ApplianceDto update(ApplianceDto smartphone) throws ApplianceNotFoundException {
+        if (smartphoneRepo.findById(smartphone.getId()).isPresent()) {
+            smartphoneRepo.saveAndFlush(SmartphoneEntity.toEntity(smartphone));
+            return smartphone;
+        } else throw new ApplianceNotFoundException("Группа смартфонов для изменения (обновления) не найдена!");
     }
 
-    public String delete(Long id) throws ApplianceNotFoundException {
-        SmartphoneEntity smartphoneEntity = smartphoneRepo.findById(id).get();
-        if (smartphoneEntity == null) {
-            throw new ApplianceNotFoundException("Смартфон не найден!");
-        }
-        smartphoneRepo.deleteById(id);
-        return "Смартфон с id = " + id + " успешно удалён!";
+    public void delete(Long id) throws ApplianceNotFoundException {
+        if (smartphoneRepo.findById(id).isPresent()) {
+            smartphoneRepo.deleteById(id);
+        } else throw new ApplianceNotFoundException("Группа смартфонов с id = " + id + " для удаления не найдена!");
     }
 
-    public List<Smartphone> searchByName(String name) throws ApplianceNotFoundException {
-        List<Smartphone> smartphones = smartphoneRepo.findAll().stream()
+    public List<ApplianceDto> searchByName(String name) throws ApplianceNotFoundException {
+        return smartphoneRepo.findAll().stream()
                 .filter(x -> x.getName().equalsIgnoreCase(name))
-                .map(Smartphone::toModel).sorted().collect(Collectors.toList());
-        if (smartphones.size() == 0) throw new ApplianceNotFoundException("Техника с таким именем не найдена!");
-        return smartphones;
+                .map(ApplianceDto::toDto).sorted().collect(Collectors.toList());
     }
 }
