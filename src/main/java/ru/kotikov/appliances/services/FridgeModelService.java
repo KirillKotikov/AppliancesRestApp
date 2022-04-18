@@ -9,7 +9,6 @@ import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.repository.FridgeModelRepo;
 import ru.kotikov.appliances.repository.FridgeRepo;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -29,7 +28,7 @@ public class FridgeModelService {
 
     public FridgeModelDto create(FridgeModelDto fridgeModel, Long fridgeId)
             throws ModelAlreadyExistException, ApplianceNotFoundException {
-        if (fridgeModelRepo.findByName(fridgeModel.getName()) != null) {
+        if (fridgeModelRepo.getByNameContainingIgnoreCase(fridgeModel.getName()) != null) {
             throw new ModelAlreadyExistException("Модель холодильника с таким именем уже существует!");
         } else if (fridgeRepo.findById(fridgeId).isPresent()) {
             FridgeModelEntity fridgeModelEntity = toEntity(fridgeModel);
@@ -42,8 +41,6 @@ public class FridgeModelService {
 
     public List<FridgeModelDto> getAll() {
         return fridgeModelRepo.findAll().stream()
-                .sorted((Comparator.comparing(FridgeModelEntity::getPrice)))
-                .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
                 .map(FridgeModelDto::toModelDto).collect(Collectors.toList());
     }
 
@@ -67,58 +64,27 @@ public class FridgeModelService {
     }
 
     public List<FridgeModelDto> searchByName(String name) throws ModelNotFoundException {
-        return fridgeModelRepo.findAll().stream()
-                .filter(x -> x.getName().equalsIgnoreCase(name))
+        return fridgeModelRepo.getByNameContainingIgnoreCase(name).stream()
                 .map(FridgeModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
     public List<FridgeModelDto> searchByColor(String color) throws ModelNotFoundException {
-        return fridgeModelRepo.findAll().stream()
-                .filter(x -> x.getColor().equalsIgnoreCase(color))
+        return fridgeModelRepo.getByColorContainingIgnoreCase(color).stream()
                 .map(FridgeModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
     public List<FridgeModelDto> searchByPrice(Double low, Double high) throws ModelNotFoundException {
-        return fridgeModelRepo.findAll().stream()
-                .map(FridgeModelDto::toModelDto).sorted()
-                .filter(x -> (x.getPrice() > low) && (high > x.getPrice())).collect(Collectors.toList());
+        return fridgeModelRepo.getByPriceGreaterThanAndPriceLessThan(low, high).stream()
+                .map(FridgeModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
     public List<FridgeModelDto> searchWithFilters(
             String name, Long serialNumber, String color, String size,
             Double lowPrice, Double highPrice, Integer numbersOfDoors, String compressorType, Boolean inStock
     ) {
-        return fridgeModelRepo.findAll().stream()
-                .map(FridgeModelDto::toModelDto).sorted()
-                .filter(x -> {
-                    if (!name.trim().isEmpty()) return x.getName().equalsIgnoreCase(name);
-                    else return true;
-                })
-                .filter(x -> {
-                    if (serialNumber != 0) return Objects.equals(x.getSerialNumber(), serialNumber);
-                    else return true;
-                })
-                .filter(x -> {
-                    if (!color.trim().isEmpty()) return x.getColor().equalsIgnoreCase(color);
-                    else return true;
-                })
-                .filter(x -> {
-                    if (!size.trim().isEmpty()) return x.getSize().equalsIgnoreCase(size);
-                    else return true;
-                })
-                .filter(x -> (x.getPrice() > lowPrice) && (highPrice > x.getPrice()))
-                .filter(x -> {
-                    if (numbersOfDoors != 0) return Objects.equals(x.getNumbersOfDoors(), numbersOfDoors);
-                    else return true;
-                })
-                .filter(x -> {
-                    if (!compressorType.trim().isEmpty()) return x.getCompressorType().equalsIgnoreCase(compressorType);
-                    else return true;
-                })
-                .filter(x -> {
-                    if (inStock) return x.getInStock().equals(true);
-                    else return true;
-                })
-                .collect(Collectors.toList());
+        return fridgeModelRepo.getByParams(
+                name, serialNumber, color, size, lowPrice, highPrice, numbersOfDoors, compressorType, inStock
+                ).stream()
+                .map(FridgeModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 }

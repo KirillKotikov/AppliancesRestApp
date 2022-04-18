@@ -30,7 +30,7 @@ public class TelevisionModelService {
 
     public TelevisionModelDto create(TelevisionModelDto televisionModel, Long televisionId)
             throws ModelAlreadyExistException, ApplianceNotFoundException {
-        if (televisionModelRepo.findByName(televisionModel.getName()) != null) {
+        if (televisionModelRepo.getByNameContainingIgnoreCase(televisionModel.getName()) != null) {
             throw new ModelAlreadyExistException("Модель телевизора с таким именем уже существует!");
         } else if (televisionRepo.findById(televisionId).isPresent()) {
             TelevisionModelEntity televisionModelEntity = toEntity(televisionModel);
@@ -68,58 +68,27 @@ public class TelevisionModelService {
     }
 
     public List<TelevisionModelDto> searchByName(String name) throws ModelNotFoundException {
-        return televisionModelRepo.findAll().stream()
-                .filter(x -> x.getName().equalsIgnoreCase(name))
+        return televisionModelRepo.getByNameContainingIgnoreCase(name).stream()
                 .map(TelevisionModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
     public List<TelevisionModelDto> searchByColor(String color) throws ModelNotFoundException {
-        return televisionModelRepo.findAll().stream()
-                .filter(x -> x.getColor().equalsIgnoreCase(color))
+        return televisionModelRepo.getByColorContainingIgnoreCase(color).stream()
                 .map(TelevisionModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
     public List<TelevisionModelDto> searchByPrice(Double low, Double high) throws ModelNotFoundException {
-        return televisionModelRepo.findAll().stream()
-                .map(TelevisionModelDto::toModelDto).sorted()
-                .filter(x -> (x.getPrice() > low) && (high > x.getPrice())).collect(Collectors.toList());
+        return televisionModelRepo.getByPriceGreaterThanAndPriceLessThan(low, high).stream()
+                .map(TelevisionModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
     public List<TelevisionModelDto> searchWithFilters(
             String name, Long serialNumber, String color, String size,
             Double lowPrice, Double highPrice, String category, String technology, Boolean inStock
     ) {
-        return televisionModelRepo.findAll().stream()
-                .map(TelevisionModelDto::toModelDto).sorted()
-                .filter(x -> {
-                    if (!name.trim().isEmpty()) return x.getName().equalsIgnoreCase(name);
-                    else return true;
-                })
-                .filter(x -> {
-                    if (!(serialNumber == 0)) return Objects.equals(x.getSerialNumber(), serialNumber);
-                    else return true;
-                })
-                .filter(x -> {
-                    if (!color.trim().isEmpty()) return x.getColor().equalsIgnoreCase(color);
-                    else return true;
-                })
-                .filter(x -> {
-                    if (!size.trim().isEmpty()) return x.getSize().equalsIgnoreCase(size);
-                    else return true;
-                })
-                .filter(x -> (x.getPrice() > lowPrice) && (highPrice > x.getPrice()))
-                .filter(x -> {
-                    if (!category.trim().isEmpty()) return x.getCategory().equalsIgnoreCase(category);
-                    else return true;
-                })
-                .filter(x -> {
-                    if (!technology.trim().isEmpty()) return x.getTechnology().equalsIgnoreCase(technology);
-                    else return true;
-                })
-                .filter(x -> {
-                    if (inStock) return x.getInStock().equals(true);
-                    else return true;
-                })
-                .collect(Collectors.toList());
+        return televisionModelRepo.getByParams(
+                        name, serialNumber, color, size, lowPrice, highPrice, category, technology, inStock
+                ).stream()
+                .map(TelevisionModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 }

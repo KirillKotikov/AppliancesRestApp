@@ -103,15 +103,15 @@ public class SmartphoneModelController {
 
     @GetMapping
     public ResponseEntity getAllWithFilters(
-            @RequestParam(required = false, defaultValue = "") String name,
-            @RequestParam(required = false, defaultValue = "0") Long serialNumber,
-            @RequestParam(required = false, defaultValue = "") String color,
-            @RequestParam(required = false, defaultValue = "") String size,
-            @RequestParam(required = false, defaultValue = "0") Double lowPrice,
-            @RequestParam(required = false, defaultValue = "20000000") Double highPrice,
-            @RequestParam(required = false, defaultValue = "0") Integer volumeOfMemory,
-            @RequestParam(required = false, defaultValue = "0") Integer numberOfCameras,
-            @RequestParam(required = false, defaultValue = "true") Boolean inStock
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Long serialNumber,
+            @RequestParam(required = false) String color,
+            @RequestParam(required = false) String size,
+            @RequestParam(required = false) Double lowPrice,
+            @RequestParam(required = false) Double highPrice,
+            @RequestParam(required = false) Integer volumeOfMemory,
+            @RequestParam(required = false) Integer numberOfCameras,
+            @RequestParam(required = false) Boolean inStock
     ) {
         try {
             return ResponseEntity.ok(smartphoneModelService.searchWithFilters

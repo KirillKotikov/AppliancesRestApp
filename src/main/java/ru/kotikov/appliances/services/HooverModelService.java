@@ -11,7 +11,6 @@ import ru.kotikov.appliances.repository.HooverRepo;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static ru.kotikov.appliances.dto.HooverModelDto.toModelDto;
@@ -29,7 +28,7 @@ public class HooverModelService {
 
     public HooverModelDto create(HooverModelDto hooverModel, Long hooverId)
             throws ModelAlreadyExistException, ApplianceNotFoundException {
-        if (hooverModelRepo.findByName(hooverModel.getName()) != null) {
+        if (hooverModelRepo.getByNameContainingIgnoreCase(hooverModel.getName()) != null) {
             throw new ModelAlreadyExistException("Модель пылесоса с таким именем уже существует!");
         } else if (hooverRepo.findById(hooverId).isPresent()) {
             HooverModelEntity hooverModelEntity = toEntity(hooverModel);
@@ -67,58 +66,27 @@ public class HooverModelService {
     }
 
     public List<HooverModelDto> searchByName(String name) throws ModelNotFoundException {
-        return hooverModelRepo.findAll().stream()
-                .filter(x -> x.getName().equalsIgnoreCase(name))
+        return hooverModelRepo.getByNameContainingIgnoreCase(name).stream()
                 .map(HooverModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
     public List<HooverModelDto> searchByColor(String color) throws ModelNotFoundException {
-        return hooverModelRepo.findAll().stream()
-                .filter(x -> x.getColor().equalsIgnoreCase(color))
+        return hooverModelRepo.getByColorContainingIgnoreCase(color).stream()
                 .map(HooverModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
     public List<HooverModelDto> searchByPrice(Double low, Double high) throws ModelNotFoundException {
-        return hooverModelRepo.findAll().stream()
-                .map(HooverModelDto::toModelDto).sorted()
-                .filter(x -> (x.getPrice() > low) && (high > x.getPrice())).collect(Collectors.toList());
+        return hooverModelRepo.getByPriceGreaterThanAndPriceLessThan(low, high).stream()
+                .map(HooverModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
     public List<HooverModelDto> searchWithFilters(
             String name, Long serialNumber, String color, String size,
             Double lowPrice, Double highPrice, Integer dustContainerVolume, Integer numberOfModes, Boolean inStock
     ) {
-        return hooverModelRepo.findAll().stream()
-                .map(HooverModelDto::toModelDto).sorted()
-                .filter(x -> {
-                    if (!name.trim().isEmpty()) return x.getName().equalsIgnoreCase(name);
-                    else return true;
-                })
-                .filter(x -> {
-                    if (!(serialNumber == 0)) return Objects.equals(x.getSerialNumber(), serialNumber);
-                    else return true;
-                })
-                .filter(x -> {
-                    if (!color.trim().isEmpty()) return x.getColor().equalsIgnoreCase(color);
-                    else return true;
-                })
-                .filter(x -> {
-                    if (!size.trim().isEmpty()) return x.getSize().equalsIgnoreCase(size);
-                    else return true;
-                })
-                .filter(x -> (x.getPrice() > lowPrice) && (highPrice > x.getPrice()))
-                .filter(x -> {
-                    if (!(dustContainerVolume == 0)) return x.getDustContainerVolume().equals(dustContainerVolume);
-                    else return true;
-                })
-                .filter(x -> {
-                    if (!(numberOfModes == 0)) return x.getNumberOfModes().equals(numberOfModes);
-                    else return true;
-                })
-                .filter(x -> {
-                    if (inStock) return x.getInStock().equals(true);
-                    else return true;
-                })
-                .collect(Collectors.toList());
+        return hooverModelRepo.getByParams(
+                name, serialNumber, color, size, lowPrice, highPrice, dustContainerVolume, numberOfModes, inStock
+                ).stream()
+                .map(HooverModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 }

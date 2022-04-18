@@ -83,11 +83,6 @@ public class ComputerModelService {
             String name, Long serialNumber, String color, String size,
             Double lowPrice, Double highPrice, String category, String processorType, Boolean inStock
     ) {
-        if (name != null) name = name.toUpperCase();
-        if (color != null) color = color.toUpperCase();
-        if (size != null) size = size.toUpperCase();
-        if (category != null) category = category.toUpperCase();
-        if (processorType != null) processorType = processorType.toUpperCase();
         return computerModelRepo.getByParams(
                 name, serialNumber, color, size, lowPrice, highPrice, category, processorType, inStock
         ).stream().map(ComputerModelDto::toModelDto).sorted().collect(Collectors.toList());

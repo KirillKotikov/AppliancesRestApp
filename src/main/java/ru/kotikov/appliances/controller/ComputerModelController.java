@@ -68,7 +68,7 @@ public class ComputerModelController {
     }
 
     @GetMapping("/search-by-name")
-    public ResponseEntity searchByName(@RequestParam(required = false) String name) {
+    public ResponseEntity searchByName(String name) {
         try {
             return ResponseEntity.ok(computerModelService.searchByName(name));
         } catch (ModelNotFoundException e) {
@@ -79,7 +79,7 @@ public class ComputerModelController {
     }
 
     @GetMapping("/search-by-color")
-    public ResponseEntity searchByColor(@RequestParam String color) {
+    public ResponseEntity searchByColor(String color) {
         try {
             return ResponseEntity.ok(computerModelService.searchByColor(color));
         } catch (ModelNotFoundException e) {
@@ -90,7 +90,7 @@ public class ComputerModelController {
     }
 
     @GetMapping("/search-by-price")
-    public ResponseEntity searchByPrice(@RequestParam Double low, Double high) {
+    public ResponseEntity searchByPrice(Double low, Double high) {
         try {
             return ResponseEntity.ok(computerModelService.searchByPrice(low, high));
         } catch (ModelNotFoundException e) {
