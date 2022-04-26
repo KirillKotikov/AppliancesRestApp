@@ -22,17 +22,16 @@ public class TelevisionService {
     }
 
     public ApplianceDto create(ApplianceDto television) throws ApplianceAlreadyExistException {
-        if (televisionRepo.findByName(television.getName()) != null) {
+        if (televisionRepo.getByName(television.getName()) != null) {
             throw new ApplianceAlreadyExistException("Группа телевизоров с таким именем уже существует!");
         } else return toDto(televisionRepo.save(toEntity(television)));
     }
 
     public List<ApplianceDto> getAll() {
-        return televisionRepo.findAll().stream().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
-                .map(ApplianceDto::toDto).collect(Collectors.toList());
+        return televisionRepo.findAll().stream().map(ApplianceDto::toDto).collect(Collectors.toList());
     }
 
-    public ApplianceDto SearchById(Long id) throws ApplianceNotFoundException {
+    public ApplianceDto getById(Long id) throws ApplianceNotFoundException {
         if (televisionRepo.findById(id).isPresent()) {
             return toDto(televisionRepo.findById(id).get());
         } else throw new ApplianceNotFoundException("Группа телевизоров с id = " + id + " не найдена!");
@@ -52,9 +51,7 @@ public class TelevisionService {
         throw new ApplianceNotFoundException("Группа телевизоров c id = " + id + " для удаления не найдена!");
     }
 
-    public List<ApplianceDto> searchByName(String name) throws ApplianceNotFoundException {
-        return televisionRepo.findAll().stream()
-                .filter(x -> x.getName().equalsIgnoreCase(name))
-                .map(ApplianceDto::toDto).sorted().collect(Collectors.toList());
+    public List<ApplianceDto> findByName(String name) throws ApplianceNotFoundException {
+        return televisionRepo.findByName(name).stream().map(ApplianceDto::toDto).sorted().collect(Collectors.toList());
     }
 }

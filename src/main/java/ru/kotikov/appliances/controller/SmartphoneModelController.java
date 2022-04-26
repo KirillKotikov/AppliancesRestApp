@@ -3,7 +3,6 @@ package ru.kotikov.appliances.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.dto.SmartphoneModelDto;
-import ru.kotikov.appliances.entity.SmartphoneModelEntity;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.services.SmartphoneModelService;
 
@@ -39,7 +38,7 @@ public class SmartphoneModelController {
     @GetMapping("/{id}")
     public ResponseEntity searchById(@PathVariable Long id) {
         try {
-            return ResponseEntity.ok(smartphoneModelService.searchById(id));
+            return ResponseEntity.ok(smartphoneModelService.getById(id));
         } catch (ModelNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -71,7 +70,7 @@ public class SmartphoneModelController {
     @GetMapping("/search-by-name")
     public ResponseEntity searchByName(@RequestParam String name) {
         try {
-            return ResponseEntity.ok(smartphoneModelService.searchByName(name));
+            return ResponseEntity.ok(smartphoneModelService.getByName(name));
         } catch (ModelNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -82,7 +81,7 @@ public class SmartphoneModelController {
     @GetMapping("/search-by-color")
     public ResponseEntity searchByColor(@RequestParam String color) {
         try {
-            return ResponseEntity.ok(smartphoneModelService.searchByColor(color));
+            return ResponseEntity.ok(smartphoneModelService.getByColor(color));
         } catch (ModelNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -93,7 +92,7 @@ public class SmartphoneModelController {
     @GetMapping("/search-by-price")
     public ResponseEntity searchByPrice(@RequestParam Double low, Double high) {
         try {
-            return ResponseEntity.ok(smartphoneModelService.searchByPrice(low, high));
+            return ResponseEntity.ok(smartphoneModelService.getByPrice(low, high));
         } catch (ModelNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -114,7 +113,7 @@ public class SmartphoneModelController {
             @RequestParam(required = false) Boolean inStock
     ) {
         try {
-            return ResponseEntity.ok(smartphoneModelService.searchWithFilters
+            return ResponseEntity.ok(smartphoneModelService.getByParams
                     (name, serialNumber, color, size, lowPrice, highPrice, volumeOfMemory, numberOfCameras, inStock));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка");

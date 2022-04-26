@@ -22,18 +22,18 @@ public class FridgeService {
     }
 
     public ApplianceDto create(ApplianceDto fridge) throws ApplianceAlreadyExistException {
-        if (fridgeRepo.findByName(fridge.getName()) != null) {
+        if (fridgeRepo.getByName(fridge.getName()) != null) {
             throw new ApplianceAlreadyExistException("Группа холодильника с таким именем уже существует!");
         }
         return toDto(fridgeRepo.save(FridgeEntity.toEntity(fridge)));
     }
 
     public List<ApplianceDto> getAll() {
-        return fridgeRepo.findAll().stream().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
+        return fridgeRepo.findAll().stream()
                 .map(ApplianceDto::toDto).collect(Collectors.toList());
     }
 
-    public ApplianceDto searchById(Long id) throws ApplianceNotFoundException {
+    public ApplianceDto getById(Long id) throws ApplianceNotFoundException {
         if (fridgeRepo.findById(id).isPresent()) {
             return toDto(fridgeRepo.findById(id).get());
         } else throw new ApplianceNotFoundException("Группа пылесосов с id = " + id + " не найден!");
@@ -52,9 +52,7 @@ public class FridgeService {
         } else throw new ApplianceNotFoundException("Группа холодильников с id = " + id + " для удаления не найдена!");
     }
 
-    public List<ApplianceDto> searchByName(String name) throws ApplianceNotFoundException {
-        return fridgeRepo.findAll().stream()
-                .filter(x -> x.getName().equalsIgnoreCase(name))
-                .map(ApplianceDto::toDto).sorted().collect(Collectors.toList());
+    public List<ApplianceDto> getByName(String name) throws ApplianceNotFoundException {
+        return fridgeRepo.findByName(name).stream().map(ApplianceDto::toDto).sorted().collect(Collectors.toList());
     }
 }

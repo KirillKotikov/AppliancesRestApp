@@ -4,7 +4,6 @@ package ru.kotikov.appliances.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.dto.ApplianceDto;
-import ru.kotikov.appliances.entity.SmartphoneEntity;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
 import ru.kotikov.appliances.services.SmartphoneService;
@@ -42,7 +41,7 @@ public class SmartphoneController {
     @GetMapping
     public ResponseEntity searchById(@RequestParam Long id) {
         try {
-            return ResponseEntity.ok(smartphoneService.searchById(id));
+            return ResponseEntity.ok(smartphoneService.getById(id));
         } catch (ApplianceNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {

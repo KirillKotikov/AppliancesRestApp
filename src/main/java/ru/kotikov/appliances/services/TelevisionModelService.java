@@ -9,9 +9,7 @@ import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.repository.TelevisionModelRepo;
 import ru.kotikov.appliances.repository.TelevisionRepo;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static ru.kotikov.appliances.dto.TelevisionModelDto.toModelDto;
@@ -42,13 +40,10 @@ public class TelevisionModelService {
     }
 
     public List<TelevisionModelDto> getAll() {
-        return televisionModelRepo.findAll().stream()
-                .sorted((Comparator.comparing(TelevisionModelEntity::getPrice)))
-                .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
-                .map(TelevisionModelDto::toModelDto).collect(Collectors.toList());
+        return televisionModelRepo.findAll().stream().map(TelevisionModelDto::toModelDto).collect(Collectors.toList());
     }
 
-    public TelevisionModelDto searchById(Long id) throws ModelNotFoundException {
+    public TelevisionModelDto getById(Long id) throws ModelNotFoundException {
         if (televisionModelRepo.findById(id).isPresent()) {
             return toModelDto(televisionModelRepo.findById(id).get());
         } else throw new ModelNotFoundException("Модель телевизора с id = " + id + " не найдена!");
@@ -67,28 +62,27 @@ public class TelevisionModelService {
         } else throw new ModelNotFoundException("Модель телевизора с id = " + id + " для удаления не найдена!");
     }
 
-    public List<TelevisionModelDto> searchByName(String name) throws ModelNotFoundException {
+    public List<TelevisionModelDto> getByName(String name) throws ModelNotFoundException {
         return televisionModelRepo.getByNameContainingIgnoreCase(name).stream()
                 .map(TelevisionModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<TelevisionModelDto> searchByColor(String color) throws ModelNotFoundException {
+    public List<TelevisionModelDto> getByColor(String color) throws ModelNotFoundException {
         return televisionModelRepo.getByColorContainingIgnoreCase(color).stream()
                 .map(TelevisionModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<TelevisionModelDto> searchByPrice(Double low, Double high) throws ModelNotFoundException {
+    public List<TelevisionModelDto> getByPrice(Double low, Double high) throws ModelNotFoundException {
         return televisionModelRepo.getByPriceGreaterThanAndPriceLessThan(low, high).stream()
                 .map(TelevisionModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<TelevisionModelDto> searchWithFilters(
+    public List<TelevisionModelDto> getByParams(
             String name, Long serialNumber, String color, String size,
             Double lowPrice, Double highPrice, String category, String technology, Boolean inStock
     ) {
         return televisionModelRepo.getByParams(
-                        name, serialNumber, color, size, lowPrice, highPrice, category, technology, inStock
-                ).stream()
-                .map(TelevisionModelDto::toModelDto).sorted().collect(Collectors.toList());
+                name, serialNumber, color, size, lowPrice, highPrice, category, technology, inStock
+        ).stream().map(TelevisionModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 }

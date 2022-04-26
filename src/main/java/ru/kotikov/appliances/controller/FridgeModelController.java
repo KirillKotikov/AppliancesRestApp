@@ -39,7 +39,7 @@ public class FridgeModelController {
     @GetMapping("/{id}")
     public ResponseEntity searchById(@PathVariable Long id) {
         try {
-            return ResponseEntity.ok(fridgeModelService.searchById(id));
+            return ResponseEntity.ok(fridgeModelService.getById(id));
         } catch (ModelNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -71,7 +71,7 @@ public class FridgeModelController {
     @GetMapping("/search-by-name")
     public ResponseEntity searchByName(@RequestParam String name) {
         try {
-            return ResponseEntity.ok(fridgeModelService.searchByName(name));
+            return ResponseEntity.ok(fridgeModelService.getByName(name));
         } catch (ModelNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -82,7 +82,7 @@ public class FridgeModelController {
     @GetMapping("/search-by-color")
     public ResponseEntity searchByColor(@RequestParam String color) {
         try {
-            return ResponseEntity.ok(fridgeModelService.searchByColor(color));
+            return ResponseEntity.ok(fridgeModelService.getByColor(color));
         } catch (ModelNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -93,7 +93,7 @@ public class FridgeModelController {
     @GetMapping("/search-by-price")
     public ResponseEntity searchByPrice(@RequestParam Double low, Double high) {
         try {
-            return ResponseEntity.ok(fridgeModelService.searchByPrice(low, high));
+            return ResponseEntity.ok(fridgeModelService.getByPrice(low, high));
         } catch (ModelNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -114,7 +114,7 @@ public class FridgeModelController {
             @RequestParam(required = false) Boolean inStock
     ) {
         try {
-            return ResponseEntity.ok(fridgeModelService.searchWithFilters
+            return ResponseEntity.ok(fridgeModelService.getByParams
                     (name, serialNumber, color, size, lowPrice, highPrice, numberOfDoors, compressorType, inStock));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка");

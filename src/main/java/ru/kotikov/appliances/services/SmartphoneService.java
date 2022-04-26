@@ -22,7 +22,7 @@ public class SmartphoneService {
     }
 
     public ApplianceDto create(ApplianceDto smartphone) throws ApplianceAlreadyExistException {
-        if (smartphoneRepo.findByName(smartphone.getName()) != null) {
+        if (smartphoneRepo.getByName(smartphone.getName()) != null) {
             throw new ApplianceAlreadyExistException("Группа смартфонов с таким именем уже существует!");
         } else {
             return toDto(smartphoneRepo.save(SmartphoneEntity.toEntity(smartphone)));
@@ -34,7 +34,7 @@ public class SmartphoneService {
                 .map(ApplianceDto::toDto).collect(Collectors.toList());
     }
 
-    public ApplianceDto searchById(Long id) throws ApplianceNotFoundException {
+    public ApplianceDto getById(Long id) throws ApplianceNotFoundException {
         if (smartphoneRepo.findById(id).isPresent()) {
             return toDto(smartphoneRepo.findById(id).get());
         } else throw new ApplianceNotFoundException("Группа смартфонов с id = " + id + " не найдена!");
@@ -54,8 +54,6 @@ public class SmartphoneService {
     }
 
     public List<ApplianceDto> searchByName(String name) throws ApplianceNotFoundException {
-        return smartphoneRepo.findAll().stream()
-                .filter(x -> x.getName().equalsIgnoreCase(name))
-                .map(ApplianceDto::toDto).sorted().collect(Collectors.toList());
+        return smartphoneRepo.findByName(name).stream().map(ApplianceDto::toDto).sorted().collect(Collectors.toList());
     }
 }

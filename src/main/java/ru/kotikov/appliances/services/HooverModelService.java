@@ -9,7 +9,6 @@ import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.repository.HooverModelRepo;
 import ru.kotikov.appliances.repository.HooverRepo;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,13 +39,10 @@ public class HooverModelService {
     }
 
     public List<HooverModelDto> getAll() {
-        return hooverModelRepo.findAll().stream()
-                .sorted((Comparator.comparing(HooverModelEntity::getPrice)))
-                .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
-                .map(HooverModelDto::toModelDto).collect(Collectors.toList());
+        return hooverModelRepo.findAll().stream().map(HooverModelDto::toModelDto).collect(Collectors.toList());
     }
 
-    public HooverModelDto searchById(Long id) throws ModelNotFoundException {
+    public HooverModelDto getById(Long id) throws ModelNotFoundException {
         if (hooverModelRepo.findById(id).isPresent()) {
             return toModelDto(hooverModelRepo.findById(id).get());
         } else throw new ModelNotFoundException("Модель пылесоса с id = " + id + " не найдена!");
@@ -65,28 +61,27 @@ public class HooverModelService {
         } else throw new ModelNotFoundException("Модель пылесоса с id = " + id + " для удаления не найдена!");
     }
 
-    public List<HooverModelDto> searchByName(String name) throws ModelNotFoundException {
+    public List<HooverModelDto> getByName(String name) throws ModelNotFoundException {
         return hooverModelRepo.getByNameContainingIgnoreCase(name).stream()
                 .map(HooverModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<HooverModelDto> searchByColor(String color) throws ModelNotFoundException {
+    public List<HooverModelDto> getByColor(String color) throws ModelNotFoundException {
         return hooverModelRepo.getByColorContainingIgnoreCase(color).stream()
                 .map(HooverModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<HooverModelDto> searchByPrice(Double low, Double high) throws ModelNotFoundException {
+    public List<HooverModelDto> getByPrice(Double low, Double high) throws ModelNotFoundException {
         return hooverModelRepo.getByPriceGreaterThanAndPriceLessThan(low, high).stream()
                 .map(HooverModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<HooverModelDto> searchWithFilters(
+    public List<HooverModelDto> getByParams(
             String name, Long serialNumber, String color, String size,
             Double lowPrice, Double highPrice, Integer dustContainerVolume, Integer numberOfModes, Boolean inStock
     ) {
         return hooverModelRepo.getByParams(
                 name, serialNumber, color, size, lowPrice, highPrice, dustContainerVolume, numberOfModes, inStock
-                ).stream()
-                .map(HooverModelDto::toModelDto).sorted().collect(Collectors.toList());
+        ).stream().map(HooverModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 }

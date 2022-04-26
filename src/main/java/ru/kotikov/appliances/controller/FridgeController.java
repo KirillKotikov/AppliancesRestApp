@@ -4,7 +4,6 @@ package ru.kotikov.appliances.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.dto.ApplianceDto;
-import ru.kotikov.appliances.entity.FridgeEntity;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
 import ru.kotikov.appliances.services.FridgeService;
@@ -42,7 +41,7 @@ public class FridgeController {
     @GetMapping
     public ResponseEntity searchById(@RequestParam Long id) {
         try {
-            return ResponseEntity.ok(fridgeService.searchById(id));
+            return ResponseEntity.ok(fridgeService.getById(id));
         } catch (ApplianceNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -74,7 +73,7 @@ public class FridgeController {
     @GetMapping("/search-by-name")
     public ResponseEntity searchByName(@RequestParam String name) {
         try {
-            return ResponseEntity.ok(fridgeService.searchByName(name));
+            return ResponseEntity.ok(fridgeService.getByName(name));
         } catch (ApplianceNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {

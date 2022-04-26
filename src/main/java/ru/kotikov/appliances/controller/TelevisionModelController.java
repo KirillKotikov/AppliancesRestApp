@@ -3,7 +3,6 @@ package ru.kotikov.appliances.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.dto.TelevisionModelDto;
-import ru.kotikov.appliances.entity.TelevisionModelEntity;
 import ru.kotikov.appliances.exceptions.ModelAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.services.TelevisionModelService;
@@ -42,7 +41,7 @@ public class TelevisionModelController {
     @GetMapping("/{id}")
     public ResponseEntity searchById(@PathVariable Long id) {
         try {
-            return ResponseEntity.ok(televisionModelService.searchById(id));
+            return ResponseEntity.ok(televisionModelService.getById(id));
         } catch (ModelNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -74,7 +73,7 @@ public class TelevisionModelController {
     @GetMapping("/search-by-name")
     public ResponseEntity searchByName(@RequestParam String name) {
         try {
-            return ResponseEntity.ok(televisionModelService.searchByName(name));
+            return ResponseEntity.ok(televisionModelService.getByName(name));
         } catch (ModelNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -85,7 +84,7 @@ public class TelevisionModelController {
     @GetMapping("/search-by-color")
     public ResponseEntity searchByColor(@RequestParam String color) {
         try {
-            return ResponseEntity.ok(televisionModelService.searchByColor(color));
+            return ResponseEntity.ok(televisionModelService.getByColor(color));
         } catch (ModelNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -96,7 +95,7 @@ public class TelevisionModelController {
     @GetMapping("/search-by-price")
     public ResponseEntity searchByPrice(@RequestParam Double low, Double high) {
         try {
-            return ResponseEntity.ok(televisionModelService.searchByPrice(low, high));
+            return ResponseEntity.ok(televisionModelService.getByPrice(low, high));
         } catch (ModelNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -117,7 +116,7 @@ public class TelevisionModelController {
             @RequestParam(required = false) Boolean inStock
     ) {
         try {
-            return ResponseEntity.ok(televisionModelService.searchWithFilters
+            return ResponseEntity.ok(televisionModelService.getByParams
                     (name, serialNumber, color, size, lowPrice, highPrice, category, technology, inStock));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка");

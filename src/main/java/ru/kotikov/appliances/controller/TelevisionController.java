@@ -3,7 +3,6 @@ package ru.kotikov.appliances.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.dto.ApplianceDto;
-import ru.kotikov.appliances.entity.TelevisionEntity;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
 import ru.kotikov.appliances.services.TelevisionService;
@@ -41,7 +40,7 @@ public class TelevisionController {
     @GetMapping
     public ResponseEntity searchById(@RequestParam Long id) {
         try {
-            return ResponseEntity.ok(televisionService.SearchById(id));
+            return ResponseEntity.ok(televisionService.getById(id));
         } catch (ApplianceNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -73,7 +72,7 @@ public class TelevisionController {
     @GetMapping("/search-by-name")
     public ResponseEntity searchByName(@RequestParam String name) {
         try {
-            return ResponseEntity.ok(televisionService.searchByName(name));
+            return ResponseEntity.ok(televisionService.findByName(name));
         } catch (ApplianceNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {

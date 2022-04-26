@@ -22,17 +22,16 @@ public class HooverService {
     }
 
     public ApplianceDto create(ApplianceDto hoover) throws ApplianceAlreadyExistException {
-        if (hooverRepo.findByName(hoover.getName()) != null) {
+        if (hooverRepo.getByName(hoover.getName()) != null) {
             throw new ApplianceAlreadyExistException("Группа пылесосов с таким именем уже существует!");
         } else return toDto(hooverRepo.save(toEntity(hoover)));
     }
 
     public List<ApplianceDto> getAll() {
-        return hooverRepo.findAll().stream().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
-                .map(ApplianceDto::toDto).collect(Collectors.toList());
+        return hooverRepo.findAll().stream().map(ApplianceDto::toDto).collect(Collectors.toList());
     }
 
-    public ApplianceDto searchById(Long id) throws ApplianceNotFoundException {
+    public ApplianceDto getById(Long id) throws ApplianceNotFoundException {
         if (hooverRepo.findById(id).isPresent()) {
             return toDto(hooverRepo.findById(id).get());
         } else throw new ApplianceNotFoundException("Группа пылесосов с id = " + id + " для удаления не найдена!");
@@ -52,9 +51,7 @@ public class HooverService {
         throw new ApplianceNotFoundException("Группа пылесосов с id = " + id + " для удаления не найдена!");
     }
 
-    public List<ApplianceDto> searchByName(String name) throws ApplianceNotFoundException {
-        return hooverRepo.findAll().stream()
-                .filter(x -> x.getName().equalsIgnoreCase(name))
-                .map(ApplianceDto::toDto).sorted().collect(Collectors.toList());
+    public List<ApplianceDto> getByName(String name) throws ApplianceNotFoundException {
+        return hooverRepo.findByName(name).stream().map(ApplianceDto::toDto).sorted().collect(Collectors.toList());
     }
 }

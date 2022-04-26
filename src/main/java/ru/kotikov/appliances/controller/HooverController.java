@@ -3,7 +3,6 @@ package ru.kotikov.appliances.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.dto.ApplianceDto;
-import ru.kotikov.appliances.entity.HooverEntity;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
 import ru.kotikov.appliances.services.HooverService;
@@ -41,7 +40,7 @@ public class HooverController {
     @GetMapping
     public ResponseEntity searchById(@RequestParam Long id) {
         try {
-            return ResponseEntity.ok(hooverService.searchById(id));
+            return ResponseEntity.ok(hooverService.getById(id));
         } catch (ApplianceNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -73,7 +72,7 @@ public class HooverController {
     @GetMapping("/search-by-name")
     public ResponseEntity searchByName(@RequestParam String name) {
         try {
-            return ResponseEntity.ok(hooverService.searchByName(name));
+            return ResponseEntity.ok(hooverService.getByName(name));
         } catch (ApplianceNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {

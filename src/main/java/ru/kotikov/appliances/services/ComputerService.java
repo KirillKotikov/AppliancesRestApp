@@ -2,7 +2,6 @@ package ru.kotikov.appliances.services;
 
 import org.springframework.stereotype.Service;
 import ru.kotikov.appliances.dto.ApplianceDto;
-import ru.kotikov.appliances.entity.AbstractApplianceEntity;
 import ru.kotikov.appliances.entity.ComputerEntity;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
@@ -23,18 +22,17 @@ public class ComputerService {
     }
 
     public ApplianceDto create(ApplianceDto computer) throws ApplianceAlreadyExistException {
-        if (computerRepo.findByName(computer.getName()) != null) {
+        if (computerRepo.getByName(computer.getName()) != null) {
             throw new ApplianceAlreadyExistException("Группа компьютеров с таким именем уже существует!");
         }
         return toDto(computerRepo.save(ComputerEntity.toEntity(computer)));
     }
 
     public List<ApplianceDto> getAll() {
-        return computerRepo.findAll().stream().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
-                .map(ApplianceDto::toDto).collect(Collectors.toList());
+        return computerRepo.findAll().stream().map(ApplianceDto::toDto).collect(Collectors.toList());
     }
 
-    public ApplianceDto searchById(Long id) throws ApplianceNotFoundException {
+    public ApplianceDto getById(Long id) throws ApplianceNotFoundException {
         if (computerRepo.findById(id).isPresent()) {
             return toDto(computerRepo.findById(id).get());
         } else throw new ApplianceNotFoundException("Группа компьютеров с id = " + id + " не найдена!");
@@ -53,9 +51,7 @@ public class ComputerService {
         } else throw new ApplianceNotFoundException("Группа компьютеров с id = " + id + " для удаления не найдена!");
     }
 
-    public List<ApplianceDto> searchByName(String name) throws ApplianceNotFoundException {
-        return computerRepo.findAll().stream()
-                .filter(x -> x.getName().equalsIgnoreCase(name))
-                .map(ApplianceDto::toDto).sorted().collect(Collectors.toList());
+    public List<ApplianceDto> getByName(String name) throws ApplianceNotFoundException {
+        return computerRepo.findByName(name).stream().map(ApplianceDto::toDto).sorted().collect(Collectors.toList());
     }
 }

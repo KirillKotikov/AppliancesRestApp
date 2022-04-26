@@ -40,12 +40,11 @@ public class ComputerModelService {
     }
 
     public List<ComputerModelDto> getAll() {
-        return computerModelRepo.findAll().stream()
-                .map(ComputerModelDto::toModelDto).collect(Collectors.toList());
+        return computerModelRepo.findAll().stream().map(ComputerModelDto::toModelDto).collect(Collectors.toList());
 
     }
 
-    public ComputerModelDto searchById(Long id) throws ModelNotFoundException {
+    public ComputerModelDto getById(Long id) throws ModelNotFoundException {
         if (computerModelRepo.findById(id).isPresent()) {
             return toModelDto(computerModelRepo.findById(id).get());
         } else throw new ModelNotFoundException("Модель компьютера с id = " + id + " не найдена!");
@@ -64,22 +63,22 @@ public class ComputerModelService {
         } else throw new ModelNotFoundException("Модель компьютера с id = " + id + " для удаления не найдена!");
     }
 
-    public List<ComputerModelDto> searchByName(String name) throws ModelNotFoundException {
+    public List<ComputerModelDto> getByName(String name) throws ModelNotFoundException {
         return computerModelRepo.getByNameContainingIgnoreCase(name).stream()
                 .map(ComputerModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<ComputerModelDto> searchByColor(String color) throws ModelNotFoundException {
+    public List<ComputerModelDto> getByColor(String color) throws ModelNotFoundException {
         return computerModelRepo.getByColorContainingIgnoreCase(color).stream()
                 .map(ComputerModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<ComputerModelDto> searchByPrice(Double low, Double high) throws ModelNotFoundException {
+    public List<ComputerModelDto> getByPrice(Double low, Double high) throws ModelNotFoundException {
         return computerModelRepo.getByPriceGreaterThanAndPriceLessThan(low, high).stream()
                 .map(ComputerModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<ComputerModelDto> searchWithFilters(
+    public List<ComputerModelDto> getByParams(
             String name, Long serialNumber, String color, String size,
             Double lowPrice, Double highPrice, String category, String processorType, Boolean inStock
     ) {

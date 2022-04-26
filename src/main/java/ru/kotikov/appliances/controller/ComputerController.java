@@ -40,7 +40,7 @@ public class ComputerController {
     @GetMapping
     public ResponseEntity searchById(@RequestParam Long id) {
         try {
-            return ResponseEntity.ok(computerService.searchById(id));
+            return ResponseEntity.ok(computerService.getById(id));
         } catch (ApplianceNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -72,7 +72,7 @@ public class ComputerController {
     @GetMapping("/search-by-name")
     public ResponseEntity searchByName(@RequestParam String name) {
         try {
-            return ResponseEntity.ok(computerService.searchByName(name));
+            return ResponseEntity.ok(computerService.getByName(name));
         } catch (ApplianceNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {

@@ -17,7 +17,8 @@ public class MainService {
     private final SmartphoneRepo smartphoneRepo;
     private final TelevisionRepo televisionRepo;
 
-    public MainService(ComputerRepo computerRepo, FridgeRepo fridgeRepo, HooverRepo hooverRepo, SmartphoneRepo smartphoneRepo, TelevisionRepo televisionRepo) {
+    public MainService(ComputerRepo computerRepo, FridgeRepo fridgeRepo, HooverRepo hooverRepo,
+                       SmartphoneRepo smartphoneRepo, TelevisionRepo televisionRepo) {
         this.computerRepo = computerRepo;
         this.fridgeRepo = fridgeRepo;
         this.hooverRepo = hooverRepo;

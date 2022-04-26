@@ -9,9 +9,7 @@ import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.repository.SmartphoneModelRepo;
 import ru.kotikov.appliances.repository.SmartphoneRepo;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static ru.kotikov.appliances.dto.SmartphoneModelDto.toModelDto;
@@ -41,13 +39,10 @@ public class SmartphoneModelService {
     }
 
     public List<SmartphoneModelDto> getAll() {
-        return smartphoneModelRepo.findAll().stream()
-                .sorted((Comparator.comparing(SmartphoneModelEntity::getPrice)))
-                .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
-                .map(SmartphoneModelDto::toModelDto).collect(Collectors.toList());
+        return smartphoneModelRepo.findAll().stream().map(SmartphoneModelDto::toModelDto).collect(Collectors.toList());
     }
 
-    public SmartphoneModelDto searchById(Long id) throws ModelNotFoundException {
+    public SmartphoneModelDto getById(Long id) throws ModelNotFoundException {
         if (smartphoneModelRepo.findById(id).isPresent()) {
             return toModelDto(smartphoneModelRepo.findById(id).get());
         } else throw new ModelNotFoundException("Модель смартфона c id = " + id + " не найдена!");
@@ -66,22 +61,22 @@ public class SmartphoneModelService {
         } else throw new ModelNotFoundException("Модель смартфона с id = " + id + " для удаления не найдена!");
     }
 
-    public List<SmartphoneModelDto> searchByName(String name) throws ModelNotFoundException {
+    public List<SmartphoneModelDto> getByName(String name) throws ModelNotFoundException {
         return smartphoneModelRepo.getByNameContainingIgnoreCase(name).stream()
                 .map(SmartphoneModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<SmartphoneModelDto> searchByColor(String color) throws ModelNotFoundException {
+    public List<SmartphoneModelDto> getByColor(String color) throws ModelNotFoundException {
         return smartphoneModelRepo.getByColorContainingIgnoreCase(color).stream()
                 .map(SmartphoneModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<SmartphoneModelDto> searchByPrice(Double low, Double high) throws ModelNotFoundException {
+    public List<SmartphoneModelDto> getByPrice(Double low, Double high) throws ModelNotFoundException {
         return smartphoneModelRepo.getByPriceGreaterThanAndPriceLessThan(low, high).stream()
                 .map(SmartphoneModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<SmartphoneModelDto> searchWithFilters(
+    public List<SmartphoneModelDto> getByParams(
             String name, Long serialNumber, String color, String size,
             Double lowPrice, Double highPrice, Integer volumeOfMemory, Integer numberOfCameras, Boolean inStock
     ) {
