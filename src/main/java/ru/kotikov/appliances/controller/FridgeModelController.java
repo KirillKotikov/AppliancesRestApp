@@ -1,5 +1,6 @@
 package ru.kotikov.appliances.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.dto.FridgeModelDto;
@@ -17,6 +18,7 @@ public class FridgeModelController {
         this.fridgeModelService = fridgeModelService;
     }
 
+    @Operation(summary = "Создать новую модель холодильников")
     @PostMapping
     public ResponseEntity create(@RequestBody FridgeModelDto fridgeModel,
                                  @RequestParam Long fridgeId) {
@@ -27,6 +29,7 @@ public class FridgeModelController {
         }
     }
 
+    @Operation(summary = "Получить список всех моделей холодильника")
     @GetMapping("/get-all")
     public ResponseEntity getAll() {
         try {
@@ -36,6 +39,7 @@ public class FridgeModelController {
         }
     }
 
+    @Operation(summary = "Поиск модели холодильника по id")
     @GetMapping("/{id}")
     public ResponseEntity searchById(@PathVariable Long id) {
         try {
@@ -47,6 +51,7 @@ public class FridgeModelController {
         }
     }
 
+    @Operation(summary = "Обновление модели холодильника")
     @PutMapping
     public ResponseEntity update(@RequestBody FridgeModelDto fridgeModel) {
         try {
@@ -59,6 +64,7 @@ public class FridgeModelController {
         }
     }
 
+    @Operation(summary = "Удаление модели компьютера по id")
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         try {
@@ -68,6 +74,7 @@ public class FridgeModelController {
         }
     }
 
+    @Operation(summary = "Поиск модели компьютера по имени")
     @GetMapping("/search-by-name")
     public ResponseEntity searchByName(@RequestParam String name) {
         try {
@@ -79,6 +86,7 @@ public class FridgeModelController {
         }
     }
 
+    @Operation(summary = "Поиск модели компьютера по цвету")
     @GetMapping("/search-by-color")
     public ResponseEntity searchByColor(@RequestParam String color) {
         try {
@@ -90,6 +98,7 @@ public class FridgeModelController {
         }
     }
 
+    @Operation(summary = "Поиск модели компьютера по цене")
     @GetMapping("/search-by-price")
     public ResponseEntity searchByPrice(@RequestParam Double low, Double high) {
         try {
@@ -101,6 +110,7 @@ public class FridgeModelController {
         }
     }
 
+    @Operation(summary = "Поиск модели холодильника по любым параметрам (можно с пустыми)")
     @GetMapping
     public ResponseEntity getAllWithFilters(
             @RequestParam(required = false) String name,

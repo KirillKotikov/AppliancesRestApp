@@ -1,5 +1,6 @@
 package ru.kotikov.appliances.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.dto.ApplianceDto;
@@ -18,6 +19,7 @@ public class HooverController {
         this.hooverService = hooverService;
     }
 
+    @Operation(summary = "Создать новую группу пылесосов")
     @PostMapping
     public ResponseEntity create(@RequestBody ApplianceDto hoover) {
         try {
@@ -29,6 +31,7 @@ public class HooverController {
         }
     }
 
+    @Operation(summary = "Получение списка всех групп пылесосов")
     @GetMapping("/get-all")
     public ResponseEntity getAll() {
         try {
@@ -38,6 +41,7 @@ public class HooverController {
         }
     }
 
+    @Operation(summary = "Поиск группы пылесосов по id")
     @GetMapping
     public ResponseEntity searchById(@RequestParam Long id) {
         try {
@@ -49,6 +53,7 @@ public class HooverController {
         }
     }
 
+    @Operation(summary = "Обновление группы пылесосов")
     @PutMapping
     public ResponseEntity update(@RequestBody ApplianceDto hoover) {
         try {
@@ -61,6 +66,7 @@ public class HooverController {
         }
     }
 
+    @Operation(summary = "Удаление группы пылесосов по id")
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         try {
@@ -70,6 +76,7 @@ public class HooverController {
         }
     }
 
+    @Operation(summary = "Поиск группы пылесосов по имени")
     @GetMapping("/search-by-name")
     public ResponseEntity searchByName(@RequestParam String name) {
         try {

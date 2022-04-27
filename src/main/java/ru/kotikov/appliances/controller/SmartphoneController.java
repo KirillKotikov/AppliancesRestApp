@@ -1,6 +1,7 @@
 package ru.kotikov.appliances.controller;
 
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.dto.ApplianceDto;
@@ -18,6 +19,7 @@ public class SmartphoneController {
         this.smartphoneService = smartphoneService;
     }
 
+    @Operation(summary = "Создать новую группу смартфонов")
     @PostMapping
     public ResponseEntity create(@RequestBody ApplianceDto smartphone) {
         try {
@@ -29,6 +31,7 @@ public class SmartphoneController {
         }
     }
 
+    @Operation(summary = "Получение списка всех групп смартфонов")
     @GetMapping("/get-all")
     public ResponseEntity getAll() {
         try {
@@ -38,6 +41,7 @@ public class SmartphoneController {
         }
     }
 
+    @Operation(summary = "Поиск группы смартфонов по id")
     @GetMapping
     public ResponseEntity searchById(@RequestParam Long id) {
         try {
@@ -49,6 +53,7 @@ public class SmartphoneController {
         }
     }
 
+    @Operation(summary = "Обновление группы смартфонов")
     @PutMapping
     public ResponseEntity update(@RequestBody ApplianceDto smartphone) {
         try {
@@ -61,6 +66,7 @@ public class SmartphoneController {
         }
     }
 
+    @Operation(summary = "Удаление группы смартфонов по id")
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         try {
@@ -70,6 +76,7 @@ public class SmartphoneController {
         }
     }
 
+    @Operation(summary = "Поиск группы смартфонов по имени")
     @GetMapping("/search-by-name")
     public ResponseEntity searchByName(@RequestParam String name) {
         try {

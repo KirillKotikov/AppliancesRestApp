@@ -1,5 +1,6 @@
 package ru.kotikov.appliances.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.dto.ComputerModelDto;
@@ -16,6 +17,7 @@ public class ComputerModelController {
         this.computerModelService = computerModelService;
     }
 
+    @Operation(summary = "Создать новую модель компьютера")
     @PostMapping
     public ResponseEntity create(@RequestBody ComputerModelDto computerModelDto,
                                  @RequestParam Long computerId) {
@@ -26,6 +28,7 @@ public class ComputerModelController {
         }
     }
 
+    @Operation(summary = "Получить список всех моделей компьютеров")
     @GetMapping("/get-all")
     public ResponseEntity getAll() {
         try {
@@ -35,6 +38,7 @@ public class ComputerModelController {
         }
     }
 
+    @Operation(summary = "Поиск модели компьютера по id")
     @GetMapping("/{id}")
     public ResponseEntity searchById(@PathVariable Long id) {
         try {
@@ -46,6 +50,7 @@ public class ComputerModelController {
         }
     }
 
+    @Operation(summary = "Обновление модели компьютера")
     @PutMapping
     public ResponseEntity update(@RequestBody ComputerModelDto computerModel) {
         try {
@@ -58,6 +63,7 @@ public class ComputerModelController {
         }
     }
 
+    @Operation(summary = "Удаление модели компьютера по id")
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         try {
@@ -67,6 +73,7 @@ public class ComputerModelController {
         }
     }
 
+    @Operation(summary = "Поиск модели компьютера по имени")
     @GetMapping("/search-by-name")
     public ResponseEntity searchByName(String name) {
         try {
@@ -78,6 +85,7 @@ public class ComputerModelController {
         }
     }
 
+    @Operation(summary = "Поиск модели компьютера по цвету")
     @GetMapping("/search-by-color")
     public ResponseEntity searchByColor(String color) {
         try {
@@ -89,6 +97,7 @@ public class ComputerModelController {
         }
     }
 
+    @Operation(summary = "Поиск модели компьютера по цене")
     @GetMapping("/search-by-price")
     public ResponseEntity searchByPrice(Double low, Double high) {
         try {
@@ -100,6 +109,7 @@ public class ComputerModelController {
         }
     }
 
+    @Operation(summary = "Поиск модели компьютера по любым параметрам (можно с пустыми)")
     @GetMapping
     public ResponseEntity getAllWithFilters(
             @RequestParam(required = false) String name,

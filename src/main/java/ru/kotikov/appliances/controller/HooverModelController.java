@@ -1,5 +1,6 @@
 package ru.kotikov.appliances.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.dto.HooverModelDto;
@@ -16,6 +17,7 @@ public class HooverModelController {
         this.hooverModelService = hooverModelService;
     }
 
+    @Operation(summary = "Создать новую модель пылесоса")
     @PostMapping
     public ResponseEntity create(@RequestBody HooverModelDto hooverModel,
                                  @RequestParam Long hooverId) {
@@ -26,6 +28,7 @@ public class HooverModelController {
         }
     }
 
+    @Operation(summary = "Получить список всех моделей пылесосов")
     @GetMapping("/get-all")
     public ResponseEntity getAll() {
         try {
@@ -35,6 +38,7 @@ public class HooverModelController {
         }
     }
 
+    @Operation(summary = "Поиск модели пылесоса по id")
     @GetMapping("/{id}")
     public ResponseEntity searchById(@PathVariable Long id) {
         try {
@@ -46,6 +50,7 @@ public class HooverModelController {
         }
     }
 
+    @Operation(summary = "Обновление модели пылесоса")
     @PutMapping
     public ResponseEntity update(@RequestBody HooverModelDto hooverModel) {
         try {
@@ -58,6 +63,7 @@ public class HooverModelController {
         }
     }
 
+    @Operation(summary = "Удаление модели пылесоса по id")
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         try {
@@ -67,6 +73,7 @@ public class HooverModelController {
         }
     }
 
+    @Operation(summary = "Поиск модели пылесоса по имени")
     @GetMapping("/search-by-name")
     public ResponseEntity searchByName(@RequestParam String name) {
         try {
@@ -78,6 +85,7 @@ public class HooverModelController {
         }
     }
 
+    @Operation(summary = "Поиск модели пылесоса по цвету")
     @GetMapping("/search-by-color")
     public ResponseEntity searchByColor(@RequestParam String color) {
         try {
@@ -89,6 +97,7 @@ public class HooverModelController {
         }
     }
 
+    @Operation(summary = "Поиск модели пылесоса по цене")
     @GetMapping("/search-by-price")
     public ResponseEntity searchByPrice(@RequestParam Double low, Double high) {
         try {
@@ -100,6 +109,7 @@ public class HooverModelController {
         }
     }
 
+    @Operation(summary = "Поиск модели пылесоса по любым параметрам (можно с пустыми)")
     @GetMapping
     public ResponseEntity getAllWithFilters(
             @RequestParam(required = false) String name,

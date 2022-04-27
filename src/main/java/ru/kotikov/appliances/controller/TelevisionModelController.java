@@ -1,5 +1,6 @@
 package ru.kotikov.appliances.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.dto.TelevisionModelDto;
@@ -17,6 +18,7 @@ public class TelevisionModelController {
         this.televisionModelService = televisionModelService;
     }
 
+    @Operation(summary = "Создать новую модель телевизора")
     @PostMapping
     public ResponseEntity create(@RequestBody TelevisionModelDto televisionModel,
                                  @RequestParam Long televisionId) {
@@ -29,6 +31,7 @@ public class TelevisionModelController {
         }
     }
 
+    @Operation(summary = "Получить список всех моделей телевизоров")
     @GetMapping("/get-all")
     public ResponseEntity getAll() {
         try {
@@ -38,6 +41,7 @@ public class TelevisionModelController {
         }
     }
 
+    @Operation(summary = "Поиск модели телевизора по id")
     @GetMapping("/{id}")
     public ResponseEntity searchById(@PathVariable Long id) {
         try {
@@ -49,6 +53,7 @@ public class TelevisionModelController {
         }
     }
 
+    @Operation(summary = "Обновление модели телевизора")
     @PutMapping
     public ResponseEntity update(@RequestBody TelevisionModelDto televisionModel) {
         try {
@@ -61,6 +66,7 @@ public class TelevisionModelController {
         }
     }
 
+    @Operation(summary = "Удаление модели телевизора по id")
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         try {
@@ -70,6 +76,7 @@ public class TelevisionModelController {
         }
     }
 
+    @Operation(summary = "Поиск модели телевизора по имени")
     @GetMapping("/search-by-name")
     public ResponseEntity searchByName(@RequestParam String name) {
         try {
@@ -81,6 +88,7 @@ public class TelevisionModelController {
         }
     }
 
+    @Operation(summary = "Поиск модели телевизора по цвету")
     @GetMapping("/search-by-color")
     public ResponseEntity searchByColor(@RequestParam String color) {
         try {
@@ -92,6 +100,7 @@ public class TelevisionModelController {
         }
     }
 
+    @Operation(summary = "Поиск модели телевизора по цене")
     @GetMapping("/search-by-price")
     public ResponseEntity searchByPrice(@RequestParam Double low, Double high) {
         try {
@@ -103,6 +112,7 @@ public class TelevisionModelController {
         }
     }
 
+    @Operation(summary = "Поиск модели телевизора по любым параметрам (можно с пустыми)")
     @GetMapping
     public ResponseEntity getAllWithFilters(
             @RequestParam(required = false) String name,
