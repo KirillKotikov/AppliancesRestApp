@@ -1,6 +1,6 @@
 package ru.kotikov.appliances.services;
 
-import org.apache.juli.logging.Log;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import ru.kotikov.appliances.dto.ApplianceDto;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import static ru.kotikov.appliances.dto.ApplianceDto.toDto;
 import static ru.kotikov.appliances.entity.HooverEntity.toEntity;
 
+@Log4j2
 @Service
 public class HooverService implements ApplianceService {
 
@@ -53,6 +54,7 @@ public class HooverService implements ApplianceService {
     public void delete(Long id) throws ApplianceNotFoundException {
         if (hooverRepo.findById(id).isPresent()) {
             hooverRepo.deleteById(id);
+            log.info("Удалена группа пылесосов с id = {}", id);
         }
         throw new ApplianceNotFoundException("Группа пылесосов с id = " + id + " для удаления не найдена!");
     }

@@ -1,5 +1,6 @@
 package ru.kotikov.appliances.services;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import ru.kotikov.appliances.dto.ApplianceModelDto;
 import ru.kotikov.appliances.dto.HooverModelDto;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 import static ru.kotikov.appliances.dto.HooverModelDto.toModelDto;
 import static ru.kotikov.appliances.entity.HooverModelEntity.toEntity;
 
+@Log4j2
 @Service
 public class HooverModelService implements ApplianceModelService {
     private final HooverModelRepo hooverModelRepo;
@@ -64,6 +66,7 @@ public class HooverModelService implements ApplianceModelService {
     public void delete(Long id) throws ModelNotFoundException {
         if (hooverModelRepo.findById(id).isPresent()) {
             hooverModelRepo.deleteById(id);
+            log.info("Удалена модель пылесоса с id = {}", id);
         } else throw new ModelNotFoundException("Модель пылесоса с id = " + id + " для удаления не найдена!");
     }
 
@@ -91,7 +94,7 @@ public class HooverModelService implements ApplianceModelService {
             Double lowPrice, Double highPrice, Object dustContainerVolume, Object numberOfModes, Boolean inStock
     ) {
         return hooverModelRepo.getByParams(
-                name, serialNumber, color, size, lowPrice, highPrice,(Integer) dustContainerVolume, (Integer) numberOfModes, inStock
+                name, serialNumber, color, size, lowPrice, highPrice, (Integer) dustContainerVolume, (Integer) numberOfModes, inStock
         ).stream().map(HooverModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 }

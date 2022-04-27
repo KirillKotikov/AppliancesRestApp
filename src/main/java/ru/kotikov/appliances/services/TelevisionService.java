@@ -1,5 +1,6 @@
 package ru.kotikov.appliances.services;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import ru.kotikov.appliances.dto.ApplianceDto;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 import static ru.kotikov.appliances.dto.ApplianceDto.toDto;
 import static ru.kotikov.appliances.entity.TelevisionEntity.toEntity;
 
+@Log4j2
 @Service
 public class TelevisionService implements ApplianceService {
 
@@ -52,6 +54,7 @@ public class TelevisionService implements ApplianceService {
     public void delete(Long id) throws ApplianceNotFoundException {
         if (televisionRepo.findById(id).isPresent()) {
             televisionRepo.deleteById(id);
+            log.info("Удалена группа телевизоров с id = {}", id);
         }
         throw new ApplianceNotFoundException("Группа телевизоров c id = " + id + " для удаления не найдена!");
     }

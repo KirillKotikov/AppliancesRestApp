@@ -1,5 +1,6 @@
 package ru.kotikov.appliances.services;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import ru.kotikov.appliances.dto.ApplianceModelDto;
 import ru.kotikov.appliances.dto.SmartphoneModelDto;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 import static ru.kotikov.appliances.dto.SmartphoneModelDto.toModelDto;
 import static ru.kotikov.appliances.entity.SmartphoneModelEntity.toEntity;
 
+@Log4j2
 @Service
 public class SmartphoneModelService implements ApplianceModelService {
     private final SmartphoneModelRepo smartphoneModelRepo;
@@ -65,6 +67,7 @@ public class SmartphoneModelService implements ApplianceModelService {
     public void delete(Long id) throws ModelNotFoundException {
         if (smartphoneModelRepo.findById(id).isPresent()) {
             smartphoneModelRepo.deleteById(id);
+            log.info("Удалена модель телефона с id = {}", id);
         } else throw new ModelNotFoundException("Модель смартфона с id = " + id + " для удаления не найдена!");
     }
 

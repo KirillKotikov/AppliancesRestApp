@@ -1,5 +1,6 @@
 package ru.kotikov.appliances.services;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import ru.kotikov.appliances.dto.ApplianceModelDto;
 import ru.kotikov.appliances.dto.FridgeModelDto;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 import static ru.kotikov.appliances.dto.FridgeModelDto.toModelDto;
 import static ru.kotikov.appliances.entity.FridgeModelEntity.toEntity;
 
+@Log4j2
 @Service
 public class FridgeModelService implements ApplianceModelService {
     private final FridgeModelRepo fridgeModelRepo;
@@ -64,6 +66,7 @@ public class FridgeModelService implements ApplianceModelService {
     public void delete(Long id) throws ModelNotFoundException {
         if (fridgeModelRepo.findById(id).isPresent()) {
             fridgeModelRepo.deleteById(id);
+            log.info("Удалена модель холодильника с id = {}", id);
         } else throw new ModelNotFoundException("Модель холодильника с id = " + id + " для удаления не найдена!");
     }
 

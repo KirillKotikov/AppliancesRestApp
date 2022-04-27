@@ -1,5 +1,6 @@
 package ru.kotikov.appliances.services;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import ru.kotikov.appliances.dto.ApplianceDto;
 import ru.kotikov.appliances.entity.ComputerEntity;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 
 import static ru.kotikov.appliances.dto.ApplianceDto.toDto;
 
+@Log4j2
 @Service
 public class ComputerService implements ApplianceService {
 
@@ -53,6 +55,7 @@ public class ComputerService implements ApplianceService {
     public void delete(Long id) throws ApplianceNotFoundException {
         if (computerRepo.findById(id).isPresent()) {
             computerRepo.deleteById(id);
+            log.info("Удалена группа компьютеров с id = {}", id);
         } else throw new ApplianceNotFoundException("Группа компьютеров с id = " + id + " для удаления не найдена!");
     }
 

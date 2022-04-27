@@ -1,5 +1,6 @@
 package ru.kotikov.appliances.services;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import ru.kotikov.appliances.dto.ApplianceDto;
 import ru.kotikov.appliances.entity.SmartphoneEntity;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 
 import static ru.kotikov.appliances.dto.ApplianceDto.toDto;
 
+@Log4j2
 @Service
 public class SmartphoneService implements ApplianceService {
 
@@ -55,6 +57,7 @@ public class SmartphoneService implements ApplianceService {
     public void delete(Long id) throws ApplianceNotFoundException {
         if (smartphoneRepo.findById(id).isPresent()) {
             smartphoneRepo.deleteById(id);
+            log.info("Удалена группа смартфонов с id = {}", id);
         } else throw new ApplianceNotFoundException("Группа смартфонов с id = " + id + " для удаления не найдена!");
     }
 
