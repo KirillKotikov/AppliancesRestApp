@@ -73,7 +73,7 @@ public class SmartphoneController {
     @GetMapping("/search-by-name")
     public ResponseEntity searchByName(@RequestParam String name) {
         try {
-            return ResponseEntity.ok(smartphoneService.searchByName(name));
+            return ResponseEntity.ok(smartphoneService.findByName(name));
         } catch (ApplianceNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {

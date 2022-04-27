@@ -13,7 +13,7 @@ import static ru.kotikov.appliances.dto.ApplianceDto.toDto;
 import static ru.kotikov.appliances.entity.HooverEntity.toEntity;
 
 @Service
-public class HooverService {
+public class HooverService implements ApplianceService {
 
     private final HooverRepo hooverRepo;
 
@@ -21,22 +21,26 @@ public class HooverService {
         this.hooverRepo = hooverRepo;
     }
 
+    @Override
     public ApplianceDto create(ApplianceDto hoover) throws ApplianceAlreadyExistException {
         if (hooverRepo.getByName(hoover.getName()) != null) {
             throw new ApplianceAlreadyExistException("Группа пылесосов с таким именем уже существует!");
         } else return toDto(hooverRepo.save(toEntity(hoover)));
     }
 
+    @Override
     public List<ApplianceDto> getAll() {
         return hooverRepo.findAll().stream().map(ApplianceDto::toDto).collect(Collectors.toList());
     }
 
+    @Override
     public ApplianceDto getById(Long id) throws ApplianceNotFoundException {
         if (hooverRepo.findById(id).isPresent()) {
             return toDto(hooverRepo.findById(id).get());
         } else throw new ApplianceNotFoundException("Группа пылесосов с id = " + id + " для удаления не найдена!");
     }
 
+    @Override
     public ApplianceDto update(ApplianceDto hoover) throws ApplianceNotFoundException {
         if (hooverRepo.findById(hoover.getId()).isPresent()) {
             hooverRepo.saveAndFlush(toEntity(hoover));
@@ -44,14 +48,16 @@ public class HooverService {
         } else throw new ApplianceNotFoundException("Группа пылесосов не найдена!");
     }
 
-    public String delete(Long id) throws ApplianceNotFoundException {
+    @Override
+    public void delete(Long id) throws ApplianceNotFoundException {
         if (hooverRepo.findById(id).isPresent()) {
             hooverRepo.deleteById(id);
         }
         throw new ApplianceNotFoundException("Группа пылесосов с id = " + id + " для удаления не найдена!");
     }
 
-    public List<ApplianceDto> getByName(String name) throws ApplianceNotFoundException {
+    @Override
+    public List<ApplianceDto> findByName(String name) throws ApplianceNotFoundException {
         return hooverRepo.findByName(name).stream().map(ApplianceDto::toDto).sorted().collect(Collectors.toList());
     }
 }

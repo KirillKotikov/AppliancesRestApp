@@ -1,20 +1,15 @@
 package ru.kotikov.appliances.dto;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import ru.kotikov.appliances.entity.HooverModelEntity;
 
 @Data
 @NoArgsConstructor
-public class HooverModelDto implements Comparable {
+@EqualsAndHashCode(callSuper = true)
+public class HooverModelDto extends ApplianceModelDto implements Comparable {
 
-    private Long id;
-    private String name;
-    private Long serialNumber;
-    private String color;
-    private String size;
-    private Double price;
-    private Boolean inStock;
     private Integer dustContainerVolume;
     private Integer numberOfModes;
     private ApplianceDto hooverDto;

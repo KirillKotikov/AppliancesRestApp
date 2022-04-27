@@ -1,20 +1,15 @@
 package ru.kotikov.appliances.dto;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import ru.kotikov.appliances.entity.TelevisionModelEntity;
 
 @Data
 @NoArgsConstructor
-public class TelevisionModelDto implements Comparable {
+@EqualsAndHashCode(callSuper = true)
+public class TelevisionModelDto extends ApplianceModelDto implements Comparable {
 
-    private Long id;
-    private String name;
-    private Long serialNumber;
-    private String color;
-    private String size;
-    private Double price;
-    private Boolean inStock;
     private String category;
     private String technology;
     private ApplianceDto televisionDto;

@@ -6,17 +6,12 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import ru.kotikov.appliances.entity.FridgeModelEntity;
 
+
 @Data
 @NoArgsConstructor
-public class FridgeModelDto implements Comparable {
+@EqualsAndHashCode(callSuper = true)
+public class FridgeModelDto extends ApplianceModelDto implements Comparable {
 
-    private Long id;
-    private String name;
-    private Long serialNumber;
-    private String color;
-    private String size;
-    private Double price;
-    private Boolean inStock;
     private Integer numbersOfDoors;
     private String compressorType;
     private ApplianceDto fridgeDto;

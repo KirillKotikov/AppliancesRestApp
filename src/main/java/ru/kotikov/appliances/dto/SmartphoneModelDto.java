@@ -7,15 +7,9 @@ import ru.kotikov.appliances.entity.SmartphoneModelEntity;
 
 @Data
 @NoArgsConstructor
-public class SmartphoneModelDto implements Comparable {
+@EqualsAndHashCode(callSuper = true)
+public class SmartphoneModelDto extends ApplianceModelDto implements Comparable {
 
-    private Long id;
-    private String name;
-    private Long serialNumber;
-    private String color;
-    private String size;
-    private Double price;
-    private Boolean inStock;
     private Integer volumeOfMemory;
     private Integer numbersOfCameras;
     private ApplianceDto smartphoneDto;

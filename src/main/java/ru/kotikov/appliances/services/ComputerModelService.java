@@ -1,6 +1,7 @@
 package ru.kotikov.appliances.services;
 
 import org.springframework.stereotype.Service;
+import ru.kotikov.appliances.dto.ApplianceModelDto;
 import ru.kotikov.appliances.dto.ComputerModelDto;
 import ru.kotikov.appliances.entity.ComputerModelEntity;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
@@ -16,7 +17,7 @@ import static ru.kotikov.appliances.dto.ComputerModelDto.toModelDto;
 import static ru.kotikov.appliances.entity.ComputerModelEntity.toEntity;
 
 @Service
-public class ComputerModelService {
+public class ComputerModelService implements ApplianceModelService {
 
     private final ComputerModelRepo computerModelRepo;
     private final ComputerRepo computerRepo;
@@ -26,59 +27,67 @@ public class ComputerModelService {
         this.computerRepo = computerRepo;
     }
 
-    public ComputerModelDto create(ComputerModelDto computerModel, Long computerId)
+    @Override
+    public ApplianceModelDto create(ApplianceModelDto applianceModelDto, Long computerId)
             throws ModelAlreadyExistException, ApplianceNotFoundException {
-        if (computerModelRepo.getByNameContainingIgnoreCase(computerModel.getName()) != null) {
+        if (computerModelRepo.getByNameContainingIgnoreCase(applianceModelDto.getName()) != null) {
             throw new ModelAlreadyExistException("Модель компьютера с таким именем уже существует!");
         } else if (computerRepo.findById(computerId).isPresent()) {
-            ComputerModelEntity computerModelEntity = toEntity(computerModel);
+            ComputerModelEntity computerModelEntity = toEntity((ComputerModelDto) applianceModelDto);
             computerModelEntity.setComputer(computerRepo.findById(computerId).get());
             computerModelRepo.save(computerModelEntity);
-            return computerModel;
+            return applianceModelDto;
         } else
             throw new ApplianceNotFoundException("Группа компьютеров с id = " + computerId + " для добавления модели не найдена!");
     }
 
-    public List<ComputerModelDto> getAll() {
+    @Override
+    public List<ApplianceModelDto> getAll() {
         return computerModelRepo.findAll().stream().map(ComputerModelDto::toModelDto).collect(Collectors.toList());
 
     }
 
-    public ComputerModelDto getById(Long id) throws ModelNotFoundException {
+    @Override
+    public ApplianceModelDto getById(Long id) throws ModelNotFoundException {
         if (computerModelRepo.findById(id).isPresent()) {
             return toModelDto(computerModelRepo.findById(id).get());
         } else throw new ModelNotFoundException("Модель компьютера с id = " + id + " не найдена!");
     }
 
-    public ComputerModelDto update(ComputerModelDto computerModel) throws ModelNotFoundException {
-        if (computerModelRepo.findById(computerModel.getId()).isPresent()) {
-            computerModelRepo.saveAndFlush(toEntity(computerModel));
-            return computerModel;
+    @Override
+    public ApplianceModelDto update(ApplianceModelDto applianceModelDto) throws ModelNotFoundException {
+        if (computerModelRepo.findById(applianceModelDto.getId()).isPresent()) {
+            computerModelRepo.saveAndFlush(toEntity((ComputerModelDto) applianceModelDto));
+            return applianceModelDto;
         } else throw new ModelNotFoundException("Модель компьютера для изменения (обновления) не найдена!");
     }
 
+    @Override
     public void delete(Long id) throws ModelNotFoundException {
         if (computerModelRepo.findById(id).isPresent()) {
             computerModelRepo.deleteById(id);
         } else throw new ModelNotFoundException("Модель компьютера с id = " + id + " для удаления не найдена!");
     }
 
-    public List<ComputerModelDto> getByName(String name) throws ModelNotFoundException {
+    @Override
+    public List<ApplianceModelDto> getByName(String name) throws ModelNotFoundException {
         return computerModelRepo.getByNameContainingIgnoreCase(name).stream()
                 .map(ComputerModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<ComputerModelDto> getByColor(String color) throws ModelNotFoundException {
+    @Override
+    public List<ApplianceModelDto> getByColor(String color) throws ModelNotFoundException {
         return computerModelRepo.getByColorContainingIgnoreCase(color).stream()
                 .map(ComputerModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<ComputerModelDto> getByPrice(Double low, Double high) throws ModelNotFoundException {
+    @Override
+    public List<ApplianceModelDto> getByPrice(Double low, Double high) throws ModelNotFoundException {
         return computerModelRepo.getByPriceGreaterThanAndPriceLessThan(low, high).stream()
                 .map(ComputerModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<ComputerModelDto> getByParams(
+    public List<ApplianceModelDto> getByParams(
             String name, Long serialNumber, String color, String size,
             Double lowPrice, Double highPrice, String category, String processorType, Boolean inStock
     ) {

@@ -73,7 +73,7 @@ public class FridgeController {
     @GetMapping("/search-by-name")
     public ResponseEntity searchByName(@RequestParam String name) {
         try {
-            return ResponseEntity.ok(fridgeService.getByName(name));
+            return ResponseEntity.ok(fridgeService.findByName(name));
         } catch (ApplianceNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {

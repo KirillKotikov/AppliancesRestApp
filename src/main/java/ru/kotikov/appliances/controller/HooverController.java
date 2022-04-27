@@ -72,7 +72,7 @@ public class HooverController {
     @GetMapping("/search-by-name")
     public ResponseEntity searchByName(@RequestParam String name) {
         try {
-            return ResponseEntity.ok(hooverService.getByName(name));
+            return ResponseEntity.ok(hooverService.findByName(name));
         } catch (ApplianceNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {

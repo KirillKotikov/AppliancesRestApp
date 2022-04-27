@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import static ru.kotikov.appliances.dto.ApplianceDto.toDto;
 
 @Service
-public class ComputerService {
+public class ComputerService implements ApplianceService {
 
     private final ComputerRepo computerRepo;
 
@@ -21,6 +21,7 @@ public class ComputerService {
         this.computerRepo = computerRepo;
     }
 
+    @Override
     public ApplianceDto create(ApplianceDto computer) throws ApplianceAlreadyExistException {
         if (computerRepo.getByName(computer.getName()) != null) {
             throw new ApplianceAlreadyExistException("Группа компьютеров с таким именем уже существует!");
@@ -28,16 +29,19 @@ public class ComputerService {
         return toDto(computerRepo.save(ComputerEntity.toEntity(computer)));
     }
 
+    @Override
     public List<ApplianceDto> getAll() {
         return computerRepo.findAll().stream().map(ApplianceDto::toDto).collect(Collectors.toList());
     }
 
+    @Override
     public ApplianceDto getById(Long id) throws ApplianceNotFoundException {
         if (computerRepo.findById(id).isPresent()) {
             return toDto(computerRepo.findById(id).get());
         } else throw new ApplianceNotFoundException("Группа компьютеров с id = " + id + " не найдена!");
     }
 
+    @Override
     public ApplianceDto update(ApplianceDto computer) throws ApplianceNotFoundException {
         if (computerRepo.findById(computer.getId()).isPresent()) {
             computerRepo.saveAndFlush(ComputerEntity.toEntity(computer));
@@ -45,13 +49,15 @@ public class ComputerService {
         } else throw new ApplianceNotFoundException("Группа компьютеров для изменения (обновления) не найдена!");
     }
 
+    @Override
     public void delete(Long id) throws ApplianceNotFoundException {
         if (computerRepo.findById(id).isPresent()) {
             computerRepo.deleteById(id);
         } else throw new ApplianceNotFoundException("Группа компьютеров с id = " + id + " для удаления не найдена!");
     }
 
-    public List<ApplianceDto> getByName(String name) throws ApplianceNotFoundException {
+    @Override
+    public List<ApplianceDto> findByName(String name) throws ApplianceNotFoundException {
         return computerRepo.findByName(name).stream().map(ApplianceDto::toDto).sorted().collect(Collectors.toList());
     }
 }

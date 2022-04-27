@@ -1,6 +1,7 @@
 package ru.kotikov.appliances.services;
 
 import org.springframework.stereotype.Service;
+import ru.kotikov.appliances.dto.ApplianceModelDto;
 import ru.kotikov.appliances.dto.SmartphoneModelDto;
 import ru.kotikov.appliances.entity.SmartphoneModelEntity;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
@@ -16,7 +17,7 @@ import static ru.kotikov.appliances.dto.SmartphoneModelDto.toModelDto;
 import static ru.kotikov.appliances.entity.SmartphoneModelEntity.toEntity;
 
 @Service
-public class SmartphoneModelService {
+public class SmartphoneModelService implements ApplianceModelService {
     private final SmartphoneModelRepo smartphoneModelRepo;
     private final SmartphoneRepo smartphoneRepo;
 
@@ -25,12 +26,13 @@ public class SmartphoneModelService {
         this.smartphoneRepo = smartphoneRepo;
     }
 
-    public SmartphoneModelDto create(SmartphoneModelDto smartphoneModel, Long smartphoneId)
+    @Override
+    public ApplianceModelDto create(ApplianceModelDto smartphoneModel, Long smartphoneId)
             throws ModelAlreadyExistException, ApplianceNotFoundException {
         if (smartphoneModelRepo.getByNameContainingIgnoreCase(smartphoneModel.getName()) != null) {
             throw new ModelAlreadyExistException("Модель смартфона с таким именем уже существует!");
         } else if (smartphoneRepo.findById(smartphoneId).isPresent()) {
-            SmartphoneModelEntity smartphoneModelEntity = toEntity(smartphoneModel);
+            SmartphoneModelEntity smartphoneModelEntity = toEntity((SmartphoneModelDto) smartphoneModel);
             smartphoneModelEntity.setSmartphone(smartphoneRepo.findById(smartphoneId).get());
             smartphoneModelRepo.save(smartphoneModelEntity);
             return smartphoneModel;
@@ -38,45 +40,52 @@ public class SmartphoneModelService {
             throw new ApplianceNotFoundException("Группа смартфонов с id = " + smartphoneId + " для добавления модели не найдена!");
     }
 
-    public List<SmartphoneModelDto> getAll() {
+    @Override
+    public List<ApplianceModelDto> getAll() {
         return smartphoneModelRepo.findAll().stream().map(SmartphoneModelDto::toModelDto).collect(Collectors.toList());
     }
 
-    public SmartphoneModelDto getById(Long id) throws ModelNotFoundException {
+    @Override
+    public ApplianceModelDto getById(Long id) throws ModelNotFoundException {
         if (smartphoneModelRepo.findById(id).isPresent()) {
             return toModelDto(smartphoneModelRepo.findById(id).get());
         } else throw new ModelNotFoundException("Модель смартфона c id = " + id + " не найдена!");
     }
 
-    public SmartphoneModelDto update(SmartphoneModelDto smartphoneModel) throws ModelNotFoundException {
+    @Override
+    public ApplianceModelDto update(ApplianceModelDto smartphoneModel) throws ModelNotFoundException {
         if (smartphoneModelRepo.findById(smartphoneModel.getId()).isPresent()) {
-            smartphoneModelRepo.saveAndFlush(toEntity(smartphoneModel));
+            smartphoneModelRepo.saveAndFlush(toEntity((SmartphoneModelDto) smartphoneModel));
             return smartphoneModel;
         } else throw new ModelNotFoundException("Модель смартфона для изменения (обновления) не найдена!");
     }
 
+    @Override
     public void delete(Long id) throws ModelNotFoundException {
         if (smartphoneModelRepo.findById(id).isPresent()) {
             smartphoneModelRepo.deleteById(id);
         } else throw new ModelNotFoundException("Модель смартфона с id = " + id + " для удаления не найдена!");
     }
 
-    public List<SmartphoneModelDto> getByName(String name) throws ModelNotFoundException {
+    @Override
+    public List<ApplianceModelDto> getByName(String name) throws ModelNotFoundException {
         return smartphoneModelRepo.getByNameContainingIgnoreCase(name).stream()
                 .map(SmartphoneModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<SmartphoneModelDto> getByColor(String color) throws ModelNotFoundException {
+    @Override
+    public List<ApplianceModelDto> getByColor(String color) throws ModelNotFoundException {
         return smartphoneModelRepo.getByColorContainingIgnoreCase(color).stream()
                 .map(SmartphoneModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<SmartphoneModelDto> getByPrice(Double low, Double high) throws ModelNotFoundException {
+    @Override
+    public List<ApplianceModelDto> getByPrice(Double low, Double high) throws ModelNotFoundException {
         return smartphoneModelRepo.getByPriceGreaterThanAndPriceLessThan(low, high).stream()
                 .map(SmartphoneModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
-    public List<SmartphoneModelDto> getByParams(
+    public List<ApplianceModelDto> getByParams(
             String name, Long serialNumber, String color, String size,
             Double lowPrice, Double highPrice, Integer volumeOfMemory, Integer numberOfCameras, Boolean inStock
     ) {
