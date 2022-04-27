@@ -4,16 +4,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.dto.FridgeModelDto;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
-import ru.kotikov.appliances.services.FridgeModelService;
+import ru.kotikov.appliances.services.ApplianceModelService;
 
 @RestController
 @RequestMapping("/fridge-models")
 public class FridgeModelController {
 
     final
-    FridgeModelService fridgeModelService;
+    ApplianceModelService fridgeModelService;
 
-    public FridgeModelController(FridgeModelService fridgeModelService) {
+    public FridgeModelController(ApplianceModelService fridgeModelService) {
         this.fridgeModelService = fridgeModelService;
     }
 

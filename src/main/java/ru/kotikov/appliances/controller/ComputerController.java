@@ -5,15 +5,15 @@ import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.dto.ApplianceDto;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
-import ru.kotikov.appliances.services.ComputerService;
+import ru.kotikov.appliances.services.ApplianceService;
 
 @RestController
 @RequestMapping("/computers")
 public class ComputerController {
 
-    private final ComputerService computerService;
+    private final ApplianceService computerService;
 
-    public ComputerController(ComputerService computerService) {
+    public ComputerController(ApplianceService computerService) {
         this.computerService = computerService;
     }
 

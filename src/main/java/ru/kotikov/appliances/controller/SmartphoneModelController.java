@@ -4,15 +4,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.dto.SmartphoneModelDto;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
-import ru.kotikov.appliances.services.SmartphoneModelService;
+import ru.kotikov.appliances.services.ApplianceModelService;
 
 @RestController
 @RequestMapping("/smartphone-models")
 public class SmartphoneModelController {
 
-    final SmartphoneModelService smartphoneModelService;
+    final ApplianceModelService smartphoneModelService;
 
-    public SmartphoneModelController(SmartphoneModelService smartphoneModelService) {
+    public SmartphoneModelController(ApplianceModelService smartphoneModelService) {
         this.smartphoneModelService = smartphoneModelService;
     }
 

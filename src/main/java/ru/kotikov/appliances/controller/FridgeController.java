@@ -6,15 +6,15 @@ import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.dto.ApplianceDto;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
-import ru.kotikov.appliances.services.FridgeService;
+import ru.kotikov.appliances.services.ApplianceService;
 
 @RestController
 @RequestMapping("/fridges")
 public class FridgeController {
 
-    private final FridgeService fridgeService;
+    private final ApplianceService fridgeService;
 
-    public FridgeController(FridgeService fridgeService) {
+    public FridgeController(ApplianceService fridgeService) {
         this.fridgeService = fridgeService;
     }
 

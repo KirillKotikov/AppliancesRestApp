@@ -5,15 +5,16 @@ import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.dto.ApplianceDto;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
+import ru.kotikov.appliances.services.ApplianceService;
 import ru.kotikov.appliances.services.HooverService;
 
 @RestController
 @RequestMapping("/hoovers")
 public class HooverController {
 
-    private final HooverService hooverService;
+    private final ApplianceService hooverService;
 
-    public HooverController(HooverService hooverService) {
+    public HooverController(ApplianceService hooverService) {
         this.hooverService = hooverService;
     }
 

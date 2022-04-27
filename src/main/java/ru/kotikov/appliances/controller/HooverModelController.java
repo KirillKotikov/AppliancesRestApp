@@ -4,15 +4,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.dto.HooverModelDto;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
-import ru.kotikov.appliances.services.HooverModelService;
+import ru.kotikov.appliances.services.ApplianceModelService;
 
 @RestController
 @RequestMapping("/hoover-models")
 public class HooverModelController {
 
-    final HooverModelService hooverModelService;
+    final ApplianceModelService hooverModelService;
 
-    public HooverModelController(HooverModelService hooverModelService) {
+    public HooverModelController(ApplianceModelService hooverModelService) {
         this.hooverModelService = hooverModelService;
     }
 

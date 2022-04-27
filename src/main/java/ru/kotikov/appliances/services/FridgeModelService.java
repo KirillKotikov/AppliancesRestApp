@@ -17,7 +17,7 @@ import static ru.kotikov.appliances.dto.FridgeModelDto.toModelDto;
 import static ru.kotikov.appliances.entity.FridgeModelEntity.toEntity;
 
 @Service
-public class FridgeModelService implements ApplianceModelService{
+public class FridgeModelService implements ApplianceModelService {
     private final FridgeModelRepo fridgeModelRepo;
     private final FridgeRepo fridgeRepo;
 
@@ -25,6 +25,7 @@ public class FridgeModelService implements ApplianceModelService{
         this.fridgeModelRepo = fridgeModelRepo;
         this.fridgeRepo = fridgeRepo;
     }
+
     @Override
     public ApplianceModelDto create(ApplianceModelDto applianceModelDto, Long fridgeId)
             throws ModelAlreadyExistException, ApplianceNotFoundException {
@@ -38,16 +39,19 @@ public class FridgeModelService implements ApplianceModelService{
         } else
             throw new ApplianceNotFoundException("Группа холодильников с id = " + fridgeId + " для добавления модели не найдена!");
     }
+
     @Override
     public List<ApplianceModelDto> getAll() {
         return fridgeModelRepo.findAll().stream().map(FridgeModelDto::toModelDto).collect(Collectors.toList());
     }
+
     @Override
     public ApplianceModelDto getById(Long id) throws ModelNotFoundException {
         if (fridgeModelRepo.findById(id).isPresent()) {
             return toModelDto(fridgeModelRepo.findById(id).get());
         } else throw new ModelNotFoundException("Модель холодильника c id = " + id + " не найдена!");
     }
+
     @Override
     public ApplianceModelDto update(ApplianceModelDto fridgeModel) throws ModelNotFoundException {
         if (fridgeModelRepo.findById(fridgeModel.getId()).isPresent()) {
@@ -55,33 +59,39 @@ public class FridgeModelService implements ApplianceModelService{
             return fridgeModel;
         } else throw new ModelNotFoundException("Модель холодильника для изменения (обновления) не найдена!");
     }
+
     @Override
     public void delete(Long id) throws ModelNotFoundException {
         if (fridgeModelRepo.findById(id).isPresent()) {
             fridgeModelRepo.deleteById(id);
         } else throw new ModelNotFoundException("Модель холодильника с id = " + id + " для удаления не найдена!");
     }
+
     @Override
     public List<ApplianceModelDto> getByName(String name) throws ModelNotFoundException {
         return fridgeModelRepo.getByNameContainingIgnoreCase(name).stream()
                 .map(FridgeModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
+
     @Override
     public List<ApplianceModelDto> getByColor(String color) throws ModelNotFoundException {
         return fridgeModelRepo.getByColorContainingIgnoreCase(color).stream()
                 .map(FridgeModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
+
     @Override
     public List<ApplianceModelDto> getByPrice(Double low, Double high) throws ModelNotFoundException {
         return fridgeModelRepo.getByPriceGreaterThanAndPriceLessThan(low, high).stream()
                 .map(FridgeModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
+
+    @Override
     public List<ApplianceModelDto> getByParams(
             String name, Long serialNumber, String color, String size,
-            Double lowPrice, Double highPrice, Integer numbersOfDoors, String compressorType, Boolean inStock
+            Double lowPrice, Double highPrice, Object numbersOfDoors, Object compressorType, Boolean inStock
     ) {
         return fridgeModelRepo.getByParams(
-                name, serialNumber, color, size, lowPrice, highPrice, numbersOfDoors, compressorType, inStock
+                name, serialNumber, color, size, lowPrice, highPrice, (Integer) numbersOfDoors,(String) compressorType, inStock
         ).stream().map(FridgeModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 }

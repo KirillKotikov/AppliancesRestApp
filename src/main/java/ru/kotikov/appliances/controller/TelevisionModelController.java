@@ -5,15 +5,15 @@ import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.dto.TelevisionModelDto;
 import ru.kotikov.appliances.exceptions.ModelAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
-import ru.kotikov.appliances.services.TelevisionModelService;
+import ru.kotikov.appliances.services.ApplianceModelService;
 
 @RestController
 @RequestMapping("/television-models")
 public class TelevisionModelController {
 
-    final TelevisionModelService televisionModelService;
+    final ApplianceModelService televisionModelService;
 
-    public TelevisionModelController(TelevisionModelService televisionModelService) {
+    public TelevisionModelController(ApplianceModelService televisionModelService) {
         this.televisionModelService = televisionModelService;
     }
 

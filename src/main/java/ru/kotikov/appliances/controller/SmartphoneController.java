@@ -6,15 +6,15 @@ import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.dto.ApplianceDto;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
-import ru.kotikov.appliances.services.SmartphoneService;
+import ru.kotikov.appliances.services.ApplianceService;
 
 @RestController
 @RequestMapping("/smartphones")
 public class SmartphoneController {
 
-    private final SmartphoneService smartphoneService;
+    private final ApplianceService smartphoneService;
 
-    public SmartphoneController(SmartphoneService smartphoneService) {
+    public SmartphoneController(ApplianceService smartphoneService) {
         this.smartphoneService = smartphoneService;
     }
 

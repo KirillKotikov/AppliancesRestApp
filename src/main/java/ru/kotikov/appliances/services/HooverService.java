@@ -1,5 +1,6 @@
 package ru.kotikov.appliances.services;
 
+import org.apache.juli.logging.Log;
 import org.springframework.stereotype.Service;
 import ru.kotikov.appliances.dto.ApplianceDto;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;

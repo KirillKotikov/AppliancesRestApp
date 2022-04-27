@@ -5,15 +5,15 @@ import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.dto.ApplianceDto;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
-import ru.kotikov.appliances.services.TelevisionService;
+import ru.kotikov.appliances.services.ApplianceService;
 
 @RestController
 @RequestMapping("/televisions")
 public class TelevisionController {
 
-    private final TelevisionService televisionService;
+    private final ApplianceService televisionService;
 
-    public TelevisionController(TelevisionService televisionService) {
+    public TelevisionController(ApplianceService televisionService) {
         this.televisionService = televisionService;
     }
 

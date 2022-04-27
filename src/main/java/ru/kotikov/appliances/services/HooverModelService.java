@@ -85,12 +85,13 @@ public class HooverModelService implements ApplianceModelService {
                 .map(HooverModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
+    @Override
     public List<ApplianceModelDto> getByParams(
             String name, Long serialNumber, String color, String size,
-            Double lowPrice, Double highPrice, Integer dustContainerVolume, Integer numberOfModes, Boolean inStock
+            Double lowPrice, Double highPrice, Object dustContainerVolume, Object numberOfModes, Boolean inStock
     ) {
         return hooverModelRepo.getByParams(
-                name, serialNumber, color, size, lowPrice, highPrice, dustContainerVolume, numberOfModes, inStock
+                name, serialNumber, color, size, lowPrice, highPrice,(Integer) dustContainerVolume, (Integer) numberOfModes, inStock
         ).stream().map(HooverModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 }

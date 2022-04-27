@@ -10,6 +10,7 @@ import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.repository.SmartphoneModelRepo;
 import ru.kotikov.appliances.repository.SmartphoneRepo;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -85,12 +86,13 @@ public class SmartphoneModelService implements ApplianceModelService {
                 .map(SmartphoneModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
+    @Override
     public List<ApplianceModelDto> getByParams(
             String name, Long serialNumber, String color, String size,
-            Double lowPrice, Double highPrice, Integer volumeOfMemory, Integer numberOfCameras, Boolean inStock
+            Double lowPrice, Double highPrice, Object volumeOfMemory, Object numberOfCameras, Boolean inStock
     ) {
         return smartphoneModelRepo.getByParams(
-                name, serialNumber, color, size, lowPrice, highPrice, volumeOfMemory, numberOfCameras, inStock
+                name, serialNumber, color, size, lowPrice, highPrice, (Integer) volumeOfMemory, (Integer) numberOfCameras, inStock
         ).stream().map(SmartphoneModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 }

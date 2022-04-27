@@ -4,15 +4,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kotikov.appliances.dto.ComputerModelDto;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
-import ru.kotikov.appliances.services.ComputerModelService;
+import ru.kotikov.appliances.services.ApplianceModelService;
 
 @RestController
 @RequestMapping("/computer-models")
 public class ComputerModelController {
 
-    final ComputerModelService computerModelService;
+    private final ApplianceModelService computerModelService;
 
-    public ComputerModelController(ComputerModelService computerModelService) {
+    public ComputerModelController(ApplianceModelService computerModelService) {
         this.computerModelService = computerModelService;
     }
 

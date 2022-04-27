@@ -87,12 +87,13 @@ public class ComputerModelService implements ApplianceModelService {
                 .map(ComputerModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 
+    @Override
     public List<ApplianceModelDto> getByParams(
             String name, Long serialNumber, String color, String size,
-            Double lowPrice, Double highPrice, String category, String processorType, Boolean inStock
+            Double lowPrice, Double highPrice, Object category, Object processorType, Boolean inStock
     ) {
         return computerModelRepo.getByParams(
-                name, serialNumber, color, size, lowPrice, highPrice, category, processorType, inStock
+                name, serialNumber, color, size, lowPrice, highPrice, (String) category, (String) processorType, inStock
         ).stream().map(ComputerModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 }
