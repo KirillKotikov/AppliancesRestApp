@@ -3,7 +3,7 @@ package ru.kotikov.appliances.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.kotikov.appliances.entity.AbstractApplianceEntity;
+import ru.kotikov.appliances.entity.ApplianceEntity;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class ApplianceDto {
     @JsonIgnore
     private List<Object> models;
 
-    public static ApplianceDto toDto(AbstractApplianceEntity appliance) {
+    public static ApplianceDto toDto(ApplianceEntity appliance) {
         ApplianceDto applianceDto = new ApplianceDto();
         applianceDto.setId(appliance.getId());
         applianceDto.setName(appliance.getName());

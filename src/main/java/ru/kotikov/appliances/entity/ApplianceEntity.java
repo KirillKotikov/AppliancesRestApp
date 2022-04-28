@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public abstract class AbstractApplianceEntity {
+public abstract class ApplianceEntity {
     private Long id;
     private String name;
     private String producingCountry;

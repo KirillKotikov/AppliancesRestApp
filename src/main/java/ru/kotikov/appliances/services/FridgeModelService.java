@@ -11,10 +11,9 @@ import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.repository.FridgeModelRepo;
 import ru.kotikov.appliances.repository.FridgeRepo;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static ru.kotikov.appliances.dto.FridgeModelDto.toModelDto;
 import static ru.kotikov.appliances.entity.FridgeModelEntity.toEntity;
 
 @Log4j2
@@ -43,14 +42,14 @@ public class FridgeModelService implements ApplianceModelService {
     }
 
     @Override
-    public List<ApplianceModelDto> getAll() {
-        return fridgeModelRepo.findAll().stream().map(FridgeModelDto::toModelDto).collect(Collectors.toList());
+    public List<Object> getAll() {
+        return new ArrayList<>(fridgeModelRepo.findAll());
     }
 
     @Override
-    public ApplianceModelDto getById(Long id) throws ModelNotFoundException {
+    public Object getById(Long id) throws ModelNotFoundException {
         if (fridgeModelRepo.findById(id).isPresent()) {
-            return toModelDto(fridgeModelRepo.findById(id).get());
+            return fridgeModelRepo.findById(id).get();
         } else throw new ModelNotFoundException("Модель холодильника c id = " + id + " не найдена!");
     }
 
@@ -71,30 +70,27 @@ public class FridgeModelService implements ApplianceModelService {
     }
 
     @Override
-    public List<ApplianceModelDto> getByName(String name) throws ModelNotFoundException {
-        return fridgeModelRepo.getByNameContainingIgnoreCase(name).stream()
-                .map(FridgeModelDto::toModelDto).sorted().collect(Collectors.toList());
+    public List<Object> getByName(String name) throws ModelNotFoundException {
+        return new ArrayList<>(fridgeModelRepo.getByNameContainingIgnoreCase(name));
     }
 
     @Override
-    public List<ApplianceModelDto> getByColor(String color) throws ModelNotFoundException {
-        return fridgeModelRepo.getByColorContainingIgnoreCase(color).stream()
-                .map(FridgeModelDto::toModelDto).sorted().collect(Collectors.toList());
+    public List<Object> getByColor(String color) throws ModelNotFoundException {
+        return new ArrayList<>(fridgeModelRepo.getByColorContainingIgnoreCase(color));
     }
 
     @Override
-    public List<ApplianceModelDto> getByPrice(Double low, Double high) throws ModelNotFoundException {
-        return fridgeModelRepo.getByPriceGreaterThanAndPriceLessThan(low, high).stream()
-                .map(FridgeModelDto::toModelDto).sorted().collect(Collectors.toList());
+    public List<Object> getByPrice(Double low, Double high) throws ModelNotFoundException {
+        return new ArrayList<>(fridgeModelRepo.getByPriceGreaterThanAndPriceLessThan(low, high));
     }
 
     @Override
-    public List<ApplianceModelDto> getByParams(
+    public List<Object> getByParams(
             String name, Long serialNumber, String color, String size,
             Double lowPrice, Double highPrice, Object numbersOfDoors, Object compressorType, Boolean inStock
     ) {
-        return fridgeModelRepo.getByParams(
-                name, serialNumber, color, size, lowPrice, highPrice, (Integer) numbersOfDoors,(String) compressorType, inStock
-        ).stream().map(FridgeModelDto::toModelDto).sorted().collect(Collectors.toList());
+        return new ArrayList<>(fridgeModelRepo.getByParams(
+                name, serialNumber, color, size, lowPrice, highPrice, (Integer) numbersOfDoors, (String) compressorType, inStock
+        ));
     }
 }

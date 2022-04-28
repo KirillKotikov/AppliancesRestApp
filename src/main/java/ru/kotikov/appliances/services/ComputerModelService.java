@@ -11,10 +11,9 @@ import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.repository.ComputerModelRepo;
 import ru.kotikov.appliances.repository.ComputerRepo;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static ru.kotikov.appliances.dto.ComputerModelDto.toModelDto;
 import static ru.kotikov.appliances.entity.ComputerModelEntity.toEntity;
 
 @Log4j2
@@ -44,14 +43,14 @@ public class ComputerModelService implements ApplianceModelService {
     }
 
     @Override
-    public List<ApplianceModelDto> getAll() {
-        return computerModelRepo.findAll().stream().map(ComputerModelDto::toModelDto).collect(Collectors.toList());
+    public List<Object> getAll() {
+        return new ArrayList<>(computerModelRepo.findAll());
     }
 
     @Override
-    public ApplianceModelDto getById(Long id) throws ModelNotFoundException {
+    public Object getById(Long id) throws ModelNotFoundException {
         if (computerModelRepo.findById(id).isPresent()) {
-            return toModelDto(computerModelRepo.findById(id).get());
+            return computerModelRepo.findById(id).get();
         } else throw new ModelNotFoundException("Модель компьютера с id = " + id + " не найдена!");
     }
 
@@ -72,30 +71,27 @@ public class ComputerModelService implements ApplianceModelService {
     }
 
     @Override
-    public List<ApplianceModelDto> getByName(String name) throws ModelNotFoundException {
-        return computerModelRepo.getByNameContainingIgnoreCase(name).stream()
-                .map(ComputerModelDto::toModelDto).sorted().collect(Collectors.toList());
+    public List<Object> getByName(String name) throws ModelNotFoundException {
+        return new ArrayList<>(computerModelRepo.getByNameContainingIgnoreCase(name));
     }
 
     @Override
-    public List<ApplianceModelDto> getByColor(String color) throws ModelNotFoundException {
-        return computerModelRepo.getByColorContainingIgnoreCase(color).stream()
-                .map(ComputerModelDto::toModelDto).sorted().collect(Collectors.toList());
+    public List<Object> getByColor(String color) throws ModelNotFoundException {
+        return new ArrayList<>(computerModelRepo.getByColorContainingIgnoreCase(color));
     }
 
     @Override
-    public List<ApplianceModelDto> getByPrice(Double low, Double high) throws ModelNotFoundException {
-        return computerModelRepo.getByPriceGreaterThanAndPriceLessThan(low, high).stream()
-                .map(ComputerModelDto::toModelDto).sorted().collect(Collectors.toList());
+    public List<Object> getByPrice(Double low, Double high) throws ModelNotFoundException {
+        return new ArrayList<>(computerModelRepo.getByPriceGreaterThanAndPriceLessThan(low, high));
     }
 
     @Override
-    public List<ApplianceModelDto> getByParams(
+    public List<Object> getByParams(
             String name, Long serialNumber, String color, String size,
             Double lowPrice, Double highPrice, Object category, Object processorType, Boolean inStock
     ) {
-        return computerModelRepo.getByParams(
+        return new ArrayList<>(computerModelRepo.getByParams(
                 name, serialNumber, color, size, lowPrice, highPrice, (String) category, (String) processorType, inStock
-        ).stream().map(ComputerModelDto::toModelDto).sorted().collect(Collectors.toList());
+        ));
     }
 }

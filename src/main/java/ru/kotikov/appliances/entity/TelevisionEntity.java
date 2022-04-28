@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @ToString
 @NoArgsConstructor
 @Table(name = "television")
-public class TelevisionEntity extends AbstractApplianceEntity {
+public class TelevisionEntity extends ApplianceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

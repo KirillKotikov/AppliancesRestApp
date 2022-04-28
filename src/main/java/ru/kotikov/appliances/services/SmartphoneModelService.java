@@ -11,11 +11,9 @@ import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 import ru.kotikov.appliances.repository.SmartphoneModelRepo;
 import ru.kotikov.appliances.repository.SmartphoneRepo;
 
-import javax.persistence.criteria.CriteriaBuilder;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static ru.kotikov.appliances.dto.SmartphoneModelDto.toModelDto;
 import static ru.kotikov.appliances.entity.SmartphoneModelEntity.toEntity;
 
 @Log4j2
@@ -44,14 +42,14 @@ public class SmartphoneModelService implements ApplianceModelService {
     }
 
     @Override
-    public List<ApplianceModelDto> getAll() {
-        return smartphoneModelRepo.findAll().stream().map(SmartphoneModelDto::toModelDto).collect(Collectors.toList());
+    public List<Object> getAll() {
+        return new ArrayList<>(smartphoneModelRepo.findAll());
     }
 
     @Override
-    public ApplianceModelDto getById(Long id) throws ModelNotFoundException {
+    public Object getById(Long id) throws ModelNotFoundException {
         if (smartphoneModelRepo.findById(id).isPresent()) {
-            return toModelDto(smartphoneModelRepo.findById(id).get());
+            return smartphoneModelRepo.findById(id).get();
         } else throw new ModelNotFoundException("Модель смартфона c id = " + id + " не найдена!");
     }
 
@@ -72,30 +70,27 @@ public class SmartphoneModelService implements ApplianceModelService {
     }
 
     @Override
-    public List<ApplianceModelDto> getByName(String name) throws ModelNotFoundException {
-        return smartphoneModelRepo.getByNameContainingIgnoreCase(name).stream()
-                .map(SmartphoneModelDto::toModelDto).sorted().collect(Collectors.toList());
+    public List<Object> getByName(String name) throws ModelNotFoundException {
+        return new ArrayList<>(smartphoneModelRepo.getByNameContainingIgnoreCase(name));
     }
 
     @Override
-    public List<ApplianceModelDto> getByColor(String color) throws ModelNotFoundException {
-        return smartphoneModelRepo.getByColorContainingIgnoreCase(color).stream()
-                .map(SmartphoneModelDto::toModelDto).sorted().collect(Collectors.toList());
+    public List<Object> getByColor(String color) throws ModelNotFoundException {
+        return new ArrayList<>(smartphoneModelRepo.getByColorContainingIgnoreCase(color));
     }
 
     @Override
-    public List<ApplianceModelDto> getByPrice(Double low, Double high) throws ModelNotFoundException {
-        return smartphoneModelRepo.getByPriceGreaterThanAndPriceLessThan(low, high).stream()
-                .map(SmartphoneModelDto::toModelDto).sorted().collect(Collectors.toList());
+    public List<Object> getByPrice(Double low, Double high) throws ModelNotFoundException {
+        return new ArrayList<>(smartphoneModelRepo.getByPriceGreaterThanAndPriceLessThan(low, high));
     }
 
     @Override
-    public List<ApplianceModelDto> getByParams(
+    public List<Object> getByParams(
             String name, Long serialNumber, String color, String size,
             Double lowPrice, Double highPrice, Object volumeOfMemory, Object numberOfCameras, Boolean inStock
     ) {
-        return smartphoneModelRepo.getByParams(
+        return new ArrayList<>(smartphoneModelRepo.getByParams(
                 name, serialNumber, color, size, lowPrice, highPrice, (Integer) volumeOfMemory, (Integer) numberOfCameras, inStock
-        ).stream().map(SmartphoneModelDto::toModelDto).sorted().collect(Collectors.toList());
+        ));
     }
 }

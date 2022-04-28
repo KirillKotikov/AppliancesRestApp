@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Entity
 @NoArgsConstructor
 @Table(name = "hoover")
-public class HooverEntity extends AbstractApplianceEntity {
+public class HooverEntity extends ApplianceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

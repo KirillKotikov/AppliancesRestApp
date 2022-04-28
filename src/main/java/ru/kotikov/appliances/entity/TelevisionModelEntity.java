@@ -1,7 +1,10 @@
 package ru.kotikov.appliances.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 import ru.kotikov.appliances.dto.TelevisionModelDto;
 
