@@ -1,5 +1,6 @@
 package ru.kotikov.appliances.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.Hibernate;
 import ru.kotikov.appliances.dto.SmartphoneModelDto;
@@ -36,6 +37,7 @@ public class SmartphoneModelEntity {
     private Integer numberOfCameras;
     @ManyToOne
     @JoinColumn(name = "smartphone_id", nullable = false)
+    @JsonIgnore
     private SmartphoneEntity smartphone;
 
     public static SmartphoneModelEntity toEntity(SmartphoneModelDto modelDto) {
@@ -49,8 +51,7 @@ public class SmartphoneModelEntity {
         modelEntity.setInStock(modelDto.getInStock());
         modelEntity.setVolumeOfMemory(modelDto.getVolumeOfMemory());
         modelEntity.setNumberOfCameras(modelDto.getNumbersOfCameras());
-        modelEntity.setSmartphone(SmartphoneEntity.toEntity(modelDto.getSmartphoneDto()));
-
+        modelEntity.setSmartphone(SmartphoneEntity.toEntity(modelDto.getSmartphone()));
         return modelEntity;
     }
 
@@ -66,5 +67,4 @@ public class SmartphoneModelEntity {
     public int hashCode() {
         return getClass().hashCode();
     }
-
 }

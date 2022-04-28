@@ -1,10 +1,10 @@
 package ru.kotikov.appliances.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import ru.kotikov.appliances.entity.ComputerModelEntity;
-
 
 @Data
 @NoArgsConstructor
@@ -13,7 +13,8 @@ public class ComputerModelDto extends ApplianceModelDto implements Comparable {
 
     private String category;
     private String processorType;
-    private ApplianceDto computerDto;
+    @JsonIgnore
+    private ApplianceDto computer;
 
     public static ComputerModelDto toModelDto(ComputerModelEntity entity) {
         var model = new ComputerModelDto();
@@ -26,8 +27,7 @@ public class ComputerModelDto extends ApplianceModelDto implements Comparable {
         model.setCategory(entity.getCategory());
         model.setProcessorType(entity.getProcessorType());
         model.setInStock(entity.getInStock());
-        model.setComputerDto(ApplianceDto.toDto(entity.getComputer()));
-
+        model.setComputer(ApplianceDto.toDto(entity.getComputer()));
         return model;
     }
 

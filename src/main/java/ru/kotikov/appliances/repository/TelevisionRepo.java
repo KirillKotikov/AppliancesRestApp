@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface TelevisionRepo extends JpaRepository<TelevisionEntity, Long> {
 
-    TelevisionEntity getByName(String name);
-    List<TelevisionEntity> findByName(String name);
+    TelevisionEntity getByNameContainingIgnoreCase(String name);
+    List<TelevisionEntity> findByNameContainingIgnoreCase(String name);
 }

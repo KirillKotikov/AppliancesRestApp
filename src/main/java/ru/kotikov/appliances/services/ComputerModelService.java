@@ -46,7 +46,6 @@ public class ComputerModelService implements ApplianceModelService {
     @Override
     public List<ApplianceModelDto> getAll() {
         return computerModelRepo.findAll().stream().map(ComputerModelDto::toModelDto).collect(Collectors.toList());
-
     }
 
     @Override

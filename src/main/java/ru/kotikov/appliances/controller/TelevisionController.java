@@ -75,7 +75,7 @@ public class TelevisionController {
         }
     }
 
-    @Operation(summary = "Поиск группы телевизоров по имени")
+    @Operation(summary = "Поиск группы телевизоров по имени (работает и по частям слова)")
     @GetMapping("/search-by-name")
     public ResponseEntity searchByName(@RequestParam String name) {
         try {

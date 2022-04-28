@@ -6,8 +6,6 @@ import ru.kotikov.appliances.entity.HooverEntity;
 import java.util.List;
 
 public interface HooverRepo extends JpaRepository<HooverEntity, Long> {
-    HooverEntity getByName(String hooverName);
-    List<HooverEntity> findByName(String hooverName);
+    HooverEntity getByNameContainingIgnoreCase(String hooverName);
+    List<HooverEntity> findByNameContainingIgnoreCase(String hooverName);
 }
-
-

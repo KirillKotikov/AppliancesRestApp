@@ -2,6 +2,7 @@ package ru.kotikov.appliances.services;
 
 import org.springframework.stereotype.Service;
 import ru.kotikov.appliances.dto.ApplianceDto;
+import ru.kotikov.appliances.entity.*;
 import ru.kotikov.appliances.repository.*;
 
 import java.util.ArrayList;
@@ -26,15 +27,28 @@ public class MainService {
         this.televisionRepo = televisionRepo;
     }
 
-    public List<ApplianceDto> getAll() {
-        List<ApplianceDto> list = new ArrayList<>();
-        computerRepo.findAll().stream().map(ApplianceDto::toDto).forEach(list::add);
-        fridgeRepo.findAll().stream().map(ApplianceDto::toDto).forEach(list::add);
-        hooverRepo.findAll().stream().map(ApplianceDto::toDto).forEach(list::add);
-        smartphoneRepo.findAll().stream().map(ApplianceDto::toDto).forEach(list::add);
-        televisionRepo.findAll().stream().map(ApplianceDto::toDto).forEach(list::add);
-        return list.stream().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).collect(Collectors.toList());
+    public List<Object> getAll() {
+        List<Object> list = new ArrayList<>();
+        list.addAll(computerRepo.findAll().stream().peek(
+                x -> x.setComputerModels(
+                        x.getComputerModels().stream().filter(ComputerModelEntity::getInStock).collect(Collectors.toList()))
+        ).collect(Collectors.toList()));
+        list.addAll(fridgeRepo.findAll().stream().peek(
+                x -> x.setFridgeModels(
+                        x.getFridgeModels().stream().filter(FridgeModelEntity::getInStock).collect(Collectors.toList()))
+        ).collect(Collectors.toList()));
+        list.addAll(hooverRepo.findAll().stream().peek(
+                x -> x.setHooverModels(
+                        x.getHooverModels().stream().filter(HooverModelEntity::getInStock).collect(Collectors.toList()))
+        ).collect(Collectors.toList()));
+        list.addAll(smartphoneRepo.findAll().stream().peek(
+                x -> x.setSmartphoneModels(
+                        x.getSmartphoneModels().stream().filter(SmartphoneModelEntity::getInStock).collect(Collectors.toList()))
+        ).collect(Collectors.toList()));
+        list.addAll(televisionRepo.findAll().stream().peek(
+                x -> x.setTelevisionModels(
+                        x.getTelevisionModels().stream().filter(TelevisionModelEntity::getInStock).collect(Collectors.toList()))
+        ).collect(Collectors.toList()));
+        return list;
     }
 }
-
-

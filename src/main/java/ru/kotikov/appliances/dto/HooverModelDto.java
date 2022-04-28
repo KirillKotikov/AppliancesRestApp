@@ -1,5 +1,6 @@
 package ru.kotikov.appliances.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,8 @@ public class HooverModelDto extends ApplianceModelDto implements Comparable {
 
     private Integer dustContainerVolume;
     private Integer numberOfModes;
-    private ApplianceDto hooverDto;
+    @JsonIgnore
+    private ApplianceDto hoover;
 
     public static HooverModelDto toModelDto(HooverModelEntity entity) {
         var model = new HooverModelDto();
@@ -25,7 +27,7 @@ public class HooverModelDto extends ApplianceModelDto implements Comparable {
         model.setDustContainerVolume(entity.getDustContainerVolume());
         model.setNumberOfModes(entity.getNumberOfModes());
         model.setInStock(entity.getInStock());
-        model.setHooverDto(ApplianceDto.toDto(entity.getHoover()));
+        model.setHoover(ApplianceDto.toDto(entity.getHoover()));
         return model;
     }
 

@@ -74,7 +74,7 @@ public class FridgeModelController {
         }
     }
 
-    @Operation(summary = "Поиск модели компьютера по имени")
+    @Operation(summary = "Поиск модели компьютера по имени (работает и по частям слова)")
     @GetMapping("/search-by-name")
     public ResponseEntity searchByName(@RequestParam String name) {
         try {
@@ -86,7 +86,7 @@ public class FridgeModelController {
         }
     }
 
-    @Operation(summary = "Поиск модели компьютера по цвету")
+    @Operation(summary = "Поиск модели компьютера по цвету (работает и по частям слова)")
     @GetMapping("/search-by-color")
     public ResponseEntity searchByColor(@RequestParam String color) {
         try {
@@ -98,7 +98,7 @@ public class FridgeModelController {
         }
     }
 
-    @Operation(summary = "Поиск модели компьютера по цене")
+    @Operation(summary = "Поиск модели компьютера по цене (вводится диапазон от и до)")
     @GetMapping("/search-by-price")
     public ResponseEntity searchByPrice(@RequestParam Double low, Double high) {
         try {

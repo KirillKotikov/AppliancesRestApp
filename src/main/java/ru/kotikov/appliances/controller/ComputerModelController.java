@@ -73,7 +73,7 @@ public class ComputerModelController {
         }
     }
 
-    @Operation(summary = "Поиск модели компьютера по имени")
+    @Operation(summary = "Поиск модели компьютера по имени (работает и по частям слова)")
     @GetMapping("/search-by-name")
     public ResponseEntity searchByName(String name) {
         try {
@@ -85,7 +85,7 @@ public class ComputerModelController {
         }
     }
 
-    @Operation(summary = "Поиск модели компьютера по цвету")
+    @Operation(summary = "Поиск модели компьютера по цвету (работает и по частям слова)")
     @GetMapping("/search-by-color")
     public ResponseEntity searchByColor(String color) {
         try {
@@ -97,7 +97,7 @@ public class ComputerModelController {
         }
     }
 
-    @Operation(summary = "Поиск модели компьютера по цене")
+    @Operation(summary = "Поиск модели компьютера по цене (вводится диапазон от и до)")
     @GetMapping("/search-by-price")
     public ResponseEntity searchByPrice(Double low, Double high) {
         try {

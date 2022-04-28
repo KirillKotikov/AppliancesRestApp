@@ -38,7 +38,7 @@ public class SmartphoneModelController {
         }
     }
 
-    @Operation(summary = "Поиск модели пылесоса по id")
+    @Operation(summary = "Поиск модели смартфона по id")
     @GetMapping("/{id}")
     public ResponseEntity searchById(@PathVariable Long id) {
         try {
@@ -50,7 +50,7 @@ public class SmartphoneModelController {
         }
     }
 
-    @Operation(summary = "Обновление модели пылесоса")
+    @Operation(summary = "Обновление модели смартфона")
     @PutMapping
     public ResponseEntity update(@RequestBody SmartphoneModelDto smartphoneModel) {
         try {
@@ -63,7 +63,7 @@ public class SmartphoneModelController {
         }
     }
 
-    @Operation(summary = "Удаление модели пылесоса по id")
+    @Operation(summary = "Удаление модели смартфона по id")
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         try {
@@ -73,7 +73,7 @@ public class SmartphoneModelController {
         }
     }
 
-    @Operation(summary = "Поиск модели пылесоса по имени")
+    @Operation(summary = "Поиск модели смартфона по имени (работает и по частям слова)")
     @GetMapping("/search-by-name")
     public ResponseEntity searchByName(@RequestParam String name) {
         try {
@@ -85,7 +85,7 @@ public class SmartphoneModelController {
         }
     }
 
-    @Operation(summary = "Поиск модели пылесоса по цвету")
+    @Operation(summary = "Поиск модели смартфона по цвету (работает и по частям слова)")
     @GetMapping("/search-by-color")
     public ResponseEntity searchByColor(@RequestParam String color) {
         try {
@@ -97,7 +97,7 @@ public class SmartphoneModelController {
         }
     }
 
-    @Operation(summary = "Поиск модели пылесоса по цене")
+    @Operation(summary = "Поиск модели смартфона по цене (вводится диапазон от и до)")
     @GetMapping("/search-by-price")
     public ResponseEntity searchByPrice(@RequestParam Double low, Double high) {
         try {
@@ -109,7 +109,7 @@ public class SmartphoneModelController {
         }
     }
 
-    @Operation(summary = "Поиск модели пылесоса по любым параметрам (можно с пустыми)")
+    @Operation(summary = "Поиск модели смартфона по любым параметрам (можно с пустыми)")
     @GetMapping
     public ResponseEntity getAllWithFilters(
             @RequestParam(required = false) String name,

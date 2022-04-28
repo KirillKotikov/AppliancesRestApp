@@ -1,5 +1,6 @@
 package ru.kotikov.appliances.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,8 @@ public class TelevisionModelDto extends ApplianceModelDto implements Comparable 
 
     private String category;
     private String technology;
-    private ApplianceDto televisionDto;
+    @JsonIgnore
+    private ApplianceDto television;
 
     public static TelevisionModelDto toModelDto(TelevisionModelEntity entity) {
         var model = new TelevisionModelDto();
@@ -25,8 +27,7 @@ public class TelevisionModelDto extends ApplianceModelDto implements Comparable 
         model.setCategory(entity.getCategory());
         model.setTechnology(entity.getTechnology());
         model.setInStock(entity.getInStock());
-        model.setTelevisionDto(ApplianceDto.toDto(entity.getTelevision()));
-
+        model.setTelevision(ApplianceDto.toDto(entity.getTelevision()));
         return model;
     }
 

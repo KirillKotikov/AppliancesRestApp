@@ -1,11 +1,11 @@
 package ru.kotikov.appliances.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import ru.kotikov.appliances.entity.FridgeModelEntity;
-
 
 @Data
 @NoArgsConstructor
@@ -14,7 +14,8 @@ public class FridgeModelDto extends ApplianceModelDto implements Comparable {
 
     private Integer numbersOfDoors;
     private String compressorType;
-    private ApplianceDto fridgeDto;
+    @JsonIgnore
+    private ApplianceDto fridge;
 
     public static FridgeModelDto toModelDto(FridgeModelEntity entity) {
         var model = new FridgeModelDto();
@@ -27,8 +28,7 @@ public class FridgeModelDto extends ApplianceModelDto implements Comparable {
         model.setNumbersOfDoors(entity.getNumbersOfDoors());
         model.setCompressorType(entity.getCompressorType());
         model.setInStock(entity.getInStock());
-        model.setFridgeDto(ApplianceDto.toDto(entity.getFridge()));
-
+        model.setFridge(ApplianceDto.toDto(entity.getFridge()));
         return model;
     }
 

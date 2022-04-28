@@ -73,7 +73,7 @@ public class HooverModelController {
         }
     }
 
-    @Operation(summary = "Поиск модели пылесоса по имени")
+    @Operation(summary = "Поиск модели пылесоса по имени (работает и по частям слова)")
     @GetMapping("/search-by-name")
     public ResponseEntity searchByName(@RequestParam String name) {
         try {
@@ -85,7 +85,7 @@ public class HooverModelController {
         }
     }
 
-    @Operation(summary = "Поиск модели пылесоса по цвету")
+    @Operation(summary = "Поиск модели пылесоса по цвету (работает и по частям слова)")
     @GetMapping("/search-by-color")
     public ResponseEntity searchByColor(@RequestParam String color) {
         try {
@@ -97,7 +97,7 @@ public class HooverModelController {
         }
     }
 
-    @Operation(summary = "Поиск модели пылесоса по цене")
+    @Operation(summary = "Поиск модели пылесоса по цене (вводится диапазон от и до)")
     @GetMapping("/search-by-price")
     public ResponseEntity searchByPrice(@RequestParam Double low, Double high) {
         try {

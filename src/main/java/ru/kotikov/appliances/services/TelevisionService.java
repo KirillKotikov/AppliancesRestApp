@@ -3,6 +3,8 @@ package ru.kotikov.appliances.services;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import ru.kotikov.appliances.dto.ApplianceDto;
+import ru.kotikov.appliances.entity.TelevisionEntity;
+import ru.kotikov.appliances.entity.TelevisionModelEntity;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
 import ru.kotikov.appliances.repository.TelevisionRepo;
@@ -25,20 +27,26 @@ public class TelevisionService implements ApplianceService {
 
     @Override
     public ApplianceDto create(ApplianceDto television) throws ApplianceAlreadyExistException {
-        if (televisionRepo.getByName(television.getName()) != null) {
+        if (televisionRepo.getByNameContainingIgnoreCase(television.getName()) != null) {
             throw new ApplianceAlreadyExistException("Группа телевизоров с таким именем уже существует!");
         } else return toDto(televisionRepo.save(toEntity(television)));
     }
 
     @Override
-    public List<ApplianceDto> getAll() {
-        return televisionRepo.findAll().stream().map(ApplianceDto::toDto).collect(Collectors.toList());
+    public List<Object> getAll() {
+        return televisionRepo.findAll().stream().peek(
+                x -> x.setTelevisionModels(
+                        x.getTelevisionModels().stream().filter(TelevisionModelEntity::getInStock).collect(Collectors.toList()))
+        ).collect(Collectors.toList());
     }
 
     @Override
-    public ApplianceDto getById(Long id) throws ApplianceNotFoundException {
+    public Object getById(Long id) throws ApplianceNotFoundException {
         if (televisionRepo.findById(id).isPresent()) {
-            return toDto(televisionRepo.findById(id).get());
+            TelevisionEntity television = televisionRepo.findById(id).get();
+            television.setTelevisionModels(television.getTelevisionModels().stream()
+                    .filter(TelevisionModelEntity::getInStock).collect(Collectors.toList()));
+            return television;
         } else throw new ApplianceNotFoundException("Группа телевизоров с id = " + id + " не найдена!");
     }
 
@@ -60,7 +68,9 @@ public class TelevisionService implements ApplianceService {
     }
 
     @Override
-    public List<ApplianceDto> findByName(String name) throws ApplianceNotFoundException {
-        return televisionRepo.findByName(name).stream().map(ApplianceDto::toDto).sorted().collect(Collectors.toList());
+    public List<Object> findByName(String name) throws ApplianceNotFoundException {
+        return televisionRepo.findByNameContainingIgnoreCase(name).stream().peek(x -> x.setTelevisionModels(x.getTelevisionModels()
+                .stream().filter(TelevisionModelEntity::getInStock).collect(Collectors.toList()))
+        ).collect(Collectors.toList());
     }
 }

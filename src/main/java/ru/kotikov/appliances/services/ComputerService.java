@@ -4,14 +4,13 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import ru.kotikov.appliances.dto.ApplianceDto;
 import ru.kotikov.appliances.entity.ComputerEntity;
+import ru.kotikov.appliances.entity.ComputerModelEntity;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
 import ru.kotikov.appliances.repository.ComputerRepo;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static ru.kotikov.appliances.dto.ApplianceDto.toDto;
 
 @Log4j2
 @Service
@@ -25,21 +24,28 @@ public class ComputerService implements ApplianceService {
 
     @Override
     public ApplianceDto create(ApplianceDto computer) throws ApplianceAlreadyExistException {
-        if (computerRepo.getByName(computer.getName()) != null) {
+        if (computerRepo.getByNameContainingIgnoreCase(computer.getName()) != null) {
             throw new ApplianceAlreadyExistException("Группа компьютеров с таким именем уже существует!");
         }
-        return toDto(computerRepo.save(ComputerEntity.toEntity(computer)));
+        computerRepo.save(ComputerEntity.toEntity(computer));
+        return computer;
     }
 
     @Override
-    public List<ApplianceDto> getAll() {
-        return computerRepo.findAll().stream().map(ApplianceDto::toDto).collect(Collectors.toList());
+    public List<Object> getAll() {
+        return computerRepo.findAll().stream().peek(
+                x -> x.setComputerModels(
+                        x.getComputerModels().stream().filter(ComputerModelEntity::getInStock).collect(Collectors.toList()))
+        ).collect(Collectors.toList());
     }
 
     @Override
-    public ApplianceDto getById(Long id) throws ApplianceNotFoundException {
+    public Object getById(Long id) throws ApplianceNotFoundException {
         if (computerRepo.findById(id).isPresent()) {
-            return toDto(computerRepo.findById(id).get());
+            ComputerEntity computerEntity = computerRepo.findById(id).get();
+            computerEntity.setComputerModels(computerEntity.getComputerModels().stream()
+                    .filter(ComputerModelEntity::getInStock).collect(Collectors.toList()));
+            return computerEntity;
         } else throw new ApplianceNotFoundException("Группа компьютеров с id = " + id + " не найдена!");
     }
 
@@ -60,7 +66,9 @@ public class ComputerService implements ApplianceService {
     }
 
     @Override
-    public List<ApplianceDto> findByName(String name) throws ApplianceNotFoundException {
-        return computerRepo.findByName(name).stream().map(ApplianceDto::toDto).sorted().collect(Collectors.toList());
+    public List<Object> findByName(String name) throws ApplianceNotFoundException {
+        return computerRepo.findByNameContainingIgnoreCase(name).stream().peek(x -> x.setComputerModels(x.getComputerModels()
+                .stream().filter(ComputerModelEntity::getInStock).collect(Collectors.toList()))
+        ).collect(Collectors.toList());
     }
 }

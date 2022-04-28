@@ -99,4 +99,3 @@ public class SmartphoneModelService implements ApplianceModelService {
         ).stream().map(SmartphoneModelDto::toModelDto).sorted().collect(Collectors.toList());
     }
 }
-

@@ -4,14 +4,13 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import ru.kotikov.appliances.dto.ApplianceDto;
 import ru.kotikov.appliances.entity.FridgeEntity;
+import ru.kotikov.appliances.entity.FridgeModelEntity;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
 import ru.kotikov.appliances.repository.FridgeRepo;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static ru.kotikov.appliances.dto.ApplianceDto.toDto;
 
 @Log4j2
 @Service
@@ -25,22 +24,28 @@ public class FridgeService implements ApplianceService {
 
     @Override
     public ApplianceDto create(ApplianceDto fridge) throws ApplianceAlreadyExistException {
-        if (fridgeRepo.getByName(fridge.getName()) != null) {
+        if (fridgeRepo.getByNameContainingIgnoreCase(fridge.getName()) != null) {
             throw new ApplianceAlreadyExistException("Группа холодильника с таким именем уже существует!");
         }
-        return toDto(fridgeRepo.save(FridgeEntity.toEntity(fridge)));
+        fridgeRepo.save(FridgeEntity.toEntity(fridge));
+        return fridge;
     }
 
     @Override
-    public List<ApplianceDto> getAll() {
-        return fridgeRepo.findAll().stream()
-                .map(ApplianceDto::toDto).collect(Collectors.toList());
+    public List<Object> getAll() {
+        return fridgeRepo.findAll().stream().peek(
+                x -> x.setFridgeModels(
+                        x.getFridgeModels().stream().filter(FridgeModelEntity::getInStock).collect(Collectors.toList()))
+        ).collect(Collectors.toList());
     }
 
     @Override
-    public ApplianceDto getById(Long id) throws ApplianceNotFoundException {
+    public Object getById(Long id) throws ApplianceNotFoundException {
         if (fridgeRepo.findById(id).isPresent()) {
-            return toDto(fridgeRepo.findById(id).get());
+            FridgeEntity fridge = fridgeRepo.findById(id).get();
+            fridge.setFridgeModels(fridge.getFridgeModels().stream()
+                    .filter(FridgeModelEntity::getInStock).collect(Collectors.toList()));
+            return fridge;
         } else throw new ApplianceNotFoundException("Группа пылесосов с id = " + id + " не найден!");
     }
 
@@ -61,7 +66,9 @@ public class FridgeService implements ApplianceService {
     }
 
     @Override
-    public List<ApplianceDto> findByName(String name) throws ApplianceNotFoundException {
-        return fridgeRepo.findByName(name).stream().map(ApplianceDto::toDto).sorted().collect(Collectors.toList());
+    public List<Object> findByName(String name) throws ApplianceNotFoundException {
+        return fridgeRepo.findByNameContainingIgnoreCase(name).stream().peek(x -> x.setFridgeModels(x.getFridgeModels()
+                .stream().filter(FridgeModelEntity::getInStock).collect(Collectors.toList()))
+        ).collect(Collectors.toList());
     }
 }

@@ -6,8 +6,6 @@ import ru.kotikov.appliances.entity.ComputerEntity;
 import java.util.List;
 
 public interface ComputerRepo extends JpaRepository<ComputerEntity, Long> {
-    ComputerEntity getByName(String name);
-    List<ComputerEntity> findByName(String name);
-
-
+    ComputerEntity getByNameContainingIgnoreCase(String name);
+    List<ComputerEntity> findByNameContainingIgnoreCase(String name);
 }

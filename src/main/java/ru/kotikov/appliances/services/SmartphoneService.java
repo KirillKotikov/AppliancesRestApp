@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import ru.kotikov.appliances.dto.ApplianceDto;
 import ru.kotikov.appliances.entity.SmartphoneEntity;
+import ru.kotikov.appliances.entity.SmartphoneModelEntity;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
 import ru.kotikov.appliances.repository.SmartphoneRepo;
@@ -25,7 +26,7 @@ public class SmartphoneService implements ApplianceService {
 
     @Override
     public ApplianceDto create(ApplianceDto smartphone) throws ApplianceAlreadyExistException {
-        if (smartphoneRepo.getByName(smartphone.getName()) != null) {
+        if (smartphoneRepo.getByNameContainingIgnoreCase(smartphone.getName()) != null) {
             throw new ApplianceAlreadyExistException("Группа смартфонов с таким именем уже существует!");
         } else {
             return toDto(smartphoneRepo.save(SmartphoneEntity.toEntity(smartphone)));
@@ -33,15 +34,20 @@ public class SmartphoneService implements ApplianceService {
     }
 
     @Override
-    public List<ApplianceDto> getAll() {
-        return smartphoneRepo.findAll().stream().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
-                .map(ApplianceDto::toDto).collect(Collectors.toList());
+    public List<Object> getAll() {
+        return smartphoneRepo.findAll().stream().peek(
+                x -> x.setSmartphoneModels(
+                        x.getSmartphoneModels().stream().filter(SmartphoneModelEntity::getInStock).collect(Collectors.toList()))
+        ).collect(Collectors.toList());
     }
 
     @Override
-    public ApplianceDto getById(Long id) throws ApplianceNotFoundException {
+    public Object getById(Long id) throws ApplianceNotFoundException {
         if (smartphoneRepo.findById(id).isPresent()) {
-            return toDto(smartphoneRepo.findById(id).get());
+            SmartphoneEntity smartphone = smartphoneRepo.findById(id).get();
+            smartphone.setSmartphoneModels(smartphone.getSmartphoneModels().stream()
+                    .filter(SmartphoneModelEntity::getInStock).collect(Collectors.toList()));
+            return smartphone;
         } else throw new ApplianceNotFoundException("Группа смартфонов с id = " + id + " не найдена!");
     }
 
@@ -62,7 +68,9 @@ public class SmartphoneService implements ApplianceService {
     }
 
     @Override
-    public List<ApplianceDto> findByName(String name) throws ApplianceNotFoundException {
-        return smartphoneRepo.findByName(name).stream().map(ApplianceDto::toDto).sorted().collect(Collectors.toList());
+    public List<Object> findByName(String name) throws ApplianceNotFoundException {
+        return smartphoneRepo.findByNameContainingIgnoreCase(name).stream().peek(x -> x.setSmartphoneModels(x.getSmartphoneModels()
+                .stream().filter(SmartphoneModelEntity::getInStock).collect(Collectors.toList()))
+        ).collect(Collectors.toList());
     }
 }

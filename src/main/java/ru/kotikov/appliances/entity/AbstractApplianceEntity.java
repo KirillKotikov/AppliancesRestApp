@@ -1,5 +1,6 @@
 package ru.kotikov.appliances.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.util.List;
@@ -12,5 +13,6 @@ public abstract class AbstractApplianceEntity {
     private String companyManufacturer;
     private Boolean availableOnline;
     private Boolean installmentPlan;
+    @JsonIgnore
     private List<Object> models;
 }

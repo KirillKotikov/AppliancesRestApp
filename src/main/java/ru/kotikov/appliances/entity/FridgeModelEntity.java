@@ -1,5 +1,6 @@
 package ru.kotikov.appliances.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.Hibernate;
 import ru.kotikov.appliances.dto.ComputerModelDto;
@@ -7,7 +8,6 @@ import ru.kotikov.appliances.dto.FridgeModelDto;
 
 import javax.persistence.*;
 import java.util.Objects;
-
 
 @Entity
 @Getter
@@ -38,6 +38,7 @@ public class FridgeModelEntity {
     private String compressorType;
     @ManyToOne
     @JoinColumn(name = "fridge_id", nullable = false)
+    @JsonIgnore
     private FridgeEntity fridge;
 
     public static FridgeModelEntity toEntity(FridgeModelDto modelDto) {
@@ -51,8 +52,7 @@ public class FridgeModelEntity {
         modelEntity.setInStock(modelDto.getInStock());
         modelEntity.setNumbersOfDoors(modelDto.getNumbersOfDoors());
         modelEntity.setCompressorType(modelDto.getCompressorType());
-        modelEntity.setFridge(FridgeEntity.toEntity(modelDto.getFridgeDto()));
-
+        modelEntity.setFridge(FridgeEntity.toEntity(modelDto.getFridge()));
         return modelEntity;
     }
 

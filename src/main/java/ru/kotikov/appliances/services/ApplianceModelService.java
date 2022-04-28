@@ -1,13 +1,11 @@
 package ru.kotikov.appliances.services;
 
 import ru.kotikov.appliances.dto.ApplianceModelDto;
-import ru.kotikov.appliances.dto.ComputerModelDto;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
 import ru.kotikov.appliances.exceptions.ModelAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ModelNotFoundException;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public interface ApplianceModelService {
 

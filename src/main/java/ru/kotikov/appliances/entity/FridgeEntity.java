@@ -51,7 +51,6 @@ public class FridgeEntity extends AbstractApplianceEntity {
                 .sorted((Comparator.comparing(FridgeModelEntity::getPrice)))
                 .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
                 .collect(Collectors.toList()));
-
         return entity;
     }
 

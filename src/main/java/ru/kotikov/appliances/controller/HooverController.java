@@ -7,7 +7,6 @@ import ru.kotikov.appliances.dto.ApplianceDto;
 import ru.kotikov.appliances.exceptions.ApplianceAlreadyExistException;
 import ru.kotikov.appliances.exceptions.ApplianceNotFoundException;
 import ru.kotikov.appliances.services.ApplianceService;
-import ru.kotikov.appliances.services.HooverService;
 
 @RestController
 @RequestMapping("/hoovers")
@@ -76,7 +75,7 @@ public class HooverController {
         }
     }
 
-    @Operation(summary = "Поиск группы пылесосов по имени")
+    @Operation(summary = "Поиск группы пылесосов по имени (работает и по частям слова)")
     @GetMapping("/search-by-name")
     public ResponseEntity searchByName(@RequestParam String name) {
         try {

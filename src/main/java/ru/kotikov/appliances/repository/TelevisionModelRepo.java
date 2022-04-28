@@ -31,5 +31,4 @@ public interface TelevisionModelRepo extends JpaRepository<TelevisionModelEntity
     List<TelevisionModelEntity> getByParams(
             String name, Long serialNumber, String color, String size,
             Double lowPrice, Double highPrice, String category, String technology, Boolean inStock);
-
 }

@@ -1,5 +1,6 @@
 package ru.kotikov.appliances.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.Hibernate;
 import ru.kotikov.appliances.dto.HooverModelDto;
@@ -36,6 +37,7 @@ public class HooverModelEntity {
     private Integer numberOfModes;
     @ManyToOne
     @JoinColumn(name = "hoover_id", nullable = false)
+    @JsonIgnore
     private HooverEntity hoover;
 
     public static HooverModelEntity toEntity(HooverModelDto modelDto) {
@@ -49,8 +51,7 @@ public class HooverModelEntity {
         modelEntity.setInStock(modelDto.getInStock());
         modelEntity.setDustContainerVolume(modelDto.getDustContainerVolume());
         modelEntity.setNumberOfModes(modelDto.getNumberOfModes());
-        modelEntity.setHoover(HooverEntity.toEntity(modelDto.getHooverDto()));
-
+        modelEntity.setHoover(HooverEntity.toEntity(modelDto.getHoover()));
         return modelEntity;
     }
 
@@ -66,5 +67,4 @@ public class HooverModelEntity {
     public int hashCode() {
         return getClass().hashCode();
     }
-
 }

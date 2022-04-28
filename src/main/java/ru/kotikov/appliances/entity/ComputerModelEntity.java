@@ -1,5 +1,6 @@
 package ru.kotikov.appliances.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.Hibernate;
 import ru.kotikov.appliances.dto.ComputerModelDto;
@@ -36,11 +37,11 @@ public class ComputerModelEntity{
     private String processorType;
     @ManyToOne
     @JoinColumn(name = "computer_id", nullable = false)
+    @JsonIgnore
     private ComputerEntity computer;
 
     public static ComputerModelEntity toEntity(ComputerModelDto modelDto) {
         var modelEntity = new ComputerModelEntity();
-
         modelEntity.setId(modelDto.getId());
         modelEntity.setName(modelDto.getName());
         modelEntity.setSerialNumber(modelDto.getSerialNumber());
@@ -50,8 +51,7 @@ public class ComputerModelEntity{
         modelEntity.setInStock(modelDto.getInStock());
         modelEntity.setCategory(modelDto.getCategory());
         modelEntity.setProcessorType(modelDto.getProcessorType());
-        modelEntity.setComputer(ComputerEntity.toEntity(modelDto.getComputerDto()));
-
+        modelEntity.setComputer(ComputerEntity.toEntity(modelDto.getComputer()));
         return modelEntity;
     }
 

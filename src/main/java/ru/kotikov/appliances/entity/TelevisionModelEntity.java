@@ -1,5 +1,6 @@
 package ru.kotikov.appliances.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.Hibernate;
 import ru.kotikov.appliances.dto.TelevisionModelDto;
@@ -36,6 +37,7 @@ public class TelevisionModelEntity {
     private String technology;
     @ManyToOne
     @JoinColumn(name = "television_id", nullable = false)
+    @JsonIgnore
     private TelevisionEntity television;
 
     public static TelevisionModelEntity toEntity(TelevisionModelDto modelDto) {
@@ -49,7 +51,7 @@ public class TelevisionModelEntity {
         modelEntity.setInStock(modelDto.getInStock());
         modelEntity.setCategory(modelDto.getCategory());
         modelEntity.setTechnology(modelDto.getTechnology());
-        modelEntity.setTelevision(TelevisionEntity.toEntity(modelDto.getTelevisionDto()));
+        modelEntity.setTelevision(TelevisionEntity.toEntity(modelDto.getTelevision()));
         return modelEntity;
     }
 
@@ -66,4 +68,3 @@ public class TelevisionModelEntity {
         return getClass().hashCode();
     }
 }
-

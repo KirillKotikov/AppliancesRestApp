@@ -10,13 +10,13 @@ public interface ApplianceService {
 
     ApplianceDto create(ApplianceDto computer) throws ApplianceAlreadyExistException;
 
-    List<ApplianceDto> getAll();
+    List<Object> getAll();
 
-    ApplianceDto getById(Long id) throws ApplianceNotFoundException;
+    Object getById(Long id) throws ApplianceNotFoundException;
 
     ApplianceDto update(ApplianceDto computer) throws ApplianceNotFoundException;
 
     void delete(Long id) throws ApplianceNotFoundException;
 
-    List<ApplianceDto> findByName(String name) throws ApplianceNotFoundException;
+    List<Object> findByName(String name) throws ApplianceNotFoundException;
 }

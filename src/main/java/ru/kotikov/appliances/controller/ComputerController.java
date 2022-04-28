@@ -75,7 +75,7 @@ public class ComputerController {
         }
     }
 
-    @Operation(summary = "Поиск группы компьютеров по имени")
+    @Operation(summary = "Поиск группы компьютеров по имени (работает и по частям слова)")
     @GetMapping("/search-by-name")
     public ResponseEntity searchByName(@RequestParam String name) {
         try {

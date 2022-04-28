@@ -51,7 +51,6 @@ public class ComputerEntity extends AbstractApplianceEntity {
                 .sorted((Comparator.comparing(ComputerModelEntity::getPrice)))
                 .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
                 .collect(Collectors.toList()));
-
         return entity;
     }
 

@@ -1,5 +1,6 @@
 package ru.kotikov.appliances.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,8 @@ public class SmartphoneModelDto extends ApplianceModelDto implements Comparable 
 
     private Integer volumeOfMemory;
     private Integer numbersOfCameras;
-    private ApplianceDto smartphoneDto;
+    @JsonIgnore
+    private ApplianceDto smartphone;
 
     public static SmartphoneModelDto toModelDto(SmartphoneModelEntity entity) {
         var model = new SmartphoneModelDto();
@@ -25,8 +27,7 @@ public class SmartphoneModelDto extends ApplianceModelDto implements Comparable 
         model.setVolumeOfMemory(entity.getVolumeOfMemory());
         model.setNumbersOfCameras(entity.getNumberOfCameras());
         model.setInStock(entity.getInStock());
-        model.setSmartphoneDto(ApplianceDto.toDto(entity.getSmartphone()));
-
+        model.setSmartphone(ApplianceDto.toDto(entity.getSmartphone()));
         return model;
     }
 

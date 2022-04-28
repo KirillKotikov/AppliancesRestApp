@@ -76,7 +76,7 @@ public class SmartphoneController {
         }
     }
 
-    @Operation(summary = "Поиск группы смартфонов по имени")
+    @Operation(summary = "Поиск группы смартфонов по имени (работает и по частям слова)")
     @GetMapping("/search-by-name")
     public ResponseEntity searchByName(@RequestParam String name) {
         try {
